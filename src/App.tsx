@@ -289,8 +289,7 @@ function TerragridScene({
         camera.lookAt(1.85, 1.45, 0.05)
       }}
     >
-      {/* FONDO DEL CIELO — cambia '#ffffff' por cualquier color o agrega <Sky> aqui */}
-      <color attach="background" args={['#008ca9ff']} />
+      <color attach="background" args={['#0d1e2a']} />
 
       <ambientLight intensity={0.22} color="#ffd0a0" />
       <directionalLight

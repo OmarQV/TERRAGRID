@@ -11,7 +11,7 @@ main {
   color: #f7f1df;
   background:
     linear-gradient(90deg, rgba(6, 8, 6, 0.94) 0%, rgba(6, 8, 6, 0.58) 42%, rgba(6, 8, 6, 0.08) 100%),
-    #ffffff;
+    #080908;
 }
 
 .scene-layer {
@@ -435,7 +435,7 @@ main {
     height: 100svh;
     background:
       linear-gradient(180deg, rgba(6, 8, 6, 0.88) 0%, rgba(6, 8, 6, 0.44) 52%, #080908 100%),
-      #ffffff;
+      #080908;
   }
 
   .topbar {
