@@ -68,20 +68,20 @@ const HOTSPOTS: Hotspot[] = [
 ]
 
 const STORY_STEPS = [
-  'Orbita alrededor del contenedor TERRAGRID',
-  'Apertura de puertas y acceso tecnico',
-  'Visualizacion del sistema hidroponico',
-  'Aislamiento del nucleo SMR',
-  'Capa IoT con estadisticas operativas',
+  'Clima extremo, sequia y suelo esteril impiden la agricultura tradicional en el altiplano',
+  'La energia inestable detiene cualquier sistema agricola moderno en zonas remotas',
+  'La baja conectividad inutiliza las soluciones AgriTech basadas en la nube',
+  'Las cadenas de abastecimiento largas elevan costos y generan dependencia externa',
+  'Las comunidades aisladas no tienen alternativa local de produccion alimentaria',
 ]
 
 const MODULES = [
-  ['Terrain', 'Altiplano arido con grietas, rocas y desniveles suaves.'],
-  ['Vegetation', 'Ichu seco disperso, bajo poligonaje y variacion aleatoria.'],
-  ['Mountains', 'Cordillera nevada a distancia cinematografica.'],
-  ['Lights', 'Golden hour, sombras largas y ambiente calido.'],
-  ['LOD', 'Tres niveles listos para GLB web: ultra, medio y bajo.'],
-  ['IoT', 'Hotspots con datos simulados para demo interactiva.'],
+  ['Agricultura vertical', 'Racks interiores con control de luz LED, temperatura, humedad, agua y nutrientes. Ciclos cortos y alta densidad productiva.'],
+  ['Sensores IoT', 'Captura continua de pH, CO2, caudal, potencia, temperatura y humedad para toma de decision en tiempo real.'],
+  ['Edge AI', 'Modelos predictivos dentro del nodo optimizan riego, iluminacion y clima interior sin depender de servidores en la nube.'],
+  ['Offline-first', 'El sistema registra eventos, controla actuadores y mantiene la produccion incluso cuando la conectividad falla por semanas.'],
+  ['Gemelo digital', 'Simulacion virtual del nodo para testear escenarios y ajustar recetas de cultivo antes de aplicarlas al sistema fisico.'],
+  ['Trazabilidad', 'Registro inmutable de siembra, uso de agua, nutrientes, energia y cosecha. Pasaporte digital de cada lote producido.'],
 ]
 
 function seededValue(seed: number) {
@@ -400,15 +400,12 @@ function App() {
             <p className="eyebrow">Containerized nuclear agriculture</p>
             <h1>TERRAGRID</h1>
             <p className="hero-lede">
-              Agricultura de precision, energia firme y control IoT dentro de un contenedor desplegable
-              para operar en el altiplano boliviano.
+              Produccion de alimentos en ambiente controlado para territorios con clima extremo,
+              energia inestable y baja conectividad. Edge AI local y operacion offline-first.
             </p>
             <div className="hero-actions">
               <a href="#experience" className="primary-action">
-                Ver experiencia
-              </a>
-              <a href="#pipeline" className="secondary-action">
-                Preparar GLB
+                Ver detalles
               </a>
             </div>
           </div>
@@ -437,20 +434,12 @@ function App() {
           )}
         </aside>
 
-        {!focusMode && (
-          <div className="hero-metrics" aria-label="Metricas simuladas">
-            <span>50k-150k tris</span>
-            <span>LOD0/1/2</span>
-            <span>Golden hour</span>
-            <span>IoT ready</span>
-          </div>
-        )}
       </section>
 
       <section className="experience-band" id="experience">
         <div>
-          <p className="eyebrow">Scroll animation</p>
-          <h2>Un recorrido pensado para una startup deep-tech</h2>
+          <p className="eyebrow">El problema</p>
+          <h2>Producir alimentos en territorios extremos sigue siendo inviable</h2>
         </div>
         <ol className="story-list">
           {STORY_STEPS.map((step) => (
@@ -461,8 +450,8 @@ function App() {
 
       <section className="modules-band" id="modules">
         <div className="section-heading">
-          <p className="eyebrow">Hero render</p>
-          <h2>Lo que la escena agrega alrededor del prototipo</h2>
+          <p className="eyebrow">Arquitectura del nodo</p>
+          <h2>Seis capas integradas en un contenedor desplegable</h2>
         </div>
         <div className="module-grid">
           {MODULES.map(([title, copy]) => (
@@ -476,19 +465,28 @@ function App() {
 
       <section className="pipeline-band" id="pipeline">
         <div className="pipeline-copy">
-          <p className="eyebrow">Blender a React</p>
-          <h2>Ruta recomendada para el siguiente export</h2>
+          <p className="eyebrow">Mercado objetivo</p>
+          <h2>Cuatro segmentos con necesidad critica</h2>
           <p>
-            Organiza la escena en colecciones, aplica transformaciones, hornea materiales PBR, crea
-            animaciones utiles y exporta el archivo como GLB con texturas, compresion y LOD.
+            TERRAGRID opera donde otras soluciones fallan: baja conectividad, energia inestable y
+            logistica vulnerable. Su arquitectura modular permite instalarlo en comunidades rurales,
+            campamentos industriales, instituciones publicas y zonas estrategicas con alta demanda
+            de soberania alimentaria.
           </p>
         </div>
         <div className="pipeline-steps">
-          {['Terrain', 'Vegetation', 'Rocks', 'Mountains', 'HDRI', 'Cameras', 'Fog', 'Post FX'].map(
-            (step) => (
-              <span key={step}>{step}</span>
-            ),
-          )}
+          {[
+            'Comunidades rurales',
+            'Municipios',
+            'Mineria remota',
+            'Bases de investigacion',
+            'Zonas fronterizas',
+            'Centros educativos',
+            'Agroindustria',
+            'Respuesta a desastres',
+          ].map((step) => (
+            <span key={step}>{step}</span>
+          ))}
         </div>
       </section>
     </main>
