@@ -8,6 +8,21 @@ import {
 } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import * as THREE from 'three'
+import {
+  Sprout,
+  Gauge,
+  BrainCircuit,
+  WifiOff,
+  ScanLine,
+  ShieldCheck,
+  Users,
+  Leaf,
+  Zap,
+  Briefcase,
+  BarChart2,
+  Palette,
+  Server,
+} from 'lucide-react'
 import './App.css'
 
 const MODEL_PATH = '/blender/TERRAGRID_web_v2.glb'
@@ -27,61 +42,131 @@ const HOTSPOTS: Hotspot[] = [
     id: 'reactor',
     label: 'SMR',
     title: 'Reactor modular',
-    copy: 'Energia firme para operar agricultura controlada en zonas remotas sin depender de una red inestable.',
+    copy: 'Energía firme para operar agricultura controlada en zonas remotas sin depender de una red inestable.',
     position: [5.85, 2.75, 0],
   },
   {
     id: 'solar',
     label: 'Solar',
-    title: 'Generacion solar',
-    copy: 'Paneles y almacenamiento reducen consumo auxiliar y permiten modos hibridos de operacion.',
+    title: 'Generación solar',
+    copy: 'Paneles y almacenamiento reducen consumo auxiliar y permiten modos híbridos de operación.',
     position: [1.5, 1.28, 2.45],
   },
   {
     id: 'hydroponic',
     label: 'Hydro',
-    title: 'Cultivo hidroponico',
-    copy: 'Produccion de alimentos en interior con nutrientes, temperatura y humedad medidos en tiempo real.',
+    title: 'Cultivo hidropónico',
+    copy: 'Producción de alimentos en interior con nutrientes, temperatura y humedad medidos en tiempo real.',
     position: [-1.2, 2.25, 0.35],
   },
   {
     id: 'water',
     label: 'H2O',
     title: 'Sistema de agua',
-    copy: 'Recirculacion, filtrado y sensores para maximizar cada litro en clima arido de altura.',
+    copy: 'Recirculación, filtrado y sensores para maximizar cada litro en clima árido de altura.',
     position: [-2.3, 0.9, 0.78],
   },
   {
     id: 'ai',
     label: 'IA',
-    title: 'Control autonomo',
-    copy: 'Modelos predictivos coordinan energia, riego, clima interior y mantenimiento preventivo.',
+    title: 'Control autónomo',
+    copy: 'Modelos predictivos coordinan energía, riego, clima interior y mantenimiento preventivo.',
     position: [0, 3.65, 0],
   },
   {
     id: 'sensors',
     label: 'IoT',
     title: 'Sensores distribuidos',
-    copy: 'Telemetria simulada para humedad, radiacion, caudal, potencia, temperatura y salud del sistema.',
+    copy: 'Telemetría simulada para humedad, radiación, caudal, potencia, temperatura y salud del sistema.',
     position: [2.54, 2.45, 0],
   },
 ]
 
 const STORY_STEPS = [
-  'Clima extremo, sequia y suelo esteril impiden la agricultura tradicional en el altiplano',
-  'La energia inestable detiene cualquier sistema agricola moderno en zonas remotas',
+  'Clima extremo, sequía y suelo estéril impiden la agricultura tradicional en el altiplano',
+  'La energía inestable detiene cualquier sistema agrícola moderno en zonas remotas',
   'La baja conectividad inutiliza las soluciones AgriTech basadas en la nube',
   'Las cadenas de abastecimiento largas elevan costos y generan dependencia externa',
-  'Las comunidades aisladas no tienen alternativa local de produccion alimentaria',
+  'Las comunidades aisladas no tienen alternativa local de producción alimentaria',
 ]
 
-const MODULES = [
-  ['Agricultura vertical', 'Racks interiores con control de luz LED, temperatura, humedad, agua y nutrientes. Ciclos cortos y alta densidad productiva.'],
-  ['Sensores IoT', 'Captura continua de pH, CO2, caudal, potencia, temperatura y humedad para toma de decision en tiempo real.'],
-  ['Edge AI', 'Modelos predictivos dentro del nodo optimizan riego, iluminacion y clima interior sin depender de servidores en la nube.'],
-  ['Offline-first', 'El sistema registra eventos, controla actuadores y mantiene la produccion incluso cuando la conectividad falla por semanas.'],
-  ['Gemelo digital', 'Simulacion virtual del nodo para testear escenarios y ajustar recetas de cultivo antes de aplicarlas al sistema fisico.'],
-  ['Trazabilidad', 'Registro inmutable de siembra, uso de agua, nutrientes, energia y cosecha. Pasaporte digital de cada lote producido.'],
+type ModuleEntry = {
+  icon: React.ReactNode
+  title: string
+  copy: string
+}
+
+const MODULES: ModuleEntry[] = [
+  { icon: <Sprout size={22} />, title: 'Agricultura vertical', copy: 'Racks interiores con control de luz LED, temperatura, humedad, agua y nutrientes. Ciclos cortos y alta densidad productiva.' },
+  { icon: <Gauge size={22} />, title: 'Sensores IoT', copy: 'Captura continua de pH, CO2, caudal, potencia, temperatura y humedad para toma de decisión en tiempo real.' },
+  { icon: <BrainCircuit size={22} />, title: 'Edge AI', copy: 'Modelos predictivos dentro del nodo optimizan riego, iluminación y clima interior sin depender de servidores en la nube.' },
+  { icon: <WifiOff size={22} />, title: 'Offline-first', copy: 'El sistema registra eventos, controla actuadores y mantiene la producción incluso cuando la conectividad falla por semanas.' },
+  { icon: <ScanLine size={22} />, title: 'Gemelo digital', copy: 'Simulación virtual del nodo para testear escenarios y ajustar recetas de cultivo antes de aplicarlas al sistema físico.' },
+  { icon: <ShieldCheck size={22} />, title: 'Trazabilidad', copy: 'Registro inmutable de siembra, uso de agua, nutrientes, energía y cosecha. Pasaporte digital de cada lote producido.' },
+]
+
+const IMPACT = [
+  {
+    icon: <Users size={28} />,
+    label: 'Social',
+    headline: 'Alimentos frescos donde no llegan',
+    points: [
+      'Reduce dependencia de cadenas externas de abastecimiento',
+      'Genera empleo técnico local en zonas vulnerables',
+      'Mejora acceso nutricional en territorios aislados',
+    ],
+  },
+  {
+    icon: <Leaf size={28} />,
+    label: 'Ambiental',
+    headline: 'Hasta 90 % menos agua que cultivo tradicional',
+    points: [
+      'Recirculación de nutrientes en circuito cerrado',
+      'Sin pesticidas ni agroquímicos masivos',
+      'Menor presión sobre suelos y acuíferos locales',
+    ],
+  },
+  {
+    icon: <Zap size={28} />,
+    label: 'Tecnológico',
+    headline: 'IA y datos en el borde de la red',
+    points: [
+      'Democratiza algoritmos de optimización en zonas sin señal',
+      'Trazabilidad inmutable para certificación de impacto',
+      'Arquitectura replicable como franquicia tecnológica',
+    ],
+  },
+]
+
+const TEAM = [
+  {
+    icon: <Briefcase size={24} />,
+    photo: '/equipo/omar.jpg',
+    name: 'Omar Quispe Vargas',
+    role: 'Liderazgo, estrategia, modelo de negocio y seguridad',
+    copy: 'Define la propuesta de valor, el modelo de negocio, la narrativa del pitch y la viabilidad del proyecto. Aporta en seguridad de la información, trazabilidad y sostenibilidad económica.',
+  },
+  {
+    icon: <BarChart2 size={24} />,
+    photo: '/equipo/carol.jpeg',
+    name: 'Carol Katerine Canqui',
+    role: 'Datos, inteligencia artificial y validación',
+    copy: 'Responsable de variables agrícolas, análisis de datos del cultivo, métricas de validación e IA local. Lidera la identificación de usuarios objetivo y validación de mercado.',
+  },
+  {
+    icon: <Palette size={24} />,
+    photo: '/equipo/jhamil.jpg',
+    name: 'Jhamil Calixto Mamani',
+    role: 'UI/UX, frontend, diseño visual e identidad',
+    copy: 'Transforma la propuesta técnica en experiencia visual. A cargo del dashboard, prototipos de interfaz, identidad visual, presentación en Canva y maqueta 3D del nodo.',
+  },
+  {
+    icon: <Server size={24} />,
+    photo: null,
+    name: 'Saúl Mijael Choquehuanca',
+    role: 'Backend, arquitectura técnica y blockchain',
+    copy: 'Diseña la estructura lógica del prototipo, gestión de datos y operación offline-first. Lidera la trazabilidad blockchain y el pasaporte digital agrícola.',
+  },
 ]
 
 function seededValue(seed: number) {
@@ -389,8 +474,6 @@ function App() {
         {!focusMode && (
           <nav className="topbar" aria-label="Principal">
             <a href="#hero">TERRAGRID</a>
-            <a href="#modules">Modulos</a>
-            <a href="#pipeline">GLB Web</a>
           </nav>
         )}
 
@@ -399,8 +482,8 @@ function App() {
             <p className="eyebrow">Containerized nuclear agriculture</p>
             <h1>TERRAGRID</h1>
             <p className="hero-lede">
-              Produccion de alimentos en ambiente controlado para territorios con clima extremo,
-              energia inestable y baja conectividad. Edge AI local y operacion offline-first.
+              Producción de alimentos en ambiente controlado para territorios con clima extremo,
+              energía inestable y baja conectividad. Edge AI local y operación offline-first.
             </p>
             <div className="hero-actions">
               <a href="#experience" className="primary-action">
@@ -453,8 +536,9 @@ function App() {
           <h2>Seis capas integradas en un contenedor desplegable</h2>
         </div>
         <div className="module-grid">
-          {MODULES.map(([title, copy]) => (
+          {MODULES.map(({ icon, title, copy }) => (
             <article key={title} className="module-card">
+              <div className="module-icon">{icon}</div>
               <h3>{title}</h3>
               <p>{copy}</p>
             </article>
@@ -462,23 +546,46 @@ function App() {
         </div>
       </section>
 
+      {/* ── IMPACTO ────────────────────────────────────── */}
+      <section className="impact-band" id="impacto">
+        <div className="impact-heading">
+          <p className="eyebrow">Impacto</p>
+          <h2>Por qué importa más allá de la tecnología</h2>
+        </div>
+        <div className="impact-grid">
+          {IMPACT.map(({ icon, label, headline, points }) => (
+            <article key={label} className="impact-card">
+              <div className="impact-icon">{icon}</div>
+              <p className="impact-label">{label}</p>
+              <h3>{headline}</h3>
+              <ul>
+                {points.map((p) => (
+                  <li key={p}>{p}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* ── MERCADO ────────────────────────────────────── */}
       <section className="pipeline-band" id="pipeline">
         <div className="pipeline-copy">
           <p className="eyebrow">Mercado objetivo</p>
-          <h2>Cuatro segmentos con necesidad critica</h2>
+          <h2>Cuatro segmentos con necesidad crítica</h2>
           <p>
-            TERRAGRID opera donde otras soluciones fallan: baja conectividad, energia inestable y
-            logistica vulnerable. Su arquitectura modular permite instalarlo en comunidades rurales,
-            campamentos industriales, instituciones publicas y zonas estrategicas con alta demanda
-            de soberania alimentaria.
+            TERRAGRID opera donde otras soluciones fallan: baja conectividad, energía inestable y
+            logística vulnerable. Su arquitectura modular permite instalarlo en comunidades rurales,
+            campamentos industriales, instituciones públicas y zonas estratégicas con alta demanda
+            de soberanía alimentaria.
           </p>
         </div>
         <div className="pipeline-steps">
           {[
             'Comunidades rurales',
             'Municipios',
-            'Mineria remota',
-            'Bases de investigacion',
+            'Minería remota',
+            'Bases de investigación',
             'Zonas fronterizas',
             'Centros educativos',
             'Agroindustria',
@@ -488,6 +595,37 @@ function App() {
           ))}
         </div>
       </section>
+      {/* ── EQUIPO ─────────────────────────────────────── */}
+      <section className="team-band" id="equipo">
+        <div className="team-heading">
+          <p className="eyebrow">Equipo</p>
+          <h2>Cuatro disciplinas, un solo sistema</h2>
+        </div>
+        <div className="team-grid">
+          {TEAM.map(({ icon, photo, name, role, copy }) => (
+            <article key={name} className="team-card">
+              {photo ? (
+                <img className="team-photo" src={photo} alt={name} />
+              ) : (
+                <div className="team-icon">{icon}</div>
+              )}
+              <div>
+                <h3>{name}</h3>
+                <p className="team-role">{role}</p>
+                <p className="team-copy">{copy}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* ── CTA FINAL ──────────────────────────────────── */}
+      <section className="cta-band">
+        <p className="eyebrow">ElevateU 2026</p>
+        <h2>Soberanía alimentaria extrema,<br />desde Bolivia al mundo.</h2>
+        <p>TERRAGRID — Universidad Mayor de San Andrés · Carrera de Informática</p>
+      </section>
+
     </main>
   )
 }
