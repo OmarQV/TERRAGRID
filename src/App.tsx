@@ -1,5 +1,5 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useThree } from '@react-three/fiber'
 import {
   ContactShadows,
   Html,
@@ -406,11 +406,56 @@ function SceneFallback() {
   )
 }
 
+function CameraModeController({
+  viewMode,
+  isCompactViewport,
+}: {
+  viewMode: HeroViewMode
+  isCompactViewport: boolean
+}) {
+  const { camera, invalidate } = useThree()
+
+  useEffect(() => {
+    const startPosition = camera.position.clone()
+    const destination = new THREE.Vector3(
+      ...(viewMode === 'model'
+        ? isCompactViewport
+          ? ([1.85, 4.1, 15.2] as const)
+          : ([1.85, 4.3, 13.5] as const)
+        : isCompactViewport
+          ? ([1.85, 3.5, 12] as const)
+          : ([1.85, 3.4, 9] as const)),
+    )
+    const lookAt = new THREE.Vector3(1.85, 1.45, 0.05)
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const duration = reduceMotion ? 0 : 560
+    const startTime = performance.now()
+    let animationFrame = 0
+
+    const updateCamera = (now: number) => {
+      const progress = duration === 0 ? 1 : Math.min((now - startTime) / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+
+      camera.position.lerpVectors(startPosition, destination, eased)
+      camera.lookAt(lookAt)
+      invalidate()
+
+      if (progress < 1) animationFrame = requestAnimationFrame(updateCamera)
+    }
+
+    animationFrame = requestAnimationFrame(updateCamera)
+    return () => cancelAnimationFrame(animationFrame)
+  }, [camera, invalidate, isCompactViewport, viewMode])
+
+  return null
+}
+
 function TerragridScene({
   activeHotspot,
   hoveredHotspot,
   showHotspots,
   isActive,
+  viewMode,
   onHotspotSelect,
   onHotspotHover,
 }: {
@@ -418,6 +463,7 @@ function TerragridScene({
   hoveredHotspot: HotspotId | null
   showHotspots: boolean
   isActive: boolean
+  viewMode: HeroViewMode
   onHotspotSelect: (id: HotspotId) => void
   onHotspotHover: (id: HotspotId | null) => void
 }) {
@@ -427,7 +473,7 @@ function TerragridScene({
   return (
     <Canvas
       shadows={!isCompactViewport}
-      dpr={isCompactViewport ? [1, 1.25] : [1, 1.75]}
+      dpr={isCompactViewport ? [1, viewMode === 'model' ? 1.15 : 1.25] : [1, 1.75]}
       frameloop={isActive ? 'demand' : 'never'}
       camera={{
         position: isCompactViewport ? [1.85, 3.5, 12] : [1.85, 3.4, 9],
@@ -441,6 +487,11 @@ function TerragridScene({
       }}
     >
       <color attach="background" args={['#0d1e2a']} />
+
+      <CameraModeController
+        viewMode={viewMode}
+        isCompactViewport={isCompactViewport}
+      />
 
       <ambientLight intensity={0.22} color="#ffd0a0" />
       <directionalLight
@@ -493,7 +544,7 @@ function TerragridScene({
         enableRotate
         target={[1.85, 1.45, 0.05]}
         minDistance={4}
-        maxDistance={11}
+        maxDistance={17}
         minPolarAngle={Math.PI * 0.18}
         maxPolarAngle={Math.PI * 0.48}
       />
@@ -551,6 +602,7 @@ function App() {
             hoveredHotspot={hoveredHotspot}
             showHotspots={heroViewMode !== 'model'}
             isActive={isHeroActive}
+            viewMode={heroViewMode}
             onHotspotSelect={handleHotspotSelect}
             onHotspotHover={setHoveredHotspot}
           />
