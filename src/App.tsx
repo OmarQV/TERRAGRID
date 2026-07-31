@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useThree } from '@react-three/fiber'
 import {
   ContactShadows,
@@ -175,6 +175,69 @@ const BUSINESS_MODEL = [
   { tag: 'Implementación', title: 'Módulo o leasing', price: 'USD 22.500', copy: 'Venta del módulo completo o leasing desde USD 780 mensuales.' },
   { tag: 'Recurrente', title: 'Servicios', price: 'Desde USD 500', copy: 'Mantenimiento, licencia de software y protocolos para nuevos cultivos.' },
 ]
+
+const numberFormatter = new Intl.NumberFormat('es-BO')
+
+function AnimatedNumber({
+  value,
+  prefix = '',
+  suffix = '',
+  duration = 1200,
+}: {
+  value: number
+  prefix?: string
+  suffix?: string
+  duration?: number
+}) {
+  const [displayValue, setDisplayValue] = useState(0)
+  const numberRef = useRef<HTMLSpanElement | null>(null)
+
+  useEffect(() => {
+    const element = numberRef.current
+    if (!element) return
+
+    let animationFrame = 0
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const animate = () => {
+      if (reduceMotion) {
+        setDisplayValue(value)
+        return
+      }
+
+      const startedAt = performance.now()
+      const update = (now: number) => {
+        const progress = Math.min((now - startedAt) / duration, 1)
+        const eased = 1 - Math.pow(1 - progress, 3)
+        setDisplayValue(Math.round(value * eased))
+        if (progress < 1) animationFrame = requestAnimationFrame(update)
+      }
+
+      animationFrame = requestAnimationFrame(update)
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        animate()
+        observer.disconnect()
+      },
+      { threshold: 0.55 },
+    )
+
+    observer.observe(element)
+    return () => {
+      observer.disconnect()
+      cancelAnimationFrame(animationFrame)
+    }
+  }, [duration, value])
+
+  return (
+    <span ref={numberRef} className="animated-number">
+      {prefix}{numberFormatter.format(displayValue)}{suffix}
+    </span>
+  )
+}
 
 const TEAM = [
   {
@@ -596,12 +659,63 @@ function App() {
     return () => observer.disconnect()
   }, [])
 
+  useLayoutEffect(() => {
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('.reveal-section'))
+    document.documentElement.classList.add('reveal-ready')
+
+    if (!('IntersectionObserver' in window)) {
+      sections.forEach((section) => section.classList.add('is-visible'))
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          entry.target.classList.add('is-visible')
+          observer.unobserve(entry.target)
+        })
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -8% 0px' },
+    )
+
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    let animationFrame = 0
+
+    const updateProgress = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight
+      const progress = scrollable > 0 ? Math.min(window.scrollY / scrollable, 1) : 0
+      document.documentElement.style.setProperty('--scroll-progress', progress.toString())
+      animationFrame = 0
+    }
+
+    const requestUpdate = () => {
+      if (animationFrame) return
+      animationFrame = requestAnimationFrame(updateProgress)
+    }
+
+    updateProgress()
+    window.addEventListener('scroll', requestUpdate, { passive: true })
+    window.addEventListener('resize', requestUpdate)
+
+    return () => {
+      window.removeEventListener('scroll', requestUpdate)
+      window.removeEventListener('resize', requestUpdate)
+      if (animationFrame) cancelAnimationFrame(animationFrame)
+    }
+  }, [])
+
   function handleHotspotSelect(id: HotspotId) {
     setActiveHotspot((prev) => (prev === id ? null : id))
   }
 
   return (
     <main>
+      <div className="scroll-progress" aria-hidden="true" />
       <section
         ref={heroRef}
         className={`hero-section ${focusMode ? 'is-focus-mode' : ''}`}
@@ -734,7 +848,7 @@ function App() {
 
       </section>
 
-      <section className="problem-band" id="problema">
+      <section className="problem-band reveal-section" id="problema">
         <div className="section-shell problem-layout">
           <div className="problem-copy">
             <p className="eyebrow">El problema</p>
@@ -752,13 +866,13 @@ function App() {
             <div className="decline-metrics">
               <div>
                 <span>2014</span>
-                <strong>281.800</strong>
+                <strong><AnimatedNumber value={281800} /></strong>
                 <small>toneladas</small>
               </div>
               <ArrowRight size={28} aria-hidden="true" />
               <div className="metric-alert">
                 <span>2026 · proyección</span>
-                <strong>92.000</strong>
+                <strong><AnimatedNumber value={92000} /></strong>
                 <small>toneladas</small>
               </div>
             </div>
@@ -776,7 +890,7 @@ function App() {
         </div>
       </section>
 
-      <section className="solution-band" id="solucion">
+      <section className="solution-band reveal-section" id="solucion">
         <div className="section-shell">
           <div className="section-heading">
             <div>
@@ -810,7 +924,7 @@ function App() {
         </div>
       </section>
 
-      <section className="modules-band" id="producto">
+      <section className="modules-band reveal-section" id="producto">
         <div className="section-shell">
           <div className="section-heading product-heading">
             <div>
@@ -831,7 +945,7 @@ function App() {
         </div>
       </section>
 
-      <section className="value-band" id="valor">
+      <section className="value-band reveal-section" id="valor">
         <div className="section-shell value-intro">
           <p className="eyebrow">Lo que compra el cliente</p>
           <h2>No compra un contenedor.<br />Compra mejores decisiones.</h2>
@@ -853,10 +967,10 @@ function App() {
         </div>
       </section>
 
-      <section className="validation-band" id="evidencia">
+      <section className="validation-band reveal-section" id="evidencia">
         <div className="section-shell validation-layout">
           <div className="validation-number">
-            <strong>10</strong>
+            <strong><AnimatedNumber value={10} /></strong>
             <span>especies validadas</span>
           </div>
           <div className="validation-copy">
@@ -869,13 +983,13 @@ function App() {
           </div>
           <div className="validation-badge">
             <Microscope size={30} />
-            <strong>Hasta 40×</strong>
+            <strong>Hasta <AnimatedNumber value={40} suffix="×" /></strong>
             <span>concentración observada</span>
           </div>
         </div>
       </section>
 
-      <section className="market-band" id="mercado">
+      <section className="market-band reveal-section" id="mercado">
         <div className="section-shell">
           <div className="section-heading">
             <div>
@@ -912,7 +1026,7 @@ function App() {
         </div>
       </section>
 
-      <section className="business-band" id="modelo">
+      <section className="business-band reveal-section" id="modelo">
         <div className="section-shell">
           <div className="business-header">
             <div>
@@ -941,7 +1055,7 @@ function App() {
         </div>
       </section>
 
-      <section className="positioning-band">
+      <section className="positioning-band reveal-section">
         <div className="section-shell positioning-layout">
           <p className="eyebrow">Nuestro lugar en la cadena</p>
           <blockquote>“TERRAGRID no compite con el campo. Lo complementa.”</blockquote>
@@ -956,7 +1070,7 @@ function App() {
         </div>
       </section>
 
-      <section className="team-band" id="equipo">
+      <section className="team-band reveal-section" id="equipo">
         <div className="team-heading">
           <p className="eyebrow">Equipo</p>
           <h2>Tecnología que busca crecer junto al campo.</h2>
@@ -980,7 +1094,7 @@ function App() {
         </div>
       </section>
 
-      <section className="cta-band">
+      <section className="cta-band reveal-section">
         <p className="eyebrow">El futuro se siembra antes de llegar al campo</p>
         <h2>No es un invernadero.<br />Es el futuro.</h2>
         <p className="cta-copy">Con TERRAGRID, de cada 10 panes, 10 bolivianos.</p>
