@@ -12,23 +12,32 @@ import {
   Sprout,
   Gauge,
   BrainCircuit,
-  WifiOff,
   ScanLine,
   ShieldCheck,
   Users,
-  Leaf,
-  Zap,
   Briefcase,
   BarChart2,
   Palette,
   Server,
+  ArrowRight,
+  CloudRain,
+  Wheat,
+  Microscope,
+  Timer,
+  Building2,
+  Handshake,
+  BadgeDollarSign,
+  Check,
+  TrendingDown,
+  BugOff,
+  SlidersHorizontal,
 } from 'lucide-react'
 import './App.css'
 
-const MODEL_PATH = '/blender/v2%20eva%20pr6.glb'
+const MODEL_PATH = '/blender/v2%20eva%20pr6%20DRACO.glb'
 const MODEL_FOOTPRINT = 6
 
-type HotspotId = 'reactor' | 'solar' | 'hydroponic' | 'water' | 'ai' | 'sensors'
+type HotspotId = 'energy' | 'solar' | 'hydroponic' | 'water' | 'ai' | 'sensors'
 
 type Hotspot = {
   id: HotspotId
@@ -40,55 +49,54 @@ type Hotspot = {
 
 const HOTSPOTS: Hotspot[] = [
   {
-    id: 'reactor',
-    label: 'SMR',
-    title: 'Reactor modular',
-    copy: 'Energía firme para operar agricultura controlada en zonas remotas sin depender de una red inestable.',
+    id: 'energy',
+    label: 'Clima',
+    title: 'Ambiente estable',
+    copy: 'Temperatura y humedad reguladas para proteger cada lote frente a sequías y cambios bruscos del clima.',
     position: [2.35, 1.6, 0],
   },
   {
     id: 'solar',
-    label: 'Solar',
-    title: 'Generación solar',
-    copy: 'Paneles y almacenamiento reducen consumo auxiliar y permiten modos híbridos de operación.',
+    label: 'Luz',
+    title: 'Iluminación precisa',
+    copy: 'La intensidad y el fotoperiodo se ajustan a cada etapa de crecimiento de la semilla.',
     position: [0.75, 0.65, 1.2],
   },
   {
     id: 'hydroponic',
-    label: 'Hydro',
-    title: 'Cultivo hidropónico',
-    copy: 'Producción de alimentos en interior con nutrientes, temperatura y humedad medidos en tiempo real.',
+    label: 'Trigo',
+    title: 'Multiplicación controlada',
+    copy: 'El trigo crece en un entorno aislado y repetible antes de llevar las semillas mejor evaluadas al campo.',
     position: [-1.55, 1.85, 0.15],
   },
   {
     id: 'water',
     label: 'H2O',
-    title: 'Sistema de agua',
-    copy: 'Recirculación, filtrado y sensores para maximizar cada litro en clima árido de altura.',
+    title: 'Riego eficiente',
+    copy: 'El sistema entrega agua solo cuando el cultivo la necesita y reduce pérdidas por sobre-riego.',
     position: [-0.45, 1.05, -0.8],
   },
   {
     id: 'ai',
     label: 'IA',
-    title: 'Control autónomo',
-    copy: 'Modelos predictivos coordinan energía, riego, clima interior y mantenimiento preventivo.',
+    title: 'Recetas de crecimiento',
+    copy: 'El controlador coordina luz, agua y temperatura según la etapa y el protocolo de cada variedad.',
     position: [1.25, 2.25, 0.05],
   },
   {
     id: 'sensors',
     label: 'IoT',
-    title: 'Sensores distribuidos',
-    copy: 'Telemetría simulada para humedad, radiación, caudal, potencia, temperatura y salud del sistema.',
+    title: 'Vigilancia continua',
+    copy: 'Sensores registran humedad, temperatura, luz y presión de agua, y alertan ante condiciones anómalas.',
     position: [0.1, 1.55, 0.45],
   },
 ]
 
-const STORY_STEPS = [
-  'Clima extremo, sequía y suelo estéril impiden la agricultura tradicional en el altiplano',
-  'La energía inestable detiene cualquier sistema agrícola moderno en zonas remotas',
-  'La baja conectividad inutiliza las soluciones AgriTech basadas en la nube',
-  'Las cadenas de abastecimiento largas elevan costos y generan dependencia externa',
-  'Las comunidades aisladas no tienen alternativa local de producción alimentaria',
+const PROBLEM_CAUSES = [
+  'Sequía',
+  'Insumos costosos',
+  'Falta de combustible',
+  'Harina importada',
 ]
 
 type ModuleEntry = {
@@ -98,45 +106,66 @@ type ModuleEntry = {
 }
 
 const MODULES: ModuleEntry[] = [
-  { icon: <Sprout size={22} />, title: 'Agricultura vertical', copy: 'Racks interiores con control de luz LED, temperatura, humedad, agua y nutrientes. Ciclos cortos y alta densidad productiva.' },
-  { icon: <Gauge size={22} />, title: 'Sensores IoT', copy: 'Captura continua de pH, CO2, caudal, potencia, temperatura y humedad para toma de decisión en tiempo real.' },
-  { icon: <BrainCircuit size={22} />, title: 'Edge AI', copy: 'Modelos predictivos dentro del nodo optimizan riego, iluminación y clima interior sin depender de servidores en la nube.' },
-  { icon: <WifiOff size={22} />, title: 'Offline-first', copy: 'El sistema registra eventos, controla actuadores y mantiene la producción incluso cuando la conectividad falla por semanas.' },
-  { icon: <ScanLine size={22} />, title: 'Gemelo digital', copy: 'Simulación virtual del nodo para testear escenarios y ajustar recetas de cultivo antes de aplicarlas al sistema físico.' },
-  { icon: <ShieldCheck size={22} />, title: 'Trazabilidad', copy: 'Registro inmutable de siembra, uso de agua, nutrientes, energía y cosecha. Pasaporte digital de cada lote producido.' },
+  { icon: <Wheat size={22} />, title: '01 · Ingreso del lote', copy: 'Las semillas de trigo se identifican y siembran dentro del módulo para iniciar una evaluación controlada.' },
+  { icon: <Gauge size={22} />, title: '02 · Medición continua', copy: 'Sensores observan temperatura, humedad, luz y presión de agua durante todo el ciclo.' },
+  { icon: <SlidersHorizontal size={22} />, title: '03 · Regulación automática', copy: 'Riego, iluminación y clima responden automáticamente cuando una variable sale del rango ideal.' },
+  { icon: <BugOff size={22} />, title: '04 · Control sanitario', copy: 'La vigilancia temprana detecta señales de plagas, bacterias u hongos antes de que comprometan el lote.' },
+  { icon: <BrainCircuit size={22} />, title: '05 · Receta de crecimiento', copy: 'El controlador ajusta las condiciones de cada etapa y conserva el historial completo del ensayo.' },
+  { icon: <Sprout size={22} />, title: '06 · Salida al campo', copy: 'Las semillas seleccionadas salen sanas, trazables y mejor preparadas para la siembra en campo abierto.' },
 ]
 
 const IMPACT = [
   {
-    icon: <Users size={28} />,
-    label: 'Social',
-    headline: 'Alimentos frescos donde no llegan',
+    icon: <ShieldCheck size={28} />,
+    label: 'Seguridad',
+    headline: 'Decidir antes de arriesgar una campaña',
     points: [
-      'Reduce dependencia de cadenas externas de abastecimiento',
-      'Genera empleo técnico local en zonas vulnerables',
-      'Mejora acceso nutricional en territorios aislados',
+      'Evaluación previa en condiciones repetibles',
+      'Detección temprana de riesgos sanitarios',
+      'Menos incertidumbre al llevar el lote al campo',
     ],
   },
   {
-    icon: <Leaf size={28} />,
-    label: 'Ambiental',
-    headline: 'Hasta 90 % menos agua que cultivo tradicional',
+    icon: <Timer size={28} />,
+    label: 'Velocidad y ahorro',
+    headline: 'Más aprendizaje con menos recursos',
     points: [
-      'Recirculación de nutrientes en circuito cerrado',
-      'Sin pesticidas ni agroquímicos masivos',
-      'Menor presión sobre suelos y acuíferos locales',
+      'Uso preciso de agua, luz y temperatura',
+      'Ciclos de prueba más cortos y comparables',
+      'Menor dependencia de agroquímicos correctivos',
     ],
   },
   {
-    icon: <Zap size={28} />,
-    label: 'Tecnológico',
-    headline: 'IA y datos en el borde de la red',
+    icon: <ScanLine size={28} />,
+    label: 'Trazabilidad',
+    headline: 'Cada decisión respaldada por datos',
     points: [
-      'Democratiza algoritmos de optimización en zonas sin señal',
-      'Trazabilidad inmutable para certificación de impacto',
-      'Arquitectura replicable como franquicia tecnológica',
+      'Historial ambiental de cada lote evaluado',
+      'Comparación directa con el método tradicional',
+      'Evidencia para mejorar nuevas líneas genéticas',
     ],
   },
+]
+
+const MARKET_SEGMENTS = [
+  { icon: <Wheat size={24} />, title: 'Empresas semilleras', copy: 'Evalúan y comercializan variedades de trigo con mayores garantías de calidad.' },
+  { icon: <Microscope size={24} />, title: 'Multiplicadoras', copy: 'Reproducen material genético y necesitan procesos consistentes, rápidos y trazables.' },
+  { icon: <Users size={24} />, title: 'Productores tecnificados', copy: 'Gestionan grandes extensiones y programas propios de prueba antes de sembrar.' },
+  { icon: <Building2 size={24} />, title: 'Agroindustrias', copy: 'Buscan asegurar la calidad y continuidad del trigo que llega a sus plantas.' },
+]
+
+const PILOT_STEPS = [
+  'Elegimos una empresa y un problema concreto',
+  'Probamos una variedad o lote dentro de TERRAGRID',
+  'Comparamos contra su método tradicional',
+  'Medimos el ahorro, la calidad y el resultado',
+  'Convertimos la evidencia en venta o leasing',
+]
+
+const BUSINESS_MODEL = [
+  { tag: 'Entrada', title: 'Piloto pagado', price: 'USD 1.500–5.000', copy: 'Validamos un lote real y demostramos valor con métricas comparables.' },
+  { tag: 'Implementación', title: 'Módulo o leasing', price: 'USD 22.500', copy: 'Venta del módulo completo o leasing desde USD 780 mensuales.' },
+  { tag: 'Recurrente', title: 'Servicios', price: 'Desde USD 500', copy: 'Mantenimiento, licencia de software y protocolos para nuevos cultivos.' },
 ]
 
 const TEAM = [
@@ -485,22 +514,40 @@ function App() {
 
         {!focusMode && (
           <nav className="topbar" aria-label="Principal">
-            <a href="#hero">TERRAGRID</a>
+            <a className="brand" href="#hero" aria-label="TERRAGRID · Inicio">
+              <img src="/img/logo%20tearagrid.png" alt="TERRAGRID" />
+            </a>
+            <div className="nav-links">
+              <a href="#problema">Problema</a>
+              <a href="#producto">Producto</a>
+              <a href="#mercado">Mercado</a>
+              <a href="#modelo">Modelo</a>
+            </div>
           </nav>
         )}
 
         {!focusMode && (
           <div className="hero-copy" id="hero">
-            <p className="eyebrow">Containerized nuclear agriculture</p>
-            <h1>TERRAGRID</h1>
+            <p className="eyebrow">Tecnología boliviana para semillas</p>
+            <img
+              className="hero-logo"
+              src="/img/logo%20tearagrid.png"
+              alt="TERRAGRID"
+            />
             <p className="hero-lede">
-              Producción de alimentos en ambiente controlado para territorios con clima extremo,
-              energía inestable y baja conectividad. Edge AI local y operación offline-first.
+              El filtro previo que ayuda a que solo las mejores semillas de trigo lleguen a la tierra.
+              Evaluamos, protegemos y multiplicamos cada lote en condiciones controladas.
             </p>
             <div className="hero-actions">
-              <a href="#experience" className="primary-action">
-                Ver detalles
+              <a href="#producto" className="primary-action">
+                Conocer el sistema <ArrowRight size={17} />
               </a>
+              <a href="#problema" className="secondary-action">Ver el desafío</a>
+            </div>
+            <div className="hero-proof" aria-label="Propuesta de valor">
+              <span>Semillas sanas</span>
+              <span>Menos riesgo</span>
+              <span>Datos trazables</span>
             </div>
           </div>
         )}
@@ -530,39 +577,108 @@ function App() {
 
       </section>
 
-      <section className="experience-band" id="experience">
-        <div>
-          <p className="eyebrow">El problema</p>
-          <h2>Producir alimentos en territorios extremos sigue siendo inviable</h2>
+      <section className="problem-band" id="problema">
+        <div className="section-shell problem-layout">
+          <div className="problem-copy">
+            <p className="eyebrow">El problema</p>
+            <h2>Bolivia produce cada vez menos del trigo que consume.</h2>
+            <p className="section-lede">
+              En dos décadas, la producción nacional pasó de cubrir 20–30 % de la demanda a solo 10–12 %.
+            </p>
+            <p className="source-note">Cifras reportadas por ANAPO, INE y prensa nacional.</p>
+          </div>
+          <div className="decline-card" aria-label="Caída de la producción de trigo">
+            <div className="decline-title">
+              <TrendingDown size={22} />
+              <span>Producción nacional de trigo</span>
+            </div>
+            <div className="decline-metrics">
+              <div>
+                <span>2014</span>
+                <strong>281.800</strong>
+                <small>toneladas</small>
+              </div>
+              <ArrowRight size={28} aria-hidden="true" />
+              <div className="metric-alert">
+                <span>2026 · proyección</span>
+                <strong>92.000</strong>
+                <small>toneladas</small>
+              </div>
+            </div>
+            <div className="decline-bar"><span /></div>
+            <p>Casi <strong>2 de cada 3 toneladas</strong> dejaron de producirse frente a 2014.</p>
+          </div>
         </div>
-        <ol className="story-list">
-          {STORY_STEPS.map((step) => (
-            <li key={step}>{step}</li>
-          ))}
-        </ol>
+        <div className="section-shell problem-causes" aria-label="Principales causas">
+          <strong>¿Por qué?</strong>
+          <div>
+            {PROBLEM_CAUSES.map((cause) => (
+              <span key={cause}>{cause}</span>
+            ))}
+          </div>
+        </div>
       </section>
 
-      <section className="modules-band" id="modules">
-        <div className="section-heading">
-          <p className="eyebrow">Arquitectura del nodo</p>
-          <h2>Seis capas integradas en un contenedor desplegable</h2>
-        </div>
-        <div className="module-grid">
-          {MODULES.map(({ icon, title, copy }) => (
-            <article key={title} className="module-card">
-              <div className="module-icon">{icon}</div>
-              <h3>{title}</h3>
-              <p>{copy}</p>
+      <section className="solution-band" id="solucion">
+        <div className="section-shell">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">La respuesta</p>
+              <span className="section-kicker">Una incubadora para semillas</span>
+            </div>
+            <h2>Controlamos el entorno para que el productor no dependa de la suerte.</h2>
+          </div>
+          <div className="solution-grid">
+            <article>
+              <CloudRain size={26} />
+              <h3>Resistencia climática</h3>
+              <p>Probamos semillas bajo condiciones adversas antes de exponerlas a una campaña completa.</p>
             </article>
-          ))}
+            <article>
+              <BugOff size={26} />
+              <h3>Sanidad del lote</h3>
+              <p>Reducimos el riesgo de plagas y hongos con vigilancia y respuesta temprana.</p>
+            </article>
+            <article>
+              <Timer size={26} />
+              <h3>Multiplicación ágil</h3>
+              <p>Generamos trigo sano en menos tiempo para disminuir la dependencia de semilla importada.</p>
+            </article>
+            <article>
+              <BadgeDollarSign size={26} />
+              <h3>Costos optimizados</h3>
+              <p>Usamos agua, luz y temperatura con precisión dentro de un sistema medible.</p>
+            </article>
+          </div>
         </div>
       </section>
 
-      {/* ── IMPACTO ────────────────────────────────────── */}
-      <section className="impact-band" id="impacto">
-        <div className="impact-heading">
-          <p className="eyebrow">Impacto</p>
-          <h2>Por qué importa más allá de la tecnología</h2>
+      <section className="modules-band" id="producto">
+        <div className="section-shell">
+          <div className="section-heading product-heading">
+            <div>
+              <p className="eyebrow">Así funciona</p>
+              <span className="section-kicker">Del lote al campo</span>
+            </div>
+            <h2>Seis pasos. Un proceso científico, repetible y trazable.</h2>
+          </div>
+          <div className="module-grid">
+            {MODULES.map(({ icon, title, copy }) => (
+              <article key={title} className="module-card">
+                <div className="module-icon">{icon}</div>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="value-band" id="valor">
+        <div className="section-shell value-intro">
+          <p className="eyebrow">Lo que compra el cliente</p>
+          <h2>No compra un contenedor.<br />Compra mejores decisiones.</h2>
+          <p>La tecnología se traduce en seguridad, ahorro, velocidad, trazabilidad y una ventaja competitiva que puede medirse.</p>
         </div>
         <div className="impact-grid">
           {IMPACT.map(({ icon, label, headline, points }) => (
@@ -580,38 +696,114 @@ function App() {
         </div>
       </section>
 
-      {/* ── MERCADO ────────────────────────────────────── */}
-      <section className="pipeline-band" id="pipeline">
-        <div className="pipeline-copy">
-          <p className="eyebrow">Mercado objetivo</p>
-          <h2>Cuatro segmentos con necesidad crítica</h2>
-          <p>
-            TERRAGRID opera donde otras soluciones fallan: baja conectividad, energía inestable y
-            logística vulnerable. Su arquitectura modular permite instalarlo en comunidades rurales,
-            campamentos industriales, instituciones públicas y zonas estratégicas con alta demanda
-            de soberanía alimentaria.
-          </p>
-        </div>
-        <div className="pipeline-steps">
-          {[
-            'Comunidades rurales',
-            'Municipios',
-            'Minería remota',
-            'Bases de investigación',
-            'Zonas fronterizas',
-            'Centros educativos',
-            'Agroindustria',
-            'Respuesta a desastres',
-          ].map((step) => (
-            <span key={step}>{step}</span>
-          ))}
+      <section className="validation-band" id="evidencia">
+        <div className="section-shell validation-layout">
+          <div className="validation-number">
+            <strong>10</strong>
+            <span>especies validadas</span>
+          </div>
+          <div className="validation-copy">
+            <p className="eyebrow">Validación / evidencia</p>
+            <h2>Tecnología probada en la UMSA.</h2>
+            <p>
+              La microgerminación controlada mostró concentraciones de vitaminas, minerales y antioxidantes
+              de hasta 40 veces frente a plantas adultas. Ahora aplicamos esa experiencia al trigo boliviano.
+            </p>
+          </div>
+          <div className="validation-badge">
+            <Microscope size={30} />
+            <strong>Hasta 40×</strong>
+            <span>concentración observada</span>
+          </div>
         </div>
       </section>
-      {/* ── EQUIPO ─────────────────────────────────────── */}
+
+      <section className="market-band" id="mercado">
+        <div className="section-shell">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Mercado</p>
+              <span className="section-kicker">B2B agrícola</span>
+            </div>
+            <h2>Empresas que ya entienden de semillas y quieren decidir mejor.</h2>
+          </div>
+          <div className="market-grid">
+            {MARKET_SEGMENTS.map(({ icon, title, copy }) => (
+              <article key={title}>
+                <div>{icon}</div>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </article>
+            ))}
+          </div>
+          <div className="pilot-block">
+            <div className="pilot-copy">
+              <p className="eyebrow">Cómo entramos</p>
+              <h3>Primero demostramos.<br />Después escalamos.</h3>
+              <p>Un piloto privado y pagado convierte una promesa tecnológica en evidencia de negocio.</p>
+            </div>
+            <ol className="pilot-steps">
+              {PILOT_STEPS.map((step, index) => (
+                <li key={step}><span>{index + 1}</span><p>{step}</p></li>
+              ))}
+            </ol>
+          </div>
+          <div className="market-footnote">
+            <Handshake size={22} />
+            <p>Primer foco: empresas de trigo en Santa Cruz, incluyendo perfiles como PRINA, Agripac y Semexa.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="business-band" id="modelo">
+        <div className="section-shell">
+          <div className="business-header">
+            <div>
+              <p className="eyebrow">Modelo de negocio</p>
+              <h2>B2B, híbrido y escalable.</h2>
+            </div>
+            <p>Combinamos una venta inicial de alto valor con servicios recurrentes que acompañan cada cultivo.</p>
+          </div>
+          <div className="business-grid">
+            {BUSINESS_MODEL.map(({ tag, title, price, copy }, index) => (
+              <article key={title} className={index === 1 ? 'featured' : ''}>
+                <span className="business-tag">{tag}</span>
+                <h3>{title}</h3>
+                <strong>{price}</strong>
+                <p>{copy}</p>
+                <div className="card-check"><Check size={15} /> {index === 0 ? 'Validación comercial' : index === 1 ? 'Venta o leasing' : 'Ingreso recurrente'}</div>
+              </article>
+            ))}
+          </div>
+          <div className="revenue-strip">
+            <span>Mantenimiento anual <strong>USD 1.200–3.500</strong></span>
+            <span>Software <strong>USD 500–4.000</strong></span>
+            <span>Nuevos protocolos <strong>USD 2.500–5.000</strong></span>
+            <span className="break-even">Punto de equilibrio: <strong>1 módulo</strong></span>
+          </div>
+        </div>
+      </section>
+
+      <section className="positioning-band">
+        <div className="section-shell positioning-layout">
+          <p className="eyebrow">Nuestro lugar en la cadena</p>
+          <blockquote>“TERRAGRID no compite con el campo. Lo complementa.”</blockquote>
+          <p>Somos el filtro previo que asegura que solo las mejores semillas lleguen a la tierra.</p>
+          <div className="expansion-list">
+            <span>Hoy · Trigo en Santa Cruz</span>
+            <ArrowRight size={20} />
+            <span>Mañana · Maíz, sorgo, soya, quinua y cañahua</span>
+            <ArrowRight size={20} />
+            <span>Escala · Latinoamérica</span>
+          </div>
+        </div>
+      </section>
+
       <section className="team-band" id="equipo">
         <div className="team-heading">
           <p className="eyebrow">Equipo</p>
-          <h2>Cuatro disciplinas, un solo sistema</h2>
+          <h2>Tecnología que busca crecer junto al campo.</h2>
+          <p>Somos cuatro informáticos y buscamos sumar agrónomos y empresas semilleras como socios estratégicos.</p>
         </div>
         <div className="team-grid">
           {TEAM.map(({ icon, photo, name, role, copy }) => (
@@ -631,11 +823,12 @@ function App() {
         </div>
       </section>
 
-      {/* ── CTA FINAL ──────────────────────────────────── */}
       <section className="cta-band">
-        <p className="eyebrow">ElevateU 2026</p>
-        <h2>Soberanía alimentaria extrema,<br />desde Bolivia al mundo.</h2>
-        <p>TERRAGRID — Universidad Mayor de San Andrés · Carrera de Informática</p>
+        <p className="eyebrow">El futuro se siembra antes de llegar al campo</p>
+        <h2>No es un invernadero.<br />Es el futuro.</h2>
+        <p className="cta-copy">Con TERRAGRID, de cada 10 panes, 10 bolivianos.</p>
+        <a href="#modelo" className="primary-action">Exploremos un piloto <ArrowRight size={17} /></a>
+        <small>TERRAGRID · Universidad Mayor de San Andrés · Carrera de Informática</small>
       </section>
 
     </main>
