@@ -1095,10 +1095,30 @@ function App() {
       </section>
 
       <section className="cta-band reveal-section">
-        <p className="eyebrow">El futuro se siembra antes de llegar al campo</p>
-        <h2>No es un invernadero.<br />Es el futuro.</h2>
-        <p className="cta-copy">Con TERRAGRID, de cada 10 panes, 10 bolivianos.</p>
-        <a href="#modelo" className="primary-action">Exploremos un piloto <ArrowRight size={17} /></a>
+        <div className="cta-inner">
+          <p className="eyebrow">Hablemos de tu próximo piloto</p>
+          <h2>Una mejor cosecha empieza antes de sembrar.</h2>
+          <p className="cta-description">
+            Evaluemos un lote real, comparemos resultados y convirtamos la evidencia en una mejor decisión de campo.
+          </p>
+          <div className="cta-contact-group">
+            <a
+              href="mailto:terragrid.2026@gmail.com?subject=Inter%C3%A9s%20en%20TERRAGRID"
+              className="primary-action cta-contact-action"
+              aria-label="Contactar a TERRAGRID por correo"
+            >
+              Contactar por correo <ArrowRight size={17} />
+            </a>
+            <a className="cta-email" href="mailto:terragrid.2026@gmail.com">
+              terragrid.2026@gmail.com
+            </a>
+          </div>
+          <div className="cta-features" aria-label="Opciones comerciales">
+            <span>Piloto privado</span>
+            <span>Venta del módulo</span>
+            <span>Leasing empresarial</span>
+          </div>
+        </div>
         <small>TERRAGRID · Universidad Mayor de San Andrés · Carrera de Informática</small>
       </section>
 
