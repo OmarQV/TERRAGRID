@@ -355,7 +355,7 @@ function TerragridModel({
   }, [gltf.scene])
 
   return (
-    <group position={[1.85, 0.05, 0.1]} rotation-y={-0.34}>
+    <group position={[1.85, 0.05, 0.1]} rotation-y={0}>
       <group scale={modelScale}>
         <primitive object={scene} position={modelOffset} />
       </group>
@@ -405,11 +405,19 @@ function TerragridScene({
   onHotspotSelect: (id: HotspotId) => void
   onHotspotHover: (id: HotspotId | null) => void
 }) {
+  const isCompactViewport =
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 900px)').matches
+
   return (
     <Canvas
-      shadows
-      dpr={[1, 1.75]}
-      camera={{ position: [7.4, 3.85, 6.1], fov: 35, near: 0.1, far: 150 }}
+      shadows={!isCompactViewport}
+      dpr={isCompactViewport ? [1, 1.25] : [1, 1.75]}
+      camera={{
+        position: isCompactViewport ? [1.85, 3.5, 12] : [1.85, 3.4, 9],
+        fov: 35,
+        near: 0.1,
+        far: 150,
+      }}
       gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.92 }}
       onCreated={({ camera }) => {
         camera.lookAt(1.85, 1.45, 0.05)
@@ -419,7 +427,7 @@ function TerragridScene({
 
       <ambientLight intensity={0.22} color="#ffd0a0" />
       <directionalLight
-        castShadow
+        castShadow={!isCompactViewport}
         intensity={2.2}
         color="#ffb06a"
         position={[-10, 3.5, 7]}
@@ -440,14 +448,16 @@ function TerragridScene({
       <ScatteredRocks />
       <DryGrass />
 
-      <ContactShadows
-        position={[0, 0.02, 0]}
-        opacity={0.48}
-        scale={18}
-        blur={3.2}
-        far={6}
-        color="#3a1e08"
-      />
+      {!isCompactViewport && (
+        <ContactShadows
+          position={[0, 0.02, 0]}
+          opacity={0.48}
+          scale={18}
+          blur={3.2}
+          far={6}
+          color="#3a1e08"
+        />
+      )}
 
       <Suspense fallback={<SceneFallback />}>
         <TerragridModel
@@ -463,6 +473,7 @@ function TerragridScene({
         makeDefault
         enableDamping
         enablePan={false}
+        enableRotate
         target={[1.85, 1.45, 0.05]}
         minDistance={4}
         maxDistance={11}
@@ -470,9 +481,11 @@ function TerragridScene({
         maxPolarAngle={Math.PI * 0.48}
       />
 
-      <EffectComposer>
-        <Bloom intensity={0.7} luminanceThreshold={0.82} luminanceSmoothing={0.5} mipmapBlur />
-      </EffectComposer>
+      {!isCompactViewport && (
+        <EffectComposer>
+          <Bloom intensity={0.7} luminanceThreshold={0.82} luminanceSmoothing={0.5} mipmapBlur />
+        </EffectComposer>
+      )}
     </Canvas>
   )
 }
@@ -492,7 +505,10 @@ function App() {
 
   return (
     <main>
-      <section className="hero-section" aria-label="TERRAGRID landing">
+      <section
+        className={`hero-section ${focusMode ? 'is-focus-mode' : ''}`}
+        aria-label="TERRAGRID landing"
+      >
         <div className="scene-layer">
           <TerragridScene
             activeHotspot={activeHotspot}
@@ -535,14 +551,22 @@ function App() {
               alt="TERRAGRID"
             />
             <p className="hero-lede">
-              El filtro previo que ayuda a que solo las mejores semillas de trigo lleguen a la tierra.
-              Evaluamos, protegemos y multiplicamos cada lote en condiciones controladas.
+              <span className="desktop-lede">
+                El filtro previo que ayuda a que solo las mejores semillas de trigo lleguen a la tierra.
+                Evaluamos, protegemos y multiplicamos cada lote en condiciones controladas.
+              </span>
+              <span className="mobile-lede">
+                Semillas de trigo más sanas, resistentes y listas para el campo.
+              </span>
             </p>
             <div className="hero-actions">
-              <a href="#producto" className="primary-action">
+              <a href="#producto" className="primary-action desktop-primary-action">
                 Conocer el sistema <ArrowRight size={17} />
               </a>
               <a href="#problema" className="secondary-action">Ver el desafío</a>
+              <a href="#problema" className="primary-action mobile-next-action">
+                Continuar <ArrowRight size={17} />
+              </a>
             </div>
             <div className="hero-proof" aria-label="Propuesta de valor">
               <span>Semillas sanas</span>
