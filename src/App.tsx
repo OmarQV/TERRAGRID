@@ -200,7 +200,7 @@ const TEAM = [
   },
   {
     icon: <Server size={24} />,
-    photo: null,
+    photo: '/img/saul.webp',
     name: 'Saúl Mijael Choquehuanca',
     role: 'Backend, arquitectura técnica y blockchain',
     copy: 'Diseña la estructura lógica del prototipo, gestión de datos y operación offline-first. Lidera la trazabilidad blockchain y el pasaporte digital agrícola.',
