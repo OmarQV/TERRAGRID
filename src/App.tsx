@@ -25,7 +25,8 @@ import {
 } from 'lucide-react'
 import './App.css'
 
-const MODEL_PATH = '/blender/TERRAGRID_web_v2.glb'
+const MODEL_PATH = '/blender/v2%20eva%20pr3.glb'
+const MODEL_FOOTPRINT = 6
 
 type HotspotId = 'reactor' | 'solar' | 'hydroponic' | 'water' | 'ai' | 'sensors'
 
@@ -43,42 +44,42 @@ const HOTSPOTS: Hotspot[] = [
     label: 'SMR',
     title: 'Reactor modular',
     copy: 'Energía firme para operar agricultura controlada en zonas remotas sin depender de una red inestable.',
-    position: [5.85, 2.75, 0],
+    position: [2.35, 1.6, 0],
   },
   {
     id: 'solar',
     label: 'Solar',
     title: 'Generación solar',
     copy: 'Paneles y almacenamiento reducen consumo auxiliar y permiten modos híbridos de operación.',
-    position: [1.5, 1.28, 2.45],
+    position: [0.75, 0.65, 1.2],
   },
   {
     id: 'hydroponic',
     label: 'Hydro',
     title: 'Cultivo hidropónico',
     copy: 'Producción de alimentos en interior con nutrientes, temperatura y humedad medidos en tiempo real.',
-    position: [-1.2, 2.25, 0.35],
+    position: [-1.55, 1.85, 0.15],
   },
   {
     id: 'water',
     label: 'H2O',
     title: 'Sistema de agua',
     copy: 'Recirculación, filtrado y sensores para maximizar cada litro en clima árido de altura.',
-    position: [-2.3, 0.9, 0.78],
+    position: [-0.45, 1.05, -0.8],
   },
   {
     id: 'ai',
     label: 'IA',
     title: 'Control autónomo',
     copy: 'Modelos predictivos coordinan energía, riego, clima interior y mantenimiento preventivo.',
-    position: [0, 3.65, 0],
+    position: [1.25, 2.25, 0.05],
   },
   {
     id: 'sensors',
     label: 'IoT',
     title: 'Sensores distribuidos',
     copy: 'Telemetría simulada para humedad, radiación, caudal, potencia, temperatura y salud del sistema.',
-    position: [2.54, 2.45, 0],
+    position: [0.1, 1.55, 0.45],
   },
 ]
 
@@ -299,25 +300,36 @@ function TerragridModel({
   onHotspotHover: (id: HotspotId | null) => void
 }) {
   const gltf = useGLTF(MODEL_PATH)
-  const scene = useMemo(() => {
+  const { scene, modelOffset, modelScale } = useMemo(() => {
     const clonedScene = gltf.scene.clone(true)
 
     clonedScene.traverse((object) => {
-      if (object.name === 'Montanas_Cordillera') {
-        object.visible = false
-      }
       if (object instanceof THREE.Mesh) {
         object.castShadow = true
         object.receiveShadow = true
       }
     })
 
-    return clonedScene
+    clonedScene.updateMatrixWorld(true)
+
+    const bounds = new THREE.Box3().setFromObject(clonedScene)
+    const size = bounds.getSize(new THREE.Vector3())
+    const center = bounds.getCenter(new THREE.Vector3())
+    const footprint = Math.max(size.x, size.z)
+    const scale = footprint > 0 ? MODEL_FOOTPRINT / footprint : 1
+
+    return {
+      scene: clonedScene,
+      modelOffset: [-center.x, -bounds.min.y, -center.z] as [number, number, number],
+      modelScale: scale,
+    }
   }, [gltf.scene])
 
   return (
-    <group scale={0.76} position={[1.85, 0.05, 0.1]} rotation-y={-0.34}>
-      <primitive object={scene} />
+    <group position={[1.85, 0.05, 0.1]} rotation-y={-0.34}>
+      <group scale={modelScale}>
+        <primitive object={scene} position={modelOffset} />
+      </group>
       {showHotspots &&
         HOTSPOTS.map((hotspot) => (
           <Html key={hotspot.id} position={hotspot.position} center distanceFactor={5}>
