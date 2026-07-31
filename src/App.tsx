@@ -481,7 +481,7 @@ function TerragridScene({
         near: 0.1,
         far: 150,
       }}
-      gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.92 }}
+      gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.14 }}
       onCreated={({ camera }) => {
         camera.lookAt(1.85, 1.45, 0.05)
       }}
@@ -493,12 +493,15 @@ function TerragridScene({
         isCompactViewport={isCompactViewport}
       />
 
-      <ambientLight intensity={0.22} color="#ffd0a0" />
+      <ambientLight intensity={0.58} color="#eefcf5" />
+      <hemisphereLight
+        args={['#dff7ff', '#5a3420', isCompactViewport ? 0.72 : 0.95]}
+      />
       <directionalLight
         castShadow={!isCompactViewport}
-        intensity={2.2}
-        color="#ffb06a"
-        position={[-10, 3.5, 7]}
+        intensity={1.75}
+        color="#ffe0bd"
+        position={[-7, 8, 8]}
         shadow-mapSize={[2048, 2048]}
         shadow-camera-near={0.5}
         shadow-camera-far={60}
@@ -508,8 +511,16 @@ function TerragridScene({
         shadow-camera-bottom={-12}
         shadow-bias={-0.001}
       />
-      <directionalLight intensity={0.38} color="#ff8c60" position={[9, 5, -4]} />
-      <directionalLight intensity={0.14} color="#a0c4ff" position={[0, 12, 0]} />
+      <directionalLight intensity={1.05} color="#d9fff4" position={[2, 4.5, 10]} />
+      <directionalLight intensity={0.72} color="#ffd0aa" position={[9, 6, 3]} />
+      <directionalLight intensity={0.42} color="#b9d9ff" position={[0, 12, 0]} />
+      <pointLight
+        intensity={isCompactViewport ? 14 : 24}
+        distance={12}
+        decay={1.6}
+        color="#e8fff7"
+        position={[1.85, 3.2, 5]}
+      />
 
       <AltiplanoTerrain />
       <MountainRange />
