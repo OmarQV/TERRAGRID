@@ -956,6 +956,107 @@ main {
   }
 }
 
+@media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
+  .reveal-ready .reveal-section :is(
+      .decline-card,
+      .problem-causes,
+      .solution-grid article,
+      .module-card,
+      .impact-card,
+      .validation-number,
+      .validation-copy,
+      .market-grid article,
+      .pilot-block,
+      .business-grid article,
+      .revenue-strip,
+      .team-card,
+      .cta-inner
+    ) {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0) scale(0.985);
+    transition:
+      opacity 620ms ease,
+      transform 720ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 200ms ease,
+      background 200ms ease,
+      box-shadow 200ms ease;
+    will-change: opacity, transform;
+  }
+
+  .reveal-ready .reveal-section :is(
+      .solution-grid article,
+      .module-card,
+      .impact-card,
+      .market-grid article,
+      .business-grid article,
+      .team-card
+    ):nth-child(odd) {
+    transform: translate3d(-18px, 26px, 0) scale(0.985);
+  }
+
+  .reveal-ready .reveal-section :is(
+      .solution-grid article,
+      .module-card,
+      .impact-card,
+      .market-grid article,
+      .business-grid article,
+      .team-card
+    ):nth-child(even) {
+    transform: translate3d(18px, 26px, 0) scale(0.985);
+  }
+
+  .reveal-ready .reveal-section.is-visible :is(
+      .decline-card,
+      .problem-causes,
+      .solution-grid article,
+      .module-card,
+      .impact-card,
+      .validation-number,
+      .validation-copy,
+      .market-grid article,
+      .pilot-block,
+      .business-grid article,
+      .revenue-strip,
+      .team-card,
+      .cta-inner
+    ) {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    will-change: auto;
+  }
+
+  .reveal-ready .reveal-section.is-visible :is(
+      .solution-grid article,
+      .module-card,
+      .impact-card,
+      .market-grid article,
+      .business-grid article,
+      .team-card
+    ):nth-child(2) {
+    transition-delay: 100ms;
+  }
+
+  .reveal-ready .reveal-section.is-visible :is(
+      .solution-grid article,
+      .module-card,
+      .impact-card,
+      .market-grid article,
+      .business-grid article,
+      .team-card
+    ):nth-child(3) {
+    transition-delay: 180ms;
+  }
+
+  .reveal-ready .reveal-section.is-visible :is(
+      .solution-grid article,
+      .module-card,
+      .market-grid article,
+      .team-card
+    ):nth-child(n + 4) {
+    transition-delay: 250ms;
+  }
+}
+
 /* Premium scroll interactions */
 .scroll-progress {
   position: fixed;
@@ -3073,5 +3174,30 @@ main {
 
   .market-footnote {
     justify-content: center;
+  }
+}
+
+@media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
+  .reveal-ready .reveal-section :is(
+      .decline-card,
+      .problem-causes,
+      .solution-grid article,
+      .module-card,
+      .impact-card,
+      .validation-number,
+      .validation-copy,
+      .market-grid article,
+      .pilot-block,
+      .business-grid article,
+      .revenue-strip,
+      .team-card,
+      .cta-inner
+    ) {
+    transition:
+      opacity 620ms ease,
+      transform 720ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 200ms ease,
+      background 200ms ease,
+      box-shadow 200ms ease;
   }
 }

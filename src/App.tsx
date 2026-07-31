@@ -1109,9 +1109,6 @@ function App() {
             >
               Contactar por correo <ArrowRight size={17} />
             </a>
-            <a className="cta-email" href="mailto:terragrid.2026@gmail.com">
-              terragrid.2026@gmail.com
-            </a>
           </div>
           <div className="cta-features" aria-label="Opciones comerciales">
             <span>Piloto privado</span>
