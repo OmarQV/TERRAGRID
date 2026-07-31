@@ -25,7 +25,7 @@ import {
 } from 'lucide-react'
 import './App.css'
 
-const MODEL_PATH = '/blender/v2%20eva%20pr3.glb'
+const MODEL_PATH = '/blender/v2%20eva%20pr6.glb'
 const MODEL_FOOTPRINT = 6
 
 type HotspotId = 'reactor' | 'solar' | 'hydroponic' | 'water' | 'ai' | 'sensors'
