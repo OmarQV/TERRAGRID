@@ -481,7 +481,7 @@ function TerragridScene({
         near: 0.1,
         far: 150,
       }}
-      gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.14 }}
+      gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.02 }}
       onCreated={({ camera }) => {
         camera.lookAt(1.85, 1.45, 0.05)
       }}
@@ -493,13 +493,13 @@ function TerragridScene({
         isCompactViewport={isCompactViewport}
       />
 
-      <ambientLight intensity={0.58} color="#eefcf5" />
+      <ambientLight intensity={0.38} color="#eefcf5" />
       <hemisphereLight
-        args={['#dff7ff', '#5a3420', isCompactViewport ? 0.72 : 0.95]}
+        args={['#dff7ff', '#5a3420', isCompactViewport ? 0.52 : 0.68]}
       />
       <directionalLight
         castShadow={!isCompactViewport}
-        intensity={1.75}
+        intensity={1.45}
         color="#ffe0bd"
         position={[-7, 8, 8]}
         shadow-mapSize={[2048, 2048]}
@@ -511,11 +511,11 @@ function TerragridScene({
         shadow-camera-bottom={-12}
         shadow-bias={-0.001}
       />
-      <directionalLight intensity={1.05} color="#d9fff4" position={[2, 4.5, 10]} />
-      <directionalLight intensity={0.72} color="#ffd0aa" position={[9, 6, 3]} />
-      <directionalLight intensity={0.42} color="#b9d9ff" position={[0, 12, 0]} />
+      <directionalLight intensity={0.72} color="#d9fff4" position={[2, 4.5, 10]} />
+      <directionalLight intensity={0.5} color="#ffd0aa" position={[9, 6, 3]} />
+      <directionalLight intensity={0.3} color="#b9d9ff" position={[0, 12, 0]} />
       <pointLight
-        intensity={isCompactViewport ? 14 : 24}
+        intensity={isCompactViewport ? 8 : 14}
         distance={12}
         decay={1.6}
         color="#e8fff7"
