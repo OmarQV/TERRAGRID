@@ -254,36 +254,152 @@ main {
   border-right: 0;
 }
 
-.hotspot {
-  width: 54px;
-  height: 54px;
-  border: 1px solid rgba(111, 242, 213, 0.8);
+.hotspot-anchor {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  transform: translateY(-22px);
+}
+
+.hotspot-anchor::after {
+  content: '';
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 50%;
+  z-index: -1;
+  width: 1px;
+  height: 23px;
+  background: linear-gradient(180deg, #6ff2d5, rgba(111, 242, 213, 0.24));
+  box-shadow: 0 0 8px rgba(111, 242, 213, 0.7);
+  transform: translateX(-50%);
+}
+
+.hotspot-anchor::before {
+  content: '';
+  position: absolute;
+  top: calc(100% + 19px);
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  border: 1px solid #6ff2d5;
   border-radius: 50%;
-  color: #07100d;
-  background: rgba(111, 242, 213, 0.82);
-  box-shadow: 0 0 0 7px rgba(111, 242, 213, 0.15), 0 18px 40px rgba(0, 0, 0, 0.32);
+  background: #0a1d18;
+  box-shadow: 0 0 8px rgba(111, 242, 213, 0.85);
+  transform: translateX(-50%);
+}
+
+.hotspot {
+  position: relative;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgba(111, 242, 213, 0.95);
+  border-radius: 50%;
+  padding: 0;
+  color: #dffff7;
+  background: rgba(6, 35, 29, 0.76);
+  box-shadow:
+    0 0 0 5px rgba(111, 242, 213, 0.1),
+    0 0 20px rgba(111, 242, 213, 0.34),
+    0 12px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
   cursor: pointer;
   transition:
     transform 180ms ease,
+    color 180ms ease,
     background 180ms ease,
     box-shadow 180ms ease;
 }
 
-.hotspot span {
+.hotspot-name {
   display: flex;
   width: 100%;
   height: 100%;
   align-items: center;
   justify-content: center;
-  font-size: 0.58rem;
+  font-size: 0.54rem;
   font-weight: 900;
+  line-height: 1;
+  text-align: center;
 }
 
 .hotspot:hover,
+.hotspot.is-hovered,
 .hotspot.is-active {
+  z-index: 4;
+  color: #061b15;
+  background: rgba(111, 242, 213, 0.96);
+  box-shadow:
+    0 0 0 6px rgba(111, 242, 213, 0.16),
+    0 0 28px rgba(111, 242, 213, 0.52),
+    0 16px 36px rgba(0, 0, 0, 0.34);
   transform: scale(1.12);
-  background: #f7ca67;
-  box-shadow: 0 0 0 9px rgba(247, 202, 103, 0.2), 0 20px 48px rgba(0, 0, 0, 0.38);
+}
+
+.hotspot:focus-visible {
+  outline: 2px solid #fff8e7;
+  outline-offset: 4px;
+}
+
+.hotspot-tooltip {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 15px);
+  display: grid;
+  width: 220px;
+  height: auto;
+  gap: 5px;
+  border: 1px solid rgba(111, 242, 213, 0.28);
+  border-radius: 10px;
+  padding: 12px 13px;
+  color: #fff8e7;
+  background: rgba(5, 16, 12, 0.92);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.34), 0 0 20px rgba(111, 242, 213, 0.08);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  pointer-events: none;
+  text-align: left;
+  transform: translate(-6px, -50%);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.hotspot-tooltip strong {
+  color: #6ff2d5;
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
+.hotspot-tooltip > span {
+  color: rgba(247, 241, 223, 0.72);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.42;
+}
+
+.hotspot:hover .hotspot-tooltip,
+.hotspot:focus-visible .hotspot-tooltip {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+.hotspot-climate .hotspot-tooltip,
+.hotspot-light .hotspot-tooltip {
+  right: calc(100% + 15px);
+  left: auto;
+  transform: translate(6px, -50%);
+}
+
+.hotspot-climate .hotspot:hover .hotspot-tooltip,
+.hotspot-climate .hotspot:focus-visible .hotspot-tooltip,
+.hotspot-light .hotspot:hover .hotspot-tooltip,
+.hotspot-light .hotspot:focus-visible .hotspot-tooltip {
+  transform: translate(0, -50%);
+}
+
+.hotspot.is-active .hotspot-tooltip {
+  visibility: hidden;
+  opacity: 0;
 }
 
 .scene-loader {
@@ -2010,6 +2126,67 @@ main {
 
 /* Unified mobile hero */
 @media (max-width: 900px) {
+  .hotspot-tooltip {
+    display: none;
+  }
+
+  .hotspot-panel {
+    right: 14px;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    left: 14px;
+    z-index: 6;
+    width: auto;
+    max-width: 520px;
+    margin-inline: auto;
+    border: 1px solid rgba(111, 242, 213, 0.3);
+    border-radius: 16px;
+    padding: 18px;
+    background: rgba(5, 17, 13, 0.94);
+    box-shadow: 0 20px 54px rgba(0, 0, 0, 0.46), 0 0 28px rgba(111, 242, 213, 0.08);
+    backdrop-filter: blur(18px) saturate(125%);
+  }
+
+  .hotspot-panel::before {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    width: 38px;
+    height: 3px;
+    border-radius: 999px;
+    background: rgba(111, 242, 213, 0.45);
+    transform: translateX(-50%);
+  }
+
+  .hotspot-panel-header {
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+
+  .hotspot-panel-header p {
+    margin: 0;
+    color: #6ff2d5;
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+  }
+
+  .hotspot-panel h2 {
+    margin-bottom: 8px;
+    font-size: 1.18rem;
+  }
+
+  .hotspot-panel span {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .hotspot-panel .panel-close {
+    width: 32px;
+    height: 32px;
+    color: rgba(247, 241, 223, 0.78);
+    background: rgba(247, 241, 223, 0.07);
+  }
+
   .hero-section {
     height: 100svh;
     min-height: 620px;
@@ -2109,11 +2286,22 @@ main {
     display: block;
     width: 44px;
     height: 44px;
-    box-shadow: 0 0 0 5px rgba(111, 242, 213, 0.12), 0 12px 28px rgba(0, 0, 0, 0.28);
   }
 
-  .hero-section:not(.is-focus-mode) .hotspot span {
+  .hero-section:not(.is-focus-mode) .hotspot-name {
     font-size: 0.5rem;
+  }
+
+  .hotspot-anchor {
+    transform: translateY(-18px);
+  }
+
+  .hotspot-anchor::after {
+    height: 19px;
+  }
+
+  .hotspot-anchor::before {
+    top: calc(100% + 15px);
   }
 }
 
@@ -2132,5 +2320,11 @@ main {
 
   .hero-copy .hero-lede {
     max-width: 330px;
+  }
+}
+
+@media (hover: none) {
+  .hotspot-tooltip {
+    display: none;
   }
 }

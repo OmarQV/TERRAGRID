@@ -37,7 +37,7 @@ import './App.css'
 const MODEL_PATH = '/blender/v2%20eva%20pr6%20DRACO.glb'
 const MODEL_FOOTPRINT = 6
 
-type HotspotId = 'energy' | 'solar' | 'hydroponic' | 'water' | 'ai' | 'sensors'
+type HotspotId = 'climate' | 'energy' | 'light' | 'wheat' | 'water' | 'ai' | 'sensors'
 
 type Hotspot = {
   id: HotspotId
@@ -49,46 +49,53 @@ type Hotspot = {
 
 const HOTSPOTS: Hotspot[] = [
   {
-    id: 'energy',
+    id: 'climate',
     label: 'Clima',
-    title: 'Ambiente estable',
+    title: 'Control climático',
     copy: 'Temperatura y humedad reguladas para proteger cada lote frente a sequías y cambios bruscos del clima.',
-    position: [2.35, 1.6, 0],
+    position: [2.72, 1.3, 0.05],
   },
   {
-    id: 'solar',
+    id: 'energy',
+    label: 'Energía',
+    title: 'Módulo de energía',
+    copy: 'Distribuye y estabiliza la energía que alimenta sensores, control climático y sistema de riego.',
+    position: [-0.55, 0.28, -0.05],
+  },
+  {
+    id: 'light',
     label: 'Luz',
-    title: 'Iluminación precisa',
-    copy: 'La intensidad y el fotoperiodo se ajustan a cada etapa de crecimiento de la semilla.',
-    position: [0.75, 0.65, 1.2],
+    title: 'Captación solar',
+    copy: 'Los paneles captan la luz solar y la convierten en energía para apoyar la operación del módulo.',
+    position: [2.2, 0.35, 1.25],
   },
   {
-    id: 'hydroponic',
+    id: 'wheat',
     label: 'Trigo',
-    title: 'Multiplicación controlada',
+    title: 'Bandejas de trigo',
     copy: 'El trigo crece en un entorno aislado y repetible antes de llevar las semillas mejor evaluadas al campo.',
-    position: [-1.55, 1.85, 0.15],
+    position: [0.45, 1.92, 0.05],
   },
   {
     id: 'water',
-    label: 'H2O',
+    label: 'H₂O',
     title: 'Riego eficiente',
     copy: 'El sistema entrega agua solo cuando el cultivo la necesita y reduce pérdidas por sobre-riego.',
-    position: [-0.45, 1.05, -0.8],
+    position: [-1.9, 0.28, -0.05],
   },
   {
     id: 'ai',
     label: 'IA',
-    title: 'Recetas de crecimiento',
-    copy: 'El controlador coordina luz, agua y temperatura según la etapa y el protocolo de cada variedad.',
-    position: [1.25, 2.25, 0.05],
+    title: 'Análisis inteligente',
+    copy: 'El módulo analiza las variables del cultivo y coordina las decisiones automáticas de cada etapa.',
+    position: [2.65, 2.25, 0.05],
   },
   {
     id: 'sensors',
     label: 'IoT',
     title: 'Vigilancia continua',
     copy: 'Sensores registran humedad, temperatura, luz y presión de agua, y alertan ante condiciones anómalas.',
-    position: [0.1, 1.55, 0.45],
+    position: [-2.15, 2.05, 0.05],
   },
 ]
 
@@ -362,22 +369,28 @@ function TerragridModel({
       {showHotspots &&
         HOTSPOTS.map((hotspot) => (
           <Html key={hotspot.id} position={hotspot.position} center distanceFactor={5}>
-            <button
-              className={[
-                'hotspot',
-                activeHotspot === hotspot.id ? 'is-active' : '',
-                hoveredHotspot === hotspot.id ? 'is-hovered' : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-              type="button"
-              onClick={() => onHotspotSelect(hotspot.id)}
-              onMouseEnter={() => onHotspotHover(hotspot.id)}
-              onMouseLeave={() => onHotspotHover(null)}
-              aria-label={hotspot.title}
-            >
-              <span>{hotspot.label}</span>
-            </button>
+            <div className={`hotspot-anchor hotspot-${hotspot.id}`}>
+              <button
+                className={[
+                  'hotspot',
+                  activeHotspot === hotspot.id ? 'is-active' : '',
+                  hoveredHotspot === hotspot.id ? 'is-hovered' : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                type="button"
+                onClick={() => onHotspotSelect(hotspot.id)}
+                onMouseEnter={() => onHotspotHover(hotspot.id)}
+                onMouseLeave={() => onHotspotHover(null)}
+                aria-label={`${hotspot.label}: ${hotspot.title}`}
+              >
+                <span className="hotspot-name">{hotspot.label}</span>
+                <span className="hotspot-tooltip" aria-hidden="true">
+                  <strong>{hotspot.title}</strong>
+                  <span>{hotspot.copy}</span>
+                </span>
+              </button>
+            </div>
           </Html>
         ))}
     </group>
@@ -500,7 +513,7 @@ function App() {
   const [isHeroActive, setIsHeroActive] = useState(true)
   const heroRef = useRef<HTMLElement | null>(null)
 
-  const panelId = hoveredHotspot ?? activeHotspot
+  const panelId = activeHotspot
   const panelData = HOTSPOTS.find((h) => h.id === panelId)
   const panelVisible = panelData !== undefined && !focusMode
 
