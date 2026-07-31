@@ -38,6 +38,7 @@ const MODEL_PATH = '/blender/v2%20eva%20pr6%20DRACO.glb'
 const MODEL_FOOTPRINT = 6
 
 type HotspotId = 'climate' | 'energy' | 'light' | 'wheat' | 'water' | 'ai' | 'sensors'
+type HeroViewMode = 'page' | 'components' | 'model'
 
 type Hotspot = {
   id: HotspotId
@@ -509,13 +510,14 @@ function TerragridScene({
 function App() {
   const [activeHotspot, setActiveHotspot] = useState<HotspotId | null>(null)
   const [hoveredHotspot, setHoveredHotspot] = useState<HotspotId | null>(null)
-  const [focusMode, setFocusMode] = useState(false)
+  const [heroViewMode, setHeroViewMode] = useState<HeroViewMode>('page')
   const [isHeroActive, setIsHeroActive] = useState(true)
   const heroRef = useRef<HTMLElement | null>(null)
 
+  const focusMode = heroViewMode !== 'page'
   const panelId = activeHotspot
   const panelData = HOTSPOTS.find((h) => h.id === panelId)
-  const panelVisible = panelData !== undefined && !focusMode
+  const panelVisible = panelData !== undefined && heroViewMode !== 'model'
 
   useEffect(() => {
     const hero = heroRef.current
@@ -547,21 +549,54 @@ function App() {
           <TerragridScene
             activeHotspot={activeHotspot}
             hoveredHotspot={hoveredHotspot}
-            showHotspots={!focusMode}
+            showHotspots={heroViewMode !== 'model'}
             isActive={isHeroActive}
             onHotspotSelect={handleHotspotSelect}
             onHotspotHover={setHoveredHotspot}
           />
         </div>
 
-        <button
-          className={`focus-btn ${focusMode ? 'is-focus' : ''}`}
-          type="button"
-          onClick={() => setFocusMode((f) => !f)}
-          aria-label={focusMode ? 'Volver a vista normal' : 'Ver solo el modelo 3D'}
-        >
-          {focusMode ? '← Volver' : 'Solo modelo'}
-        </button>
+        <div className={`view-controls ${focusMode ? 'is-focus' : ''}`} aria-label="Vista del modelo">
+          {!focusMode ? (
+            <button
+              className="view-entry-btn"
+              type="button"
+              onClick={() => setHeroViewMode('components')}
+            >
+              Ver modelo
+            </button>
+          ) : (
+            <>
+              <button
+                className="view-back-btn"
+                type="button"
+                onClick={() => setHeroViewMode('page')}
+              >
+                ← Volver
+              </button>
+              {heroViewMode === 'components' ? (
+                <button
+                  className="view-mode-btn"
+                  type="button"
+                  onClick={() => {
+                    setHeroViewMode('model')
+                    setActiveHotspot(null)
+                  }}
+                >
+                  Ver modelo 3D
+                </button>
+              ) : (
+                <button
+                  className="view-mode-btn is-active"
+                  type="button"
+                  onClick={() => setHeroViewMode('components')}
+                >
+                  Componentes
+                </button>
+              )}
+            </>
+          )}
+        </div>
 
         {!focusMode && (
           <nav className="topbar" aria-label="Principal">

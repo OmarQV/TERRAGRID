@@ -202,6 +202,55 @@ main {
   color: #6ff2d5;
 }
 
+.view-controls {
+  position: absolute;
+  top: 18px;
+  right: max(20px, calc((100vw - 1180px) / 2));
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(247, 241, 223, 0.2);
+  border-radius: 12px;
+  padding: 4px;
+  background: rgba(7, 12, 9, 0.72);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(14px);
+}
+
+.view-controls button {
+  min-height: 34px;
+  border-radius: 8px;
+  padding: 0 12px;
+  color: rgba(247, 241, 223, 0.76);
+  background: transparent;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 170ms ease, background 170ms ease, transform 170ms ease;
+}
+
+.view-controls button:hover {
+  color: #fff8e7;
+  background: rgba(247, 241, 223, 0.08);
+}
+
+.view-controls button:active {
+  transform: scale(0.97);
+}
+
+.view-controls .view-mode-btn.is-active {
+  color: #062019;
+  background: #6ff2d5;
+  box-shadow: 0 0 18px rgba(111, 242, 213, 0.24);
+}
+
+.view-back-btn {
+  border-right: 1px solid rgba(247, 241, 223, 0.12);
+}
+
 .hotspot-panel p {
   margin: 0 0 8px;
   color: #f7ca67;
@@ -2126,6 +2175,29 @@ main {
 
 /* Unified mobile hero */
 @media (max-width: 900px) {
+  .view-controls {
+    top: 14px;
+    right: 14px;
+    gap: 3px;
+    border-radius: 11px;
+    padding: 3px;
+  }
+
+  .view-controls.is-focus {
+    right: 14px;
+    left: 14px;
+    justify-content: center;
+    width: max-content;
+    max-width: calc(100% - 28px);
+    margin-inline: auto;
+  }
+
+  .view-controls button {
+    min-height: 38px;
+    padding-inline: 10px;
+    font-size: 0.66rem;
+  }
+
   .hotspot-tooltip {
     display: none;
   }
@@ -2306,6 +2378,19 @@ main {
 }
 
 @media (max-width: 420px) {
+  .view-controls:not(.is-focus) {
+    top: 14px;
+    right: 14px;
+    left: auto;
+    margin: 0;
+  }
+
+  .view-controls button {
+    min-height: 36px;
+    padding-inline: 8px;
+    font-size: 0.62rem;
+  }
+
   .hero-section {
     min-height: 600px;
   }
