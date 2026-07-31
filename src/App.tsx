@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import {
   ContactShadows,
@@ -396,12 +396,14 @@ function TerragridScene({
   activeHotspot,
   hoveredHotspot,
   showHotspots,
+  isActive,
   onHotspotSelect,
   onHotspotHover,
 }: {
   activeHotspot: HotspotId | null
   hoveredHotspot: HotspotId | null
   showHotspots: boolean
+  isActive: boolean
   onHotspotSelect: (id: HotspotId) => void
   onHotspotHover: (id: HotspotId | null) => void
 }) {
@@ -412,6 +414,7 @@ function TerragridScene({
     <Canvas
       shadows={!isCompactViewport}
       dpr={isCompactViewport ? [1, 1.25] : [1, 1.75]}
+      frameloop={isActive ? 'demand' : 'never'}
       camera={{
         position: isCompactViewport ? [1.85, 3.5, 12] : [1.85, 3.4, 9],
         fov: 35,
@@ -445,8 +448,8 @@ function TerragridScene({
 
       <AltiplanoTerrain />
       <MountainRange />
-      <ScatteredRocks />
-      <DryGrass />
+      {!isCompactViewport && <ScatteredRocks />}
+      {!isCompactViewport && <DryGrass />}
 
       {!isCompactViewport && (
         <ContactShadows
@@ -494,10 +497,27 @@ function App() {
   const [activeHotspot, setActiveHotspot] = useState<HotspotId | null>(null)
   const [hoveredHotspot, setHoveredHotspot] = useState<HotspotId | null>(null)
   const [focusMode, setFocusMode] = useState(false)
+  const [isHeroActive, setIsHeroActive] = useState(true)
+  const heroRef = useRef<HTMLElement | null>(null)
 
   const panelId = hoveredHotspot ?? activeHotspot
   const panelData = HOTSPOTS.find((h) => h.id === panelId)
   const panelVisible = panelData !== undefined && !focusMode
+
+  useEffect(() => {
+    const hero = heroRef.current
+    if (!hero || !('IntersectionObserver' in window)) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsHeroActive(entry.isIntersecting && entry.intersectionRatio > 0.08)
+      },
+      { threshold: [0, 0.08, 0.25] },
+    )
+
+    observer.observe(hero)
+    return () => observer.disconnect()
+  }, [])
 
   function handleHotspotSelect(id: HotspotId) {
     setActiveHotspot((prev) => (prev === id ? null : id))
@@ -506,6 +526,7 @@ function App() {
   return (
     <main>
       <section
+        ref={heroRef}
         className={`hero-section ${focusMode ? 'is-focus-mode' : ''}`}
         aria-label="TERRAGRID landing"
       >
@@ -514,6 +535,7 @@ function App() {
             activeHotspot={activeHotspot}
             hoveredHotspot={hoveredHotspot}
             showHotspots={!focusMode}
+            isActive={isHeroActive}
             onHotspotSelect={handleHotspotSelect}
             onHotspotHover={setHoveredHotspot}
           />
