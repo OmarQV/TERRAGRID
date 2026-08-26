@@ -1,1128 +1,817 @@
-import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { Canvas, useThree } from '@react-three/fiber'
-import {
-  ContactShadows,
-  Html,
-  OrbitControls,
-  useGLTF,
-} from '@react-three/drei'
-import { EffectComposer, Bloom } from '@react-three/postprocessing'
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { ContactShadows, Float, OrbitControls, useGLTF } from '@react-three/drei'
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
 import * as THREE from 'three'
 import {
-  Sprout,
+  Activity,
+  ArrowDown,
+  ArrowRight,
+  BadgeCheck,
+  BarChart3,
+  BatteryCharging,
+  Blocks,
+  Bot,
+  Check,
+  ChevronRight,
+  CircleDot,
+  CloudSun,
+  Cpu,
+  Database,
+  Droplets,
   Gauge,
-  BrainCircuit,
+  Handshake,
+  Leaf,
+  LineChart,
+  Mail,
+  Menu,
+  Network,
+  QrCode,
   ScanLine,
   ShieldCheck,
+  Sparkles,
+  Sprout,
+  ThermometerSun,
+  TimerReset,
   Users,
-  Briefcase,
-  BarChart2,
-  Palette,
-  Server,
-  ArrowRight,
-  CloudRain,
-  Wheat,
-  Microscope,
-  Timer,
-  Building2,
-  Handshake,
-  BadgeDollarSign,
-  Check,
-  TrendingDown,
-  BugOff,
-  SlidersHorizontal,
+  Warehouse,
+  Waves,
+  X,
+  type LucideIcon,
 } from 'lucide-react'
 import './App.css'
 
-const MODEL_PATH = '/blender/v2%20eva%20pr6%20DRACO.glb'
-const MODEL_FOOTPRINT = 6
-
-type HotspotId = 'climate' | 'energy' | 'light' | 'wheat' | 'water' | 'ai' | 'sensors'
-type HeroViewMode = 'page' | 'components' | 'model'
-
-type Hotspot = {
-  id: HotspotId
-  label: string
-  title: string
-  copy: string
-  position: [number, number, number]
+type ProductLine = {
+  id: 'seed' | 'grow' | 'seed-bank'
+  index: string
+  phase: string
+  status: string
+  name: string
+  eyebrow: string
+  headline: string
+  description: string
+  model: string
+  poster: string
+  icon: LucideIcon
+  accent: string
+  crops: string
+  purpose: string
+  features: string[]
+  note: string
 }
 
-const HOTSPOTS: Hotspot[] = [
+const PRODUCT_LINES: ProductLine[] = [
   {
-    id: 'climate',
-    label: 'Clima',
-    title: 'Control climático',
-    copy: 'Temperatura y humedad reguladas para proteger cada lote frente a sequías y cambios bruscos del clima.',
-    position: [2.72, 1.3, 0.05],
+    id: 'seed',
+    index: '01',
+    phase: 'Ahora · MVP',
+    status: 'Primera validación',
+    name: 'TERRAGRID SEED',
+    eyebrow: 'Microgerminación y plantines',
+    headline: 'Convertir la etapa más incierta en un proceso medible.',
+    description:
+      'Incubadora agrícola inteligente para controlar la germinación, la emergencia y el desarrollo inicial del plantín. Registra las condiciones y los eventos de cada lote antes del trasplante.',
+    model: '/models/terragrid-seed.glb',
+    poster: '/products/terragrid-seed.png',
+    icon: Sprout,
+    accent: '#9df78f',
+    crops: 'Perejil · Lechuga · Tomate',
+    purpose: 'Plantines uniformes y trazables',
+    features: [
+      'Protocolos agronómicos por etapa',
+      'Control de temperatura, humedad, luz, riego y ventilación',
+      'Registro digital del lote y seguimiento posrasplante',
+    ],
+    note: 'El perejil será el piloto agronómico principal; la lechuga apoyará la calibración y el tomate se evaluará como plantín para trasplante.',
   },
   {
-    id: 'energy',
-    label: 'Energía',
-    title: 'Módulo de energía',
-    copy: 'Distribuye y estabiliza la energía que alimenta sensores, control climático y sistema de riego.',
-    position: [-0.55, 0.28, -0.05],
+    id: 'grow',
+    index: '02',
+    phase: 'Siguiente fase',
+    status: 'Roadmap productivo',
+    name: 'TERRAGRID GROW',
+    eyebrow: 'Crecimiento hidropónico',
+    headline: 'Del plantín al ciclo productivo en ambiente controlado.',
+    description:
+      'Módulo hidropónico compacto orientado a hortalizas de hoja y hierbas. Extenderá el monitoreo hacia pH, conductividad eléctrica, nivel y temperatura de la solución nutritiva.',
+    model: '/models/terragrid-grow.glb',
+    poster: '/products/terragrid-grow.png',
+    icon: Waves,
+    accent: '#6ee7c1',
+    crops: 'Lechuga · Perejil · Hojas',
+    purpose: 'Producción controlada hasta cosecha',
+    features: [
+      'Recirculación y control de solución nutritiva',
+      'Monitoreo de pH, EC, agua y energía',
+      'Configuración modular según cultivo y etapa',
+    ],
+    note: 'GROW se desarrollará después de validar SEED. El tomate convencional continuará saliendo como plantín; no se promete su producción completa en el gabinete compacto.',
   },
   {
-    id: 'light',
-    label: 'Luz',
-    title: 'Captación solar',
-    copy: 'Los paneles captan la luz solar y la convierten en energía para apoyar la operación del módulo.',
-    position: [2.2, 0.35, 1.25],
-  },
-  {
-    id: 'wheat',
-    label: 'Trigo',
-    title: 'Bandejas de trigo',
-    copy: 'El trigo crece en un entorno aislado y repetible antes de llevar las semillas mejor evaluadas al campo.',
-    position: [0.45, 1.92, 0.05],
-  },
-  {
-    id: 'water',
-    label: 'H₂O',
-    title: 'Riego eficiente',
-    copy: 'El sistema entrega agua solo cuando el cultivo la necesita y reduce pérdidas por sobre-riego.',
-    position: [-1.9, 0.28, -0.05],
-  },
-  {
-    id: 'ai',
-    label: 'IA',
-    title: 'Análisis inteligente',
-    copy: 'El módulo analiza las variables del cultivo y coordina las decisiones automáticas de cada etapa.',
-    position: [2.65, 2.25, 0.05],
-  },
-  {
-    id: 'sensors',
-    label: 'IoT',
-    title: 'Vigilancia continua',
-    copy: 'Sensores registran humedad, temperatura, luz y presión de agua, y alertan ante condiciones anómalas.',
-    position: [-2.15, 2.05, 0.05],
+    id: 'seed-bank',
+    index: '03',
+    phase: 'Visión futura',
+    status: 'Conservación distribuida',
+    name: 'TERRAGRID SEED BANK',
+    eyebrow: 'Microbanco inteligente',
+    headline: 'Proteger la semilla, comprobar su viabilidad y regenerarla a tiempo.',
+    description:
+      'Sistema modular que combina conservación controlada, identificación de lotes, pruebas periódicas de germinación y un historial digital de viabilidad.',
+    model: '/models/terragrid-seed-bank.glb',
+    poster: '/products/terragrid-seed-bank.png',
+    icon: Database,
+    accent: '#f2d27d',
+    crops: 'Semillas locales · Nativas · Comerciales',
+    purpose: 'Conservación y pruebas de viabilidad',
+    features: [
+      'Zona de conservación con humedad y temperatura controladas',
+      'Zona independiente para pruebas de germinación',
+      'Alertas de revisión, pérdida de viabilidad y regeneración',
+    ],
+    note: 'SEED BANK no es una caja de almacenamiento: será una red de microbancos capaces de verificar periódicamente si cada lote continúa vivo.',
   },
 ]
 
-const PROBLEM_CAUSES = [
-  'Sequía',
-  'Insumos costosos',
-  'Falta de combustible',
-  'Harina importada',
+const PROBLEM_POINTS = [
+  {
+    icon: TimerReset,
+    title: 'Resembrar cuesta tiempo',
+    copy: 'Una emergencia irregular puede obligar al productor a repetir el almácigo y retrasar todo el ciclo.',
+  },
+  {
+    icon: CloudSun,
+    title: 'El clima amplifica el riesgo',
+    copy: 'En La Paz, bajas temperaturas, heladas y variaciones ambientales vuelven más vulnerable la primera etapa.',
+  },
+  {
+    icon: ScanLine,
+    title: 'La calidad llega sin historia',
+    copy: 'Sin datos comparables del lote es difícil distinguir un plantín vigoroso de uno que solo parece estar listo.',
+  },
 ]
 
-type ModuleEntry = {
-  icon: React.ReactNode
-  title: string
-  copy: string
-}
-
-const MODULES: ModuleEntry[] = [
-  { icon: <Wheat size={22} />, title: '01 · Ingreso del lote', copy: 'Las semillas de trigo se identifican y siembran dentro del módulo para iniciar una evaluación controlada.' },
-  { icon: <Gauge size={22} />, title: '02 · Medición continua', copy: 'Sensores observan temperatura, humedad, luz y presión de agua durante todo el ciclo.' },
-  { icon: <SlidersHorizontal size={22} />, title: '03 · Regulación automática', copy: 'Riego, iluminación y clima responden automáticamente cuando una variable sale del rango ideal.' },
-  { icon: <BugOff size={22} />, title: '04 · Control sanitario', copy: 'La vigilancia temprana detecta señales de plagas, bacterias u hongos antes de que comprometan el lote.' },
-  { icon: <BrainCircuit size={22} />, title: '05 · Receta de crecimiento', copy: 'El controlador ajusta las condiciones de cada etapa y conserva el historial completo del ensayo.' },
-  { icon: <Sprout size={22} />, title: '06 · Salida al campo', copy: 'Las semillas seleccionadas salen sanas, trazables y mejor preparadas para la siembra en campo abierto.' },
+const SYSTEM_LAYERS = [
+  {
+    icon: ThermometerSun,
+    number: '01',
+    title: 'Sensores',
+    copy: 'Temperatura, humedad, luz, riego y variables del sustrato traducen el ambiente en datos útiles.',
+    status: 'MVP',
+  },
+  {
+    icon: Cpu,
+    number: '02',
+    title: 'Automatización local',
+    copy: 'Reglas por etapa activan iluminación, ventilación y riego sin depender de conectividad permanente.',
+    status: 'MVP',
+  },
+  {
+    icon: Bot,
+    number: '03',
+    title: 'IA agronómica asistida',
+    copy: 'El análisis de tendencias, imágenes y alertas apoyará decisiones; no reemplazará el criterio agronómico.',
+    status: 'Progresivo',
+  },
+  {
+    icon: Blocks,
+    number: '04',
+    title: 'Trazabilidad verificable',
+    copy: 'Los hitos críticos podrán anclarse en blockchain y cerrar con una constancia digital, no una certificación oficial.',
+    status: 'Roadmap',
+  },
+  {
+    icon: BatteryCharging,
+    number: '05',
+    title: 'Energía modular',
+    copy: 'Medición de consumo y arquitectura adaptable a red, respaldo o energía solar según el lugar de uso.',
+    status: 'Roadmap',
+  },
 ]
 
-const IMPACT = [
-  {
-    icon: <ShieldCheck size={28} />,
-    label: 'Seguridad',
-    headline: 'Decidir antes de arriesgar una campaña',
-    points: [
-      'Evaluación previa en condiciones repetibles',
-      'Detección temprana de riesgos sanitarios',
-      'Menos incertidumbre al llevar el lote al campo',
-    ],
-  },
-  {
-    icon: <Timer size={28} />,
-    label: 'Velocidad y ahorro',
-    headline: 'Más aprendizaje con menos recursos',
-    points: [
-      'Uso preciso de agua, luz y temperatura',
-      'Ciclos de prueba más cortos y comparables',
-      'Menor dependencia de agroquímicos correctivos',
-    ],
-  },
-  {
-    icon: <ScanLine size={28} />,
-    label: 'Trazabilidad',
-    headline: 'Cada decisión respaldada por datos',
-    points: [
-      'Historial ambiental de cada lote evaluado',
-      'Comparación directa con el método tradicional',
-      'Evidencia para mejorar nuevas líneas genéticas',
-    ],
-  },
+const VALIDATION_METRICS = [
+  'Porcentaje de germinación',
+  'Velocidad de emergencia',
+  'Uniformidad y descarte',
+  'Agua y energía',
+  'Costo por plantín aceptado',
+  'Supervivencia a 7, 14 y 30 días',
 ]
 
 const MARKET_SEGMENTS = [
-  { icon: <Wheat size={24} />, title: 'Empresas semilleras', copy: 'Evalúan y comercializan variedades de trigo con mayores garantías de calidad.' },
-  { icon: <Microscope size={24} />, title: 'Multiplicadoras', copy: 'Reproducen material genético y necesitan procesos consistentes, rápidos y trazables.' },
-  { icon: <Users size={24} />, title: 'Productores tecnificados', copy: 'Gestionan grandes extensiones y programas propios de prueba antes de sembrar.' },
-  { icon: <Building2 size={24} />, title: 'Agroindustrias', copy: 'Buscan asegurar la calidad y continuidad del trigo que llega a sus plantas.' },
+  {
+    icon: Leaf,
+    title: 'Productores hortícolas',
+    copy: 'Plantines por lote para reducir incertidumbre antes del trasplante.',
+  },
+  {
+    icon: Warehouse,
+    title: 'Viveros y asociaciones',
+    copy: 'Capacidad programada, protocolos repetibles e historial de producción.',
+  },
+  {
+    icon: Users,
+    title: 'Instituciones agrícolas',
+    copy: 'Ensayos, formación, investigación aplicada y trazabilidad de lotes.',
+  },
+  {
+    icon: Handshake,
+    title: 'Aliados de implementación',
+    copy: 'Agrónomos, municipios y organizaciones que puedan habilitar pilotos reales.',
+  },
 ]
 
-const PILOT_STEPS = [
-  'Elegimos una empresa y un problema concreto',
-  'Probamos una variedad o lote dentro de TERRAGRID',
-  'Comparamos contra su método tradicional',
-  'Medimos el ahorro, la calidad y el resultado',
-  'Convertimos la evidencia en venta o leasing',
+const BUSINESS_PHASES = [
+  {
+    phase: '01',
+    label: 'Ingreso inicial',
+    title: 'Venta de plantines',
+    copy: 'TERRAGRID produce y entrega plantines por lote. El cliente compra el resultado, no el hardware.',
+    now: true,
+  },
+  {
+    phase: '02',
+    label: 'Capacidad como servicio',
+    title: 'Incubación por reserva',
+    copy: 'El cliente reserva bandejas, especies y ventanas de producción dentro de una instalación TERRAGRID.',
+  },
+  {
+    phase: '03',
+    label: 'Despliegue futuro',
+    title: 'Alquiler en sitio',
+    copy: 'La incubadora se instala en las dependencias del cliente con soporte, monitoreo y mantenimiento.',
+  },
 ]
-
-const BUSINESS_MODEL = [
-  { tag: 'Entrada', title: 'Piloto pagado', price: 'USD 1.500–5.000', copy: 'Validamos un lote real y demostramos valor con métricas comparables.' },
-  { tag: 'Implementación', title: 'Módulo o leasing', price: 'USD 22.500', copy: 'Venta del módulo completo o leasing desde USD 780 mensuales.' },
-  { tag: 'Recurrente', title: 'Servicios', price: 'Desde USD 500', copy: 'Mantenimiento, licencia de software y protocolos para nuevos cultivos.' },
-]
-
-const numberFormatter = new Intl.NumberFormat('es-BO')
-
-function AnimatedNumber({
-  value,
-  prefix = '',
-  suffix = '',
-  duration = 1200,
-}: {
-  value: number
-  prefix?: string
-  suffix?: string
-  duration?: number
-}) {
-  const [displayValue, setDisplayValue] = useState(0)
-  const numberRef = useRef<HTMLSpanElement | null>(null)
-
-  useEffect(() => {
-    const element = numberRef.current
-    if (!element) return
-
-    let animationFrame = 0
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    const animate = () => {
-      if (reduceMotion) {
-        setDisplayValue(value)
-        return
-      }
-
-      const startedAt = performance.now()
-      const update = (now: number) => {
-        const progress = Math.min((now - startedAt) / duration, 1)
-        const eased = 1 - Math.pow(1 - progress, 3)
-        setDisplayValue(Math.round(value * eased))
-        if (progress < 1) animationFrame = requestAnimationFrame(update)
-      }
-
-      animationFrame = requestAnimationFrame(update)
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return
-        animate()
-        observer.disconnect()
-      },
-      { threshold: 0.55 },
-    )
-
-    observer.observe(element)
-    return () => {
-      observer.disconnect()
-      cancelAnimationFrame(animationFrame)
-    }
-  }, [duration, value])
-
-  return (
-    <span ref={numberRef} className="animated-number">
-      {prefix}{numberFormatter.format(displayValue)}{suffix}
-    </span>
-  )
-}
 
 const TEAM = [
   {
-    icon: <Briefcase size={24} />,
     photo: '/equipo/omar.jpg',
     name: 'Omar Quispe Vargas',
-    role: 'Liderazgo, estrategia, modelo de negocio y seguridad',
-    copy: 'Define la propuesta de valor, el modelo de negocio, la narrativa del pitch y la viabilidad del proyecto. Aporta en seguridad de la información, trazabilidad y sostenibilidad económica.',
+    role: 'Cofundador · Estrategia y producto',
+    copy: 'Conecta tecnología, modelo de negocio, seguridad y alianzas para llevar TERRAGRID hacia validaciones reales.',
   },
   {
-    icon: <BarChart2 size={24} />,
+    photo: '/equipo/helen.jpeg',
+    name: 'Helen Noemi Flores Apaza',
+    role: 'Agronomía y protocolos',
+    copy: 'Define criterios biológicos, manejo de germinación, calidad del plantín y diseño de los ensayos agronómicos.',
+  },
+  {
     photo: '/equipo/carol.jpeg',
-    name: 'Carol Katerine Canqui',
-    role: 'Datos, inteligencia artificial y validación',
-    copy: 'Responsable de variables agrícolas, análisis de datos del cultivo, métricas de validación e IA local. Lidera la identificación de usuarios objetivo y validación de mercado.',
+    name: 'Carol Katerine Canqui Uturunco',
+    role: 'Datos, IA y validación',
+    copy: 'Estructura métricas, análisis de datos, validación de usuarios y evolución de la inteligencia aplicada.',
   },
   {
-    icon: <Palette size={24} />,
     photo: '/equipo/jhamil.jpg',
-    name: 'Jhamil Calixto Mamani',
-    role: 'UI/UX, frontend, diseño visual e identidad',
-    copy: 'Transforma la propuesta técnica en experiencia visual. A cargo del dashboard, prototipos de interfaz, identidad visual, presentación en Canva y maqueta 3D del nodo.',
+    name: 'Jhamil Calixto Mamani Quea',
+    role: 'UI/UX e identidad visual',
+    copy: 'Convierte el sistema técnico en una experiencia comprensible mediante interfaces, visualización y diseño.',
   },
   {
-    icon: <Server size={24} />,
     photo: '/img/saul.webp',
-    name: 'Saúl Mijael Choquehuanca',
-    role: 'Backend, arquitectura técnica y blockchain',
-    copy: 'Diseña la estructura lógica del prototipo, gestión de datos y operación offline-first. Lidera la trazabilidad blockchain y el pasaporte digital agrícola.',
+    name: 'Saúl Mijael Choquehuanca Huanca',
+    role: 'Backend y blockchain',
+    copy: 'Diseña la arquitectura de datos, operación local y trazabilidad verificable de cada lote.',
   },
 ]
 
-function seededValue(seed: number) {
-  const value = Math.sin(seed * 78.233) * 43758.5453
-  return value - Math.floor(value)
-}
-
-function AltiplanoTerrain() {
+function Reveal({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <mesh rotation-x={-Math.PI / 2} receiveShadow>
-      <planeGeometry args={[90, 90]} />
-      <meshStandardMaterial color="#7a4f2a" roughness={0.98} metalness={0.0} />
-    </mesh>
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.18 }}
+      transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
   )
 }
 
-function DryGrass() {
-  const tufts = useMemo(
-    () =>
-      Array.from({ length: 70 }, (_, index) => {
-        const angle = seededValue(index + 1) * Math.PI * 2
-        const radius = 6 + seededValue(index + 8) * 28
-        return {
-          x: Math.cos(angle) * radius,
-          z: Math.sin(angle) * radius,
-          height: 0.18 + seededValue(index + 16) * 0.38,
-          rotation: seededValue(index + 24) * Math.PI,
-        }
-      }),
-    [],
-  )
+function ProductModel({ path, onReady }: { path: string; onReady: () => void }) {
+  const gltf = useGLTF(path, '/draco/')
 
-  return (
-    <group>
-      {tufts.map((tuft, index) => (
-        <mesh
-          key={index}
-          castShadow
-          position={[tuft.x, tuft.height / 2, tuft.z]}
-          rotation={[0.18, tuft.rotation, -0.1]}
-        >
-          <coneGeometry args={[0.03, tuft.height, 5]} />
-          <meshStandardMaterial color={index % 3 === 0 ? '#c9a84c' : '#a07838'} roughness={1} />
-        </mesh>
-      ))}
-    </group>
-  )
-}
+  const prepared = useMemo(() => {
+    const scene = gltf.scene.clone(true)
 
-function ScatteredRocks() {
-  const rocks = useMemo(
-    () =>
-      Array.from({ length: 48 }, (_, index) => {
-        const angle = seededValue(index + 100) * Math.PI * 2
-        const radius = 4 + seededValue(index + 200) * 36
-        const scale = 0.1 + seededValue(index + 300) * 0.38
-        return {
-          x: Math.cos(angle) * radius,
-          z: Math.sin(angle) * radius,
-          scale,
-          rotation: seededValue(index + 400) * Math.PI,
-        }
-      }),
-    [],
-  )
+    scene.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) return
 
-  return (
-    <group>
-      {rocks.map((rock, index) => (
-        <mesh
-          key={index}
-          castShadow
-          receiveShadow
-          position={[rock.x, rock.scale * 0.4, rock.z]}
-          rotation={[rock.rotation, rock.rotation * 0.4, rock.rotation * 0.7]}
-          scale={[rock.scale * 1.4, rock.scale * 0.65, rock.scale]}
-        >
-          <dodecahedronGeometry args={[1, 0]} />
-          <meshStandardMaterial color="#5a4e3e" roughness={0.96} />
-        </mesh>
-      ))}
-    </group>
-  )
-}
+      object.castShadow = true
+      object.receiveShadow = true
 
-function MountainRange() {
-  const mountains = [
-    [-44, 28, -60, 15, '#3e4540'],
-    [-30, 36, -66, 19, '#373e38'],
-    [-14, 32, -64, 17, '#3d4540'],
-    [0, 38, -70, 20, '#384038'],
-    [14, 33, -66, 18, '#3b4340'],
-    [30, 30, -62, 16, '#373e38'],
-    [46, 26, -58, 14, '#3d4540'],
-  ] as const
-
-  return (
-    <group>
-      {mountains.map(([x, height, z, radius, color], index) => (
-        <group key={index} position={[x, -1, z]}>
-          <mesh receiveShadow>
-            <coneGeometry args={[radius, height, 9]} />
-            <meshStandardMaterial color={color} roughness={0.93} />
-          </mesh>
-          <mesh position={[0, height * 0.34, 0]} scale={[0.52, 0.34, 0.52]}>
-            <coneGeometry args={[radius, height, 9]} />
-            <meshStandardMaterial color="#fff9f9ff" roughness={0.72} />
-          </mesh>
-          <mesh position={[0, height * 0.52, 0]} scale={[0.24, 0.2, 0.24]}>
-            <coneGeometry args={[radius, height, 9]} />
-            <meshStandardMaterial color="#f9f3f3ff" roughness={0.55} />
-          </mesh>
-        </group>
-      ))}
-    </group>
-  )
-}
-
-function TerragridModel({
-  activeHotspot,
-  hoveredHotspot,
-  showHotspots,
-  onHotspotSelect,
-  onHotspotHover,
-}: {
-  activeHotspot: HotspotId | null
-  hoveredHotspot: HotspotId | null
-  showHotspots: boolean
-  onHotspotSelect: (id: HotspotId) => void
-  onHotspotHover: (id: HotspotId | null) => void
-}) {
-  const gltf = useGLTF(MODEL_PATH)
-  const { scene, modelOffset, modelScale } = useMemo(() => {
-    const clonedScene = gltf.scene.clone(true)
-
-    clonedScene.traverse((object) => {
-      if (object instanceof THREE.Mesh) {
-        object.castShadow = true
-        object.receiveShadow = true
+      if (object.material instanceof THREE.MeshStandardMaterial) {
+        object.material = object.material.clone()
+        object.material.roughness = Math.min(0.78, Math.max(0.28, object.material.roughness))
+        object.material.metalness = Math.min(0.74, object.material.metalness + 0.08)
+        object.material.envMapIntensity = 1.25
       }
     })
 
-    clonedScene.updateMatrixWorld(true)
-
-    const bounds = new THREE.Box3().setFromObject(clonedScene)
+    scene.updateMatrixWorld(true)
+    const bounds = new THREE.Box3().setFromObject(scene)
     const size = bounds.getSize(new THREE.Vector3())
     const center = bounds.getCenter(new THREE.Vector3())
-    const footprint = Math.max(size.x, size.z)
-    const scale = footprint > 0 ? MODEL_FOOTPRINT / footprint : 1
+    const maxDimension = Math.max(size.x, size.y, size.z)
+    const scale = maxDimension > 0 ? 4.2 / maxDimension : 1
 
     return {
-      scene: clonedScene,
-      modelOffset: [-center.x, -bounds.min.y, -center.z] as [number, number, number],
-      modelScale: scale,
+      scene,
+      scale,
+      offset: [-center.x, -bounds.min.y, -center.z] as [number, number, number],
     }
   }, [gltf.scene])
 
+  useEffect(() => {
+    onReady()
+  }, [onReady, path])
+
   return (
-    <group position={[1.85, 0.05, 0.1]} rotation-y={0}>
-      <group scale={modelScale}>
-        <primitive object={scene} position={modelOffset} />
+    <Float speed={1.1} rotationIntensity={0.08} floatIntensity={0.14}>
+      <group scale={prepared.scale} position={[0, -1.75, 0]}>
+        <primitive object={prepared.scene} position={prepared.offset} />
       </group>
-      {showHotspots &&
-        HOTSPOTS.map((hotspot) => (
-          <Html key={hotspot.id} position={hotspot.position} center distanceFactor={5}>
-            <div className={`hotspot-anchor hotspot-${hotspot.id}`}>
-              <button
-                className={[
-                  'hotspot',
-                  activeHotspot === hotspot.id ? 'is-active' : '',
-                  hoveredHotspot === hotspot.id ? 'is-hovered' : '',
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
-                type="button"
-                onClick={() => onHotspotSelect(hotspot.id)}
-                onMouseEnter={() => onHotspotHover(hotspot.id)}
-                onMouseLeave={() => onHotspotHover(null)}
-                aria-label={`${hotspot.label}: ${hotspot.title}`}
-              >
-                <span className="hotspot-name">{hotspot.label}</span>
-                <span className="hotspot-tooltip" aria-hidden="true">
-                  <strong>{hotspot.title}</strong>
-                  <span>{hotspot.copy}</span>
-                </span>
-              </button>
-            </div>
-          </Html>
-        ))}
-    </group>
+    </Float>
   )
 }
 
-function SceneFallback() {
-  return (
-    <Html center className="scene-loader">
-      Cargando modelo 3D
-    </Html>
-  )
-}
-
-function CameraModeController({
-  viewMode,
-  isCompactViewport,
-}: {
-  viewMode: HeroViewMode
-  isCompactViewport: boolean
-}) {
-  const { camera, invalidate } = useThree()
+function ProductStage({ product }: { product: ProductLine }) {
+  const [modelReady, setModelReady] = useState(false)
+  const reduceMotion = useReducedMotion()
+  const [supports3D, setSupports3D] = useState(false)
+  const handleModelReady = useCallback(() => setModelReady(true), [])
 
   useEffect(() => {
-    const startPosition = camera.position.clone()
-    const destination = new THREE.Vector3(
-      ...(viewMode === 'model'
-        ? isCompactViewport
-          ? ([1.85, 4.1, 15.2] as const)
-          : ([1.85, 4.3, 13.5] as const)
-        : isCompactViewport
-          ? ([1.85, 3.5, 12] as const)
-          : ([1.85, 3.4, 9] as const)),
-    )
-    const lookAt = new THREE.Vector3(1.85, 1.45, 0.05)
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const duration = reduceMotion ? 0 : 560
-    const startTime = performance.now()
-    let animationFrame = 0
-
-    const updateCamera = (now: number) => {
-      const progress = duration === 0 ? 1 : Math.min((now - startTime) / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3)
-
-      camera.position.lerpVectors(startPosition, destination, eased)
-      camera.lookAt(lookAt)
-      invalidate()
-
-      if (progress < 1) animationFrame = requestAnimationFrame(updateCamera)
-    }
-
-    animationFrame = requestAnimationFrame(updateCamera)
-    return () => cancelAnimationFrame(animationFrame)
-  }, [camera, invalidate, isCompactViewport, viewMode])
-
-  return null
-}
-
-function TerragridScene({
-  activeHotspot,
-  hoveredHotspot,
-  showHotspots,
-  isActive,
-  viewMode,
-  onHotspotSelect,
-  onHotspotHover,
-}: {
-  activeHotspot: HotspotId | null
-  hoveredHotspot: HotspotId | null
-  showHotspots: boolean
-  isActive: boolean
-  viewMode: HeroViewMode
-  onHotspotSelect: (id: HotspotId) => void
-  onHotspotHover: (id: HotspotId | null) => void
-}) {
-  const isCompactViewport =
-    typeof window !== 'undefined' && window.matchMedia('(max-width: 900px)').matches
+    const query = window.matchMedia('(min-width: 840px)')
+    const update = () => setSupports3D(query.matches)
+    update()
+    query.addEventListener('change', update)
+    return () => query.removeEventListener('change', update)
+  }, [])
 
   return (
-    <Canvas
-      shadows={!isCompactViewport}
-      dpr={isCompactViewport ? [1, viewMode === 'model' ? 1.15 : 1.25] : [1, 1.75]}
-      frameloop={isActive ? 'demand' : 'never'}
-      camera={{
-        position: isCompactViewport ? [1.85, 3.5, 12] : [1.85, 3.4, 9],
-        fov: 35,
-        near: 0.1,
-        far: 150,
-      }}
-      gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.02 }}
-      onCreated={({ camera }) => {
-        camera.lookAt(1.85, 1.45, 0.05)
-      }}
-    >
-      <color attach="background" args={['#0d1e2a']} />
+    <div className="product-stage-shell" style={{ '--product-accent': product.accent } as React.CSSProperties}>
+      <div className="stage-topline">
+        <span><CircleDot size={13} /> Modelo conceptual</span>
+        <span className="stage-status">{product.status}</span>
+      </div>
 
-      <CameraModeController
-        viewMode={viewMode}
-        isCompactViewport={isCompactViewport}
-      />
-
-      <ambientLight intensity={0.38} color="#eefcf5" />
-      <hemisphereLight
-        args={['#dff7ff', '#5a3420', isCompactViewport ? 0.52 : 0.68]}
-      />
-      <directionalLight
-        castShadow={!isCompactViewport}
-        intensity={1.45}
-        color="#ffe0bd"
-        position={[-7, 8, 8]}
-        shadow-mapSize={[2048, 2048]}
-        shadow-camera-near={0.5}
-        shadow-camera-far={60}
-        shadow-camera-left={-16}
-        shadow-camera-right={16}
-        shadow-camera-top={12}
-        shadow-camera-bottom={-12}
-        shadow-bias={-0.001}
-      />
-      <directionalLight intensity={0.72} color="#d9fff4" position={[2, 4.5, 10]} />
-      <directionalLight intensity={0.5} color="#ffd0aa" position={[9, 6, 3]} />
-      <directionalLight intensity={0.3} color="#b9d9ff" position={[0, 12, 0]} />
-      <pointLight
-        intensity={isCompactViewport ? 8 : 14}
-        distance={12}
-        decay={1.6}
-        color="#e8fff7"
-        position={[1.85, 3.2, 5]}
-      />
-
-      <AltiplanoTerrain />
-      <MountainRange />
-      {!isCompactViewport && <ScatteredRocks />}
-      {!isCompactViewport && <DryGrass />}
-
-      {!isCompactViewport && (
-        <ContactShadows
-          position={[0, 0.02, 0]}
-          opacity={0.48}
-          scale={18}
-          blur={3.2}
-          far={6}
-          color="#3a1e08"
+      <div className="stage-viewport">
+        <motion.img
+          key={product.poster}
+          src={product.poster}
+          alt={`Vista conceptual de ${product.name}`}
+          className={`product-poster ${supports3D && modelReady ? 'is-hidden' : ''}`}
+          initial={{ opacity: 0, scale: 1.025 }}
+          animate={{ opacity: supports3D && modelReady ? 0 : 1, scale: 1 }}
+          transition={{ duration: 0.45 }}
         />
-      )}
 
-      <Suspense fallback={<SceneFallback />}>
-        <TerragridModel
-          activeHotspot={activeHotspot}
-          hoveredHotspot={hoveredHotspot}
-          showHotspots={showHotspots}
-          onHotspotSelect={onHotspotSelect}
-          onHotspotHover={onHotspotHover}
-        />
-      </Suspense>
+        {supports3D && (
+          <Canvas
+            className={`product-canvas ${modelReady ? 'is-ready' : ''}`}
+            dpr={[1, 1.45]}
+            shadows
+            camera={{ position: [5.1, 2.6, 6.4], fov: 31, near: 0.1, far: 80 }}
+            gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.05 }}
+          >
+            <ambientLight intensity={0.58} color="#eafff1" />
+            <hemisphereLight args={['#effff8', '#07100d', 1.25]} />
+            <directionalLight castShadow position={[-5, 8, 6]} intensity={2.5} color="#ffffff" shadow-mapSize={[1024, 1024]} />
+            <directionalLight position={[6, 3, 4]} intensity={2.2} color={product.accent} />
+            <pointLight position={[-4, 1, -3]} intensity={12} distance={12} color="#7ddfc3" />
+            <Suspense fallback={null}>
+              <ProductModel key={product.model} path={product.model} onReady={handleModelReady} />
+              <ContactShadows position={[0, -1.72, 0]} opacity={0.48} scale={8} blur={2.8} far={4.5} color="#000000" />
+            </Suspense>
+            <OrbitControls
+              makeDefault
+              enablePan={false}
+              enableZoom={false}
+              minPolarAngle={Math.PI / 3.1}
+              maxPolarAngle={Math.PI / 2.05}
+              autoRotate={!reduceMotion}
+              autoRotateSpeed={0.42}
+              target={[0, 0.15, 0]}
+            />
+          </Canvas>
+        )}
 
-      <OrbitControls
-        makeDefault
-        enableDamping
-        enablePan={false}
-        enableRotate
-        target={[1.85, 1.45, 0.05]}
-        minDistance={4}
-        maxDistance={17}
-        minPolarAngle={Math.PI * 0.18}
-        maxPolarAngle={Math.PI * 0.48}
-      />
+        {supports3D && !modelReady && (
+          <div className="model-loader" aria-live="polite">
+            <span /> Preparando modelo 3D
+          </div>
+        )}
 
-      {!isCompactViewport && (
-        <EffectComposer>
-          <Bloom intensity={0.7} luminanceThreshold={0.82} luminanceSmoothing={0.5} mipmapBlur />
-        </EffectComposer>
-      )}
-    </Canvas>
+        <div className="stage-orbit" aria-hidden="true" />
+      </div>
+
+      <div className="stage-footer">
+        <span>{product.index} / 03</span>
+        <span>{supports3D ? 'Arrastra para explorar' : 'Vista optimizada para móvil'}</span>
+      </div>
+    </div>
   )
 }
 
 function App() {
-  const [activeHotspot, setActiveHotspot] = useState<HotspotId | null>(null)
-  const [hoveredHotspot, setHoveredHotspot] = useState<HotspotId | null>(null)
-  const [heroViewMode, setHeroViewMode] = useState<HeroViewMode>('page')
-  const [isHeroActive, setIsHeroActive] = useState(true)
-  const heroRef = useRef<HTMLElement | null>(null)
-
-  const focusMode = heroViewMode !== 'page'
-  const panelId = activeHotspot
-  const panelData = HOTSPOTS.find((h) => h.id === panelId)
-  const panelVisible = panelData !== undefined && heroViewMode !== 'model'
+  const [activeProduct, setActiveProduct] = useState(0)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const chapterRefs = useRef<Array<HTMLElement | null>>([])
+  const reduceMotion = useReducedMotion()
+  const { scrollYProgress } = useScroll()
+  const progress = useSpring(scrollYProgress, { stiffness: 110, damping: 28, restDelta: 0.001 })
+  const heroY = useTransform(scrollYProgress, [0, 0.12], [0, 90])
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0.12])
 
   useEffect(() => {
-    const hero = heroRef.current
-    if (!hero || !('IntersectionObserver' in window)) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsHeroActive(entry.isIntersecting && entry.intersectionRatio > 0.08)
-      },
-      { threshold: [0, 0.08, 0.25] },
-    )
-
-    observer.observe(hero)
-    return () => observer.disconnect()
-  }, [])
-
-  useLayoutEffect(() => {
-    const sections = Array.from(document.querySelectorAll<HTMLElement>('.reveal-section'))
-    document.documentElement.classList.add('reveal-ready')
-
-    if (!('IntersectionObserver' in window)) {
-      sections.forEach((section) => section.classList.add('is-visible'))
-      return
-    }
-
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return
-          entry.target.classList.add('is-visible')
-          observer.unobserve(entry.target)
-        })
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+
+        if (!visible) return
+        const index = Number((visible.target as HTMLElement).dataset.productIndex)
+        if (!Number.isNaN(index)) setActiveProduct(index)
       },
-      { threshold: 0.1, rootMargin: '0px 0px -8% 0px' },
+      { rootMargin: '-34% 0px -34% 0px', threshold: [0.12, 0.35, 0.6] },
     )
 
-    sections.forEach((section) => observer.observe(section))
+    chapterRefs.current.forEach((chapter) => chapter && observer.observe(chapter))
     return () => observer.disconnect()
   }, [])
 
-  useEffect(() => {
-    let animationFrame = 0
+  const active = PRODUCT_LINES[activeProduct]
 
-    const updateProgress = () => {
-      const scrollable = document.documentElement.scrollHeight - window.innerHeight
-      const progress = scrollable > 0 ? Math.min(window.scrollY / scrollable, 1) : 0
-      document.documentElement.style.setProperty('--scroll-progress', progress.toString())
-      animationFrame = 0
-    }
-
-    const requestUpdate = () => {
-      if (animationFrame) return
-      animationFrame = requestAnimationFrame(updateProgress)
-    }
-
-    updateProgress()
-    window.addEventListener('scroll', requestUpdate, { passive: true })
-    window.addEventListener('resize', requestUpdate)
-
-    return () => {
-      window.removeEventListener('scroll', requestUpdate)
-      window.removeEventListener('resize', requestUpdate)
-      if (animationFrame) cancelAnimationFrame(animationFrame)
-    }
-  }, [])
-
-  function handleHotspotSelect(id: HotspotId) {
-    setActiveHotspot((prev) => (prev === id ? null : id))
+  const goToProduct = (index: number) => {
+    setActiveProduct(index)
+    chapterRefs.current[index]?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' })
   }
 
   return (
     <main>
-      <div className="scroll-progress" aria-hidden="true" />
-      <section
-        ref={heroRef}
-        className={`hero-section ${focusMode ? 'is-focus-mode' : ''}`}
-        aria-label="TERRAGRID landing"
-      >
-        <div className="scene-layer">
-          <TerragridScene
-            activeHotspot={activeHotspot}
-            hoveredHotspot={hoveredHotspot}
-            showHotspots={heroViewMode !== 'model'}
-            isActive={isHeroActive}
-            viewMode={heroViewMode}
-            onHotspotSelect={handleHotspotSelect}
-            onHotspotHover={setHoveredHotspot}
-          />
-        </div>
+      <motion.div className="page-progress" style={{ scaleX: progress }} />
 
-        <div className={`view-controls ${focusMode ? 'is-focus' : ''}`} aria-label="Vista del modelo">
-          {!focusMode ? (
-            <button
-              className="view-entry-btn"
-              type="button"
-              onClick={() => setHeroViewMode('components')}
-            >
-              Ver modelo
-            </button>
-          ) : (
-            <>
-              <button
-                className="view-back-btn"
-                type="button"
-                onClick={() => setHeroViewMode('page')}
-              >
-                ← Volver
-              </button>
-              {heroViewMode === 'components' ? (
-                <button
-                  className="view-mode-btn"
-                  type="button"
-                  onClick={() => {
-                    setHeroViewMode('model')
-                    setActiveHotspot(null)
-                  }}
-                >
-                  Ver modelo 3D
-                </button>
-              ) : (
-                <button
-                  className="view-mode-btn is-active"
-                  type="button"
-                  onClick={() => setHeroViewMode('components')}
-                >
-                  Componentes
-                </button>
-              )}
-            </>
-          )}
-        </div>
+      <header className="topbar">
+        <a className="brand" href="#inicio" aria-label="TERRAGRID · Inicio">
+          <span className="brand-mark"><Sprout size={21} /></span>
+          <span>TERRAGRID</span>
+        </a>
 
-        {!focusMode && (
-          <nav className="topbar" aria-label="Principal">
-            <a className="brand" href="#hero" aria-label="TERRAGRID · Inicio">
-              <img src="/img/logo%20tearagrid.png" alt="TERRAGRID" />
-            </a>
-            <div className="nav-links">
-              <a href="#problema">Problema</a>
-              <a href="#producto">Producto</a>
-              <a href="#mercado">Mercado</a>
-              <a href="#modelo">Modelo</a>
-            </div>
-          </nav>
-        )}
+        <nav className={menuOpen ? 'is-open' : ''} aria-label="Navegación principal">
+          <a href="#problema" onClick={() => setMenuOpen(false)}>Problema</a>
+          <a href="#lineas" onClick={() => setMenuOpen(false)}>Líneas</a>
+          <a href="#sistema" onClick={() => setMenuOpen(false)}>Sistema</a>
+          <a href="#validacion" onClick={() => setMenuOpen(false)}>Validación</a>
+          <a href="#equipo" onClick={() => setMenuOpen(false)}>Equipo</a>
+        </nav>
 
-        {!focusMode && (
-          <div className="hero-copy" id="hero">
-            <p className="eyebrow">Tecnología boliviana para semillas</p>
-            <img
-              className="hero-logo"
-              src="/img/logo%20tearagrid.png"
-              alt="TERRAGRID"
-            />
-            <p className="hero-lede">
-              <span className="desktop-lede">
-                El filtro previo que ayuda a que solo las mejores semillas de trigo lleguen a la tierra.
-                Evaluamos, protegemos y multiplicamos cada lote en condiciones controladas.
-              </span>
-              <span className="mobile-lede">
-                Semillas de trigo más sanas, resistentes y listas para el campo.
-              </span>
-            </p>
-            <div className="hero-actions">
-              <a href="#producto" className="primary-action desktop-primary-action">
-                Conocer el sistema <ArrowRight size={17} />
-              </a>
-              <a href="#problema" className="secondary-action">Ver el desafío</a>
-              <a href="#problema" className="primary-action mobile-next-action">
-                Continuar <ArrowRight size={17} />
-              </a>
-            </div>
-            <div className="hero-proof" aria-label="Propuesta de valor">
-              <span>Semillas sanas</span>
-              <span>Menos riesgo</span>
-              <span>Datos trazables</span>
-            </div>
-          </div>
-        )}
+        <a className="nav-cta" href="mailto:terragrid.2026@gmail.com?subject=Validemos%20un%20lote%20con%20TERRAGRID">
+          Conversemos <ArrowRight size={15} />
+        </a>
 
-        <aside
-          className={`hotspot-panel ${panelVisible ? 'is-visible' : ''}`}
-          aria-live="polite"
-        >
-          {panelData && (
-            <>
-              <div className="hotspot-panel-header">
-                <p>{panelData.label}</p>
-                <button
-                  className="panel-close"
-                  type="button"
-                  onClick={() => setActiveHotspot(null)}
-                  aria-label="Cerrar panel"
-                >
-                  ×
-                </button>
-              </div>
-              <h2>{panelData.title}</h2>
-              <span>{panelData.copy}</span>
-            </>
-          )}
-        </aside>
+        <button className="menu-toggle" type="button" onClick={() => setMenuOpen((open) => !open)} aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}>
+          {menuOpen ? <X size={21} /> : <Menu size={21} />}
+        </button>
+      </header>
 
-      </section>
+      <section className="hero" id="inicio">
+        <div className="hero-grid" aria-hidden="true" />
+        <div className="hero-orb hero-orb-one" aria-hidden="true" />
+        <div className="hero-orb hero-orb-two" aria-hidden="true" />
 
-      <section className="problem-band reveal-section" id="problema">
-        <div className="section-shell problem-layout">
-          <div className="problem-copy">
-            <p className="eyebrow">El problema</p>
-            <h2>Bolivia produce cada vez menos del trigo que consume.</h2>
-            <p className="section-lede">
-              En dos décadas, la producción nacional pasó de cubrir 20–30 % de la demanda a solo 10–12 %.
-            </p>
-            <p className="source-note">Cifras reportadas por ANAPO, INE y prensa nacional.</p>
-          </div>
-          <div className="decline-card" aria-label="Caída de la producción de trigo">
-            <div className="decline-title">
-              <TrendingDown size={22} />
-              <span>Producción nacional de trigo</span>
-            </div>
-            <div className="decline-metrics">
-              <div>
-                <span>2014</span>
-                <strong><AnimatedNumber value={281800} /></strong>
-                <small>toneladas</small>
-              </div>
-              <ArrowRight size={28} aria-hidden="true" />
-              <div className="metric-alert">
-                <span>2026 · proyección</span>
-                <strong><AnimatedNumber value={92000} /></strong>
-                <small>toneladas</small>
-              </div>
-            </div>
-            <div className="decline-bar"><span /></div>
-            <p>Casi <strong>2 de cada 3 toneladas</strong> dejaron de producirse frente a 2014.</p>
-          </div>
-        </div>
-        <div className="section-shell problem-causes" aria-label="Principales causas">
-          <strong>¿Por qué?</strong>
-          <div>
-            {PROBLEM_CAUSES.map((cause) => (
-              <span key={cause}>{cause}</span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="solution-band reveal-section" id="solucion">
-        <div className="section-shell">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">La respuesta</p>
-              <span className="section-kicker">Una incubadora para semillas</span>
-            </div>
-            <h2>Controlamos el entorno para que el productor no dependa de la suerte.</h2>
-          </div>
-          <div className="solution-grid">
-            <article>
-              <CloudRain size={26} />
-              <h3>Resistencia climática</h3>
-              <p>Probamos semillas bajo condiciones adversas antes de exponerlas a una campaña completa.</p>
-            </article>
-            <article>
-              <BugOff size={26} />
-              <h3>Sanidad del lote</h3>
-              <p>Reducimos el riesgo de plagas y hongos con vigilancia y respuesta temprana.</p>
-            </article>
-            <article>
-              <Timer size={26} />
-              <h3>Multiplicación ágil</h3>
-              <p>Generamos trigo sano en menos tiempo para disminuir la dependencia de semilla importada.</p>
-            </article>
-            <article>
-              <BadgeDollarSign size={26} />
-              <h3>Costos optimizados</h3>
-              <p>Usamos agua, luz y temperatura con precisión dentro de un sistema medible.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section className="modules-band reveal-section" id="producto">
-        <div className="section-shell">
-          <div className="section-heading product-heading">
-            <div>
-              <p className="eyebrow">Así funciona</p>
-              <span className="section-kicker">Del lote al campo</span>
-            </div>
-            <h2>Seis pasos. Un proceso científico, repetible y trazable.</h2>
-          </div>
-          <div className="module-grid">
-            {MODULES.map(({ icon, title, copy }) => (
-              <article key={title} className="module-card">
-                <div className="module-icon">{icon}</div>
-                <h3>{title}</h3>
-                <p>{copy}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="value-band reveal-section" id="valor">
-        <div className="section-shell value-intro">
-          <p className="eyebrow">Lo que compra el cliente</p>
-          <h2>No compra un contenedor.<br />Compra mejores decisiones.</h2>
-          <p>La tecnología se traduce en seguridad, ahorro, velocidad, trazabilidad y una ventaja competitiva que puede medirse.</p>
-        </div>
-        <div className="impact-grid">
-          {IMPACT.map(({ icon, label, headline, points }) => (
-            <article key={label} className="impact-card">
-              <div className="impact-icon">{icon}</div>
-              <p className="impact-label">{label}</p>
-              <h3>{headline}</h3>
-              <ul>
-                {points.map((p) => (
-                  <li key={p}>{p}</li>
-                ))}
-              </ul>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="validation-band reveal-section" id="evidencia">
-        <div className="section-shell validation-layout">
-          <div className="validation-number">
-            <strong><AnimatedNumber value={10} /></strong>
-            <span>especies validadas</span>
-          </div>
-          <div className="validation-copy">
-            <p className="eyebrow">Validación / evidencia</p>
-            <h2>Tecnología probada en la UMSA.</h2>
-            <p>
-              La microgerminación controlada mostró concentraciones de vitaminas, minerales y antioxidantes
-              de hasta 40 veces frente a plantas adultas. Ahora aplicamos esa experiencia al trigo boliviano.
-            </p>
-          </div>
-          <div className="validation-badge">
-            <Microscope size={30} />
-            <strong>Hasta <AnimatedNumber value={40} suffix="×" /></strong>
-            <span>concentración observada</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="market-band reveal-section" id="mercado">
-        <div className="section-shell">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Mercado</p>
-              <span className="section-kicker">B2B agrícola</span>
-            </div>
-            <h2>Empresas que ya entienden de semillas y quieren decidir mejor.</h2>
-          </div>
-          <div className="market-grid">
-            {MARKET_SEGMENTS.map(({ icon, title, copy }) => (
-              <article key={title}>
-                <div>{icon}</div>
-                <h3>{title}</h3>
-                <p>{copy}</p>
-              </article>
-            ))}
-          </div>
-          <div className="pilot-block">
-            <div className="pilot-copy">
-              <p className="eyebrow">Cómo entramos</p>
-              <h3>Primero demostramos.<br />Después escalamos.</h3>
-              <p>Un piloto privado y pagado convierte una promesa tecnológica en evidencia de negocio.</p>
-            </div>
-            <ol className="pilot-steps">
-              {PILOT_STEPS.map((step, index) => (
-                <li key={step}><span>{index + 1}</span><p>{step}</p></li>
-              ))}
-            </ol>
-          </div>
-          <div className="market-footnote">
-            <Handshake size={22} />
-            <p>Primer foco: empresas de trigo en Santa Cruz, incluyendo perfiles como PRINA, Agripac y Semexa.</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="business-band reveal-section" id="modelo">
-        <div className="section-shell">
-          <div className="business-header">
-            <div>
-              <p className="eyebrow">Modelo de negocio</p>
-              <h2>B2B, híbrido y escalable.</h2>
-            </div>
-            <p>Combinamos una venta inicial de alto valor con servicios recurrentes que acompañan cada cultivo.</p>
-          </div>
-          <div className="business-grid">
-            {BUSINESS_MODEL.map(({ tag, title, price, copy }, index) => (
-              <article key={title} className={index === 1 ? 'featured' : ''}>
-                <span className="business-tag">{tag}</span>
-                <h3>{title}</h3>
-                <strong>{price}</strong>
-                <p>{copy}</p>
-                <div className="card-check"><Check size={15} /> {index === 0 ? 'Validación comercial' : index === 1 ? 'Venta o leasing' : 'Ingreso recurrente'}</div>
-              </article>
-            ))}
-          </div>
-          <div className="revenue-strip">
-            <span>Mantenimiento anual <strong>USD 1.200–3.500</strong></span>
-            <span>Software <strong>USD 500–4.000</strong></span>
-            <span>Nuevos protocolos <strong>USD 2.500–5.000</strong></span>
-            <span className="break-even">Punto de equilibrio: <strong>1 módulo</strong></span>
-          </div>
-        </div>
-      </section>
-
-      <section className="positioning-band reveal-section">
-        <div className="section-shell positioning-layout">
-          <p className="eyebrow">Nuestro lugar en la cadena</p>
-          <blockquote>“TERRAGRID no compite con el campo. Lo complementa.”</blockquote>
-          <p>Somos el filtro previo que asegura que solo las mejores semillas lleguen a la tierra.</p>
-          <div className="expansion-list">
-            <span>Hoy · Trigo en Santa Cruz</span>
-            <ArrowRight size={20} />
-            <span>Mañana · Maíz, sorgo, soya, quinua y cañahua</span>
-            <ArrowRight size={20} />
-            <span>Escala · Latinoamérica</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="team-band reveal-section" id="equipo">
-        <div className="team-heading">
-          <p className="eyebrow">Equipo</p>
-          <h2>Tecnología que busca crecer junto al campo.</h2>
-          <p>Somos cuatro informáticos y buscamos sumar agrónomos y empresas semilleras como socios estratégicos.</p>
-        </div>
-        <div className="team-grid">
-          {TEAM.map(({ icon, photo, name, role, copy }) => (
-            <article key={name} className="team-card">
-              {photo ? (
-                <img className="team-photo" src={photo} alt={name} />
-              ) : (
-                <div className="team-icon">{icon}</div>
-              )}
-              <div>
-                <h3>{name}</h3>
-                <p className="team-role">{role}</p>
-                <p className="team-copy">{copy}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="cta-band reveal-section">
-        <div className="cta-inner">
-          <p className="eyebrow">Hablemos de tu próximo piloto</p>
-          <h2>Una mejor cosecha empieza antes de sembrar.</h2>
-          <p className="cta-description">
-            Evaluemos un lote real, comparemos resultados y convirtamos la evidencia en una mejor decisión de campo.
+        <motion.div className="hero-copy" style={reduceMotion ? undefined : { y: heroY, opacity: heroOpacity }}>
+          <div className="status-pill"><span /> Preincubación · La Paz, Bolivia</div>
+          <p className="hero-kicker">Incubación agrícola inteligente</p>
+          <h1>El clima ya es incierto.<br /><em>El plantín no debería serlo.</em></h1>
+          <p className="hero-lede">
+            TERRAGRID controla, automatiza y documenta la microgerminación para convertir cada lote en evidencia útil antes del trasplante.
           </p>
-          <div className="cta-contact-group">
-            <a
-              href="mailto:terragrid.2026@gmail.com?subject=Inter%C3%A9s%20en%20TERRAGRID"
-              className="primary-action cta-contact-action"
-              aria-label="Contactar a TERRAGRID por correo"
-            >
-              Contactar por correo <ArrowRight size={17} />
-            </a>
+          <div className="hero-actions">
+            <a className="button button-primary" href="#lineas">Explorar el sistema <ArrowDown size={17} /></a>
+            <a className="button button-secondary" href="#validacion">Ver plan de validación</a>
           </div>
-          <div className="cta-features" aria-label="Opciones comerciales">
-            <span>Piloto privado</span>
-            <span>Venta del módulo</span>
-            <span>Leasing empresarial</span>
+        </motion.div>
+
+        <motion.div
+          className="hero-visual glow-border"
+          initial={{ opacity: 0, x: 42 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.95, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <img src="/products/terragrid-seed.png" alt="Concepto visual de la incubadora TERRAGRID SEED" />
+          <div className="telemetry-card telemetry-top">
+            <span><Activity size={14} /> Lote piloto</span>
+            <strong>Perejil</strong>
+            <small>Protocolo por validar</small>
           </div>
+          <div className="telemetry-card telemetry-bottom">
+            <span>Variables objetivo</span>
+            <div><ThermometerSun size={15} /> Temperatura</div>
+            <div><Droplets size={15} /> Humedad</div>
+            <div><Gauge size={15} /> Riego</div>
+          </div>
+        </motion.div>
+
+        <div className="hero-proof">
+          <span>Plan inicial</span>
+          <strong>3</strong><small>cultivos</small>
+          <i />
+          <strong>1</strong><small>piloto</small>
+          <i />
+          <strong>7·14·30</strong><small>días de seguimiento</small>
         </div>
-        <small>TERRAGRID · Universidad Mayor de San Andrés · Carrera de Informática</small>
+
+        <a className="scroll-cue" href="#problema"><span>Desliza para descubrir</span><ArrowDown size={16} /></a>
       </section>
 
+      <section className="problem section-pad" id="problema">
+        <div className="section-shell">
+          <Reveal className="section-heading split-heading">
+            <div>
+              <p className="eyebrow">El problema comienza antes de ver la cosecha</p>
+              <h2>Una germinación irregular compromete decisiones, tiempo y recursos.</h2>
+            </div>
+            <p>
+              El productor suele asumir el riesgo desde el almácigo sin un historial comparable del proceso. TERRAGRID enfoca su primera validación exactamente en esa brecha.
+            </p>
+          </Reveal>
+
+          <div className="problem-grid">
+            {PROBLEM_POINTS.map((point, index) => {
+              const Icon = point.icon
+              return (
+                <Reveal className="problem-card glow-border" key={point.title}>
+                  <span className="card-index">0{index + 1}</span>
+                  <Icon size={27} />
+                  <h3>{point.title}</h3>
+                  <p>{point.copy}</p>
+                </Reveal>
+              )
+            })}
+          </div>
+
+          <Reveal className="problem-statement">
+            <Sparkles size={19} />
+            <p><strong>La hipótesis:</strong> si se controlan y documentan las condiciones críticas de germinación, será posible entregar plantines más uniformes y tomar mejores decisiones antes de trasladarlos al campo.</p>
+            <span>Por validar con evidencia</span>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="product-story" id="lineas">
+        <div className="product-story-intro section-shell">
+          <p className="eyebrow">Una plataforma · Tres líneas</p>
+          <h2>El roadmap se recorre como evoluciona una semilla.</h2>
+          <p>Primero se valida la germinación. Después se amplía la producción. Finalmente se conserva y regenera el material genético.</p>
+        </div>
+
+        <div className="product-story-grid section-shell-wide">
+          <div className="product-copy-column">
+            {PRODUCT_LINES.map((product, index) => {
+              const Icon = product.icon
+              const isActive = index === activeProduct
+              return (
+                <article
+                  className={`product-chapter ${isActive ? 'is-active' : ''}`}
+                  id={product.id}
+                  key={product.id}
+                  data-product-index={index}
+                  ref={(node) => { chapterRefs.current[index] = node }}
+                  style={{ '--product-accent': product.accent } as React.CSSProperties}
+                >
+                  <motion.div
+                    className="product-copy-card"
+                    animate={isActive ? { opacity: 1, x: 0 } : { opacity: 0.34, x: -18 }}
+                    transition={{ duration: 0.45 }}
+                  >
+                    <div className="product-meta">
+                      <span>{product.index}</span>
+                      <span>{product.phase}</span>
+                    </div>
+                    <div className="product-icon"><Icon size={24} /></div>
+                    <p className="eyebrow">{product.eyebrow}</p>
+                    <h3>{product.name}</h3>
+                    <h4>{product.headline}</h4>
+                    <p className="product-description">{product.description}</p>
+                    <div className="product-facts">
+                      <span><Sprout size={15} /> {product.crops}</span>
+                      <span><BadgeCheck size={15} /> {product.purpose}</span>
+                    </div>
+                    <ul>
+                      {product.features.map((feature) => <li key={feature}><Check size={16} /> {feature}</li>)}
+                    </ul>
+                    <p className="product-note">{product.note}</p>
+                  </motion.div>
+                </article>
+              )
+            })}
+          </div>
+
+          <aside className="product-visual-column" aria-label="Modelos conceptuales TERRAGRID">
+            <div className="product-visual-sticky">
+              <ProductStage key={active.id} product={active} />
+              <div className="product-nav" role="tablist" aria-label="Cambiar línea de producto">
+                {PRODUCT_LINES.map((product, index) => (
+                  <button
+                    key={product.id}
+                    type="button"
+                    className={index === activeProduct ? 'is-active' : ''}
+                    onClick={() => goToProduct(index)}
+                    aria-label={`Ver ${product.name}`}
+                    aria-selected={index === activeProduct}
+                    role="tab"
+                  >
+                    <span>{product.index}</span>
+                    <strong>{product.name.replace('TERRAGRID ', '')}</strong>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section className="system section-pad" id="sistema">
+        <div className="section-shell">
+          <Reveal className="section-heading centered-heading">
+            <p className="eyebrow">La capa inteligente</p>
+            <h2>La tecnología solo entra cuando responde a una decisión agronómica.</h2>
+            <p>Cada sensor, regla o registro debe ayudar a medir, actuar o explicar lo que ocurrió dentro del lote.</p>
+          </Reveal>
+
+          <div className="system-map">
+            <div className="system-line" aria-hidden="true" />
+            {SYSTEM_LAYERS.map((layer, index) => {
+              const Icon = layer.icon
+              return (
+                <Reveal className="system-card glow-border" key={layer.title}>
+                  <div className="system-card-top">
+                    <span>{layer.number}</span>
+                    <em>{layer.status}</em>
+                  </div>
+                  <div className="system-icon"><Icon size={25} /></div>
+                  <h3>{layer.title}</h3>
+                  <p>{layer.copy}</p>
+                  {index < SYSTEM_LAYERS.length - 1 && <ChevronRight className="system-arrow" size={17} />}
+                </Reveal>
+              )
+            })}
+          </div>
+
+          <Reveal className="data-strip">
+            <div><Network size={21} /><span>Offline-first</span><small>El control esencial funciona localmente.</small></div>
+            <div><QrCode size={21} /><span>Identidad por lote</span><small>Datos, eventos e imágenes en una sola ficha.</small></div>
+            <div><ShieldCheck size={21} /><span>Verificable, no oficial</span><small>La constancia tecnológica no sustituye una certificación regulada.</small></div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="validation section-pad" id="validacion">
+        <div className="section-shell validation-grid">
+          <Reveal className="validation-copy">
+            <p className="eyebrow">Validar antes de escalar</p>
+            <h2>No queremos construir una máquina y esperar que funcione.</h2>
+            <p>
+              TERRAGRID se encuentra en preincubación y todavía no presenta resultados agronómicos concluyentes. La primera validación comparará el sistema con un método de referencia en condiciones reales de La Paz.
+            </p>
+            <div className="validation-steps">
+              <span><b>01</b> Protocolo agronómico</span>
+              <span><b>02</b> Grupo de referencia</span>
+              <span><b>03</b> Grupo TERRAGRID</span>
+              <span><b>04</b> Seguimiento posrasplante</span>
+            </div>
+          </Reveal>
+
+          <Reveal className="metrics-console glow-border">
+            <div className="console-header">
+              <span><LineChart size={17} /> Matriz de evidencia</span>
+              <em>Por medir</em>
+            </div>
+            <div className="metrics-list">
+              {VALIDATION_METRICS.map((metric, index) => (
+                <div key={metric}>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <p>{metric}</p>
+                  <i />
+                </div>
+              ))}
+            </div>
+            <p className="console-note">Los resultados definirán si existe valor técnico y comercial. No se publicarán porcentajes de mejora antes de medirlos.</p>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="market section-pad" id="mercado">
+        <div className="section-shell">
+          <Reveal className="section-heading split-heading">
+            <div>
+              <p className="eyebrow">Mercado inicial · Departamento de La Paz</p>
+              <h2>El usuario necesita confiabilidad. El comprador necesita resultados.</h2>
+            </div>
+            <p>La primera oferta no vende una máquina: entrega plantines y evidencia de cada lote. El hardware aparece después, cuando el proceso haya sido validado.</p>
+          </Reveal>
+
+          <div className="market-grid">
+            {MARKET_SEGMENTS.map((segment) => {
+              const Icon = segment.icon
+              return (
+                <Reveal className="market-card" key={segment.title}>
+                  <Icon size={24} />
+                  <h3>{segment.title}</h3>
+                  <p>{segment.copy}</p>
+                </Reveal>
+              )
+            })}
+          </div>
+
+          <Reveal className="market-disclaimer">
+            <BarChart3 size={20} />
+            <p><strong>Lo que falta validar:</strong> pérdidas reales en germinación, costo actual por plantín aceptado, frecuencia de compra, tamaño de lote y disposición de pago.</p>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="business section-pad" id="modelo">
+        <div className="section-shell">
+          <Reveal className="section-heading centered-heading">
+            <p className="eyebrow">Modelo de negocio por etapas</p>
+            <h2>Vender el resultado primero. Desplegar la infraestructura después.</h2>
+          </Reveal>
+
+          <div className="business-roadmap">
+            {BUSINESS_PHASES.map((phase) => (
+              <Reveal className={`business-card ${phase.now ? 'is-now glow-border' : ''}`} key={phase.phase}>
+                <div className="business-phase">
+                  <span>{phase.phase}</span>
+                  {phase.now && <em>Inicio</em>}
+                </div>
+                <p>{phase.label}</p>
+                <h3>{phase.title}</h3>
+                <div className="business-line" />
+                <p>{phase.copy}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="team section-pad" id="equipo">
+        <div className="section-shell">
+          <Reveal className="section-heading split-heading">
+            <div>
+              <p className="eyebrow">Equipo interdisciplinario</p>
+              <h2>Agronomía define el proceso. Tecnología lo vuelve medible.</h2>
+            </div>
+            <p>TERRAGRID reúne capacidades de producto, datos, software, diseño, seguridad, blockchain y agronomía dentro de una misma hoja de ruta.</p>
+          </Reveal>
+
+          <div className="team-grid">
+            {TEAM.map((member) => (
+              <Reveal className="team-card" key={member.name}>
+                <img src={member.photo} alt={member.name} />
+                <div>
+                  <h3>{member.name}</h3>
+                  <span>{member.role}</span>
+                  <p>{member.copy}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="cta section-pad">
+        <div className="section-shell">
+          <Reveal className="cta-card glow-border">
+            <div className="cta-signal"><span /><span /><span /><span /><span /></div>
+            <p className="eyebrow">Buscamos el primer entorno de validación</p>
+            <h2>Convirtamos un lote real en evidencia.</h2>
+            <p>Si produces plantines, gestionas un vivero, investigas cultivos o puedes facilitar un piloto en La Paz, queremos conversar.</p>
+            <div className="cta-actions">
+              <a className="button button-primary" href="mailto:terragrid.2026@gmail.com?subject=Validemos%20un%20lote%20con%20TERRAGRID">
+                <Mail size={17} /> terragrid.2026@gmail.com
+              </a>
+              <a className="button button-secondary" href="#inicio">Volver al inicio</a>
+            </div>
+            <div className="cta-principles">
+              <span><Check size={14} /> Datos antes que promesas</span>
+              <span><Check size={14} /> Agronomía antes que automatización</span>
+              <span><Check size={14} /> La Paz como primer territorio</span>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <footer>
+        <a className="brand" href="#inicio"><span className="brand-mark"><Sprout size={20} /></span><span>TERRAGRID</span></a>
+        <p>Incubación agrícola inteligente · La Paz, Bolivia · 2026</p>
+        <a href="#inicio" aria-label="Volver arriba"><ArrowDown size={18} style={{ transform: 'rotate(180deg)' }} /></a>
+      </footer>
     </main>
   )
 }
-
-useGLTF.preload(MODEL_PATH)
 
 export default App

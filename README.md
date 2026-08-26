@@ -1,151 +1,85 @@
-# 🌱 TERRAGRID — Landing Page
+# TERRAGRID — Landing Page
 
-> **Producción de alimentos en ambiente controlado para territorios con clima extremo, energía inestable y baja conectividad.**
+Sitio oficial del nuevo rumbo de **TERRAGRID**, una startup AgroTech boliviana que desarrolla incubación agrícola inteligente para obtener plantines uniformes, medibles y trazables.
 
-Landing page interactiva con escena 3D del nodo TERRAGRID ambientado en el altiplano boliviano. Construida con React, Three.js y Vite.
+La narrativa sigue el roadmap real del proyecto:
 
----
+1. **TERRAGRID SEED — MVP actual:** germinación y producción inicial de plantines. El piloto prioriza perejil; lechuga sirve como referencia técnica y tomate se trabaja hasta plantín para trasplante.
+2. **TERRAGRID GROW — siguiente etapa:** crecimiento y producción hidropónica compacta, inicialmente para lechuga, perejil y otros cultivos de hoja.
+3. **TERRAGRID SEED BANK — visión futura:** conservación distribuida de semillas, pruebas periódicas de viabilidad y apoyo a su regeneración.
 
-## ✨ Características principales
+La página distingue lo que pertenece al MVP, al roadmap y a la visión futura. No presenta resultados agronómicos aún no obtenidos ni describe la trazabilidad digital como una certificación oficial.
 
-| Característica | Descripción |
-|---|---|
-| **Escena 3D interactiva** | Modelo GLB del nodo desplegable con terreno, montañas, rocas y vegetación generados proceduralmente |
-| **Hotspots informativos** | 6 puntos interactivos sobre el modelo (SMR, Solar, Hidropónico, H₂O, IA, IoT) con panel lateral |
-| **Modo foco** | Vista limpia solo del modelo 3D para exploración libre con OrbitControls |
-| **Post-processing** | Bloom y tone mapping ACES Filmic para iluminación cinematográfica de atardecer altiplánico |
-| **Secciones de contenido** | Problema, Arquitectura del nodo (6 módulos), Impacto (social/ambiental/tecnológico), Mercado objetivo, Equipo |
-| **Responsive** | Adaptado a desktop y dispositivos móviles |
+## Experiencia
 
----
+- Hero editorial oscuro con la propuesta central: «El clima ya es incierto. El plantín no debería serlo».
+- Relato por desplazamiento con un escenario 3D persistente y capítulos para SEED, GROW y SEED BANK.
+- Modelos interactivos con rotación suave y controles mediante mouse o toque.
+- Imágenes de respaldo para pantallas pequeñas, dispositivos sin WebGL y preferencia de movimiento reducido.
+- Secciones de problema, arquitectura tecnológica, validación, mercado, modelo de negocio, equipo y llamado a colaborar.
+- Bordes luminosos animados sin efectos que persigan el cursor.
+- Diseño responsive, navegación móvil y estados de foco visibles.
 
-## 🛠️ Tech Stack
+## Tecnología
 
-- **Framework:** [React 19](https://react.dev/) + TypeScript 6
-- **Build tool:** [Vite 8](https://vite.dev/)
-- **3D:** [React Three Fiber](https://r3f.docs.pmnd.rs/) + [Drei](https://drei.docs.pmnd.rs/) + [Three.js](https://threejs.org/)
-- **Post-processing:** [@react-three/postprocessing](https://docs.pmnd.rs/react-postprocessing/)
-- **Íconos:** [Lucide React](https://lucide.dev/)
-- **Linter:** [Oxlint](https://oxc.rs/)
+- React 19 + TypeScript
+- Vite
+- React Three Fiber + Drei + Three.js
+- Motion para animaciones vinculadas al scroll y entrada en viewport
+- Lucide React para iconografía
+- Oxlint
+- glTF Transform como herramienta de optimización de modelos
 
----
+## Activos 3D
 
-## 📂 Estructura del proyecto
+Los modelos entregados se optimizaron para web con compresión Draco y simplificación geométrica. Las versiones originales permanecen fuera del proyecto de producción; la aplicación utiliza:
 
+| Línea | Ruta web | Tamaño aproximado |
+| --- | --- | ---: |
+| SEED | `public/models/terragrid-seed.glb` | 16,6 MB |
+| GROW | `public/models/terragrid-grow.glb` | 11,7 MB |
+| SEED BANK | `public/models/terragrid-seed-bank.glb` | 21,3 MB |
+
+Los decodificadores Draco se sirven localmente desde `public/draco/`. Las imágenes conceptuales se encuentran en `public/products/` y funcionan como póster y alternativa visual.
+
+## Desarrollo
+
+Requiere Node.js moderno y pnpm.
+
+```bash
+pnpm install
+pnpm dev
 ```
+
+La aplicación estará disponible normalmente en `http://localhost:5173`.
+
+## Verificación
+
+```bash
+pnpm lint
+pnpm build
+```
+
+## Estructura principal
+
+```text
 Terra-Grid/
 ├── public/
-│   ├── blender/          # Modelos 3D (.glb) del nodo TERRAGRID
-│   ├── equipo/           # Fotografías del equipo
-│   ├── favicon.svg
-│   └── icons.svg
+│   ├── draco/       # Decodificador local para los GLB comprimidos
+│   ├── equipo/      # Fotografías del equipo
+│   ├── models/      # Modelos web optimizados
+│   └── products/    # Imágenes conceptuales de las tres líneas
 ├── src/
-│   ├── App.tsx           # Componente principal (escena 3D + secciones)
-│   ├── App.css           # Estilos globales de la landing
-│   ├── index.css         # Reset y variables CSS base
-│   ├── main.tsx          # Entry point de React
-│   └── assets/
+│   ├── App.tsx      # Contenido, interacción, 3D y secciones
+│   ├── App.css      # Sistema visual y responsive
+│   ├── index.css    # Base tipográfica, reset y variables
+│   └── main.tsx
 ├── index.html
-├── vite.config.ts
-├── tsconfig.json
-├── tsconfig.app.json
-├── tsconfig.node.json
-├── package.json
-└── README.md
+└── package.json
 ```
 
----
+## Alcance actual
 
-## 🚀 Instalación y desarrollo
+TERRAGRID se encuentra en preincubación y diseño/validación del MVP. La primera evidencia debe obtenerse comparando el sistema con un método de referencia y midiendo germinación, velocidad de emergencia, uniformidad, descarte, consumo de recursos, costo por plantín aceptado y supervivencia posterior al trasplante.
 
-### Requisitos previos
-
-- [Node.js](https://nodejs.org/) ≥ 18
-- npm ≥ 9
-
-### Clonar e instalar
-
-```bash
-git clone https://github.com/OmarQV/TERRAGRID.git
-cd TERRAGRID
-npm install
-```
-
-### Servidor de desarrollo
-
-```bash
-npm run dev
-```
-
-Abre [http://localhost:5173](http://localhost:5173) en tu navegador.
-
-### Build de producción
-
-```bash
-npm run build
-npm run preview
-```
-
-### Lint
-
-```bash
-npm run lint
-```
-
----
-
-## 🧊 Modelo 3D
-
-El modelo activo del nodo es `public/blender/v2 eva pr6.glb` (~42 MB). Se carga de forma diferida con `Suspense` y se escala automáticamente para ocupar un footprint de 6 unidades en la escena.
-
-La escena incluye elementos procedurales generados con funciones determinísticas (sin `Math.random`):
-
-- **Terreno:** Plano de tierra ocre
-- **Montañas:** 7 conos con cumbres nevadas
-- **Rocas:** 48 dodecaedros dispersos
-- **Vegetación:** 70 conos que simulan paja brava
-
----
-
-## 🏗️ Arquitectura de la aplicación
-
-```
-App
-├── TerragridScene (Canvas R3F)
-│   ├── Iluminación (ambient + 3 directional)
-│   ├── AltiplanoTerrain
-│   ├── MountainRange
-│   ├── ScatteredRocks
-│   ├── DryGrass
-│   ├── ContactShadows
-│   ├── TerragridModel (GLB + Hotspots)
-│   ├── OrbitControls
-│   └── EffectComposer (Bloom)
-├── Hero Section (título + CTA)
-├── Hotspot Panel (panel lateral dinámico)
-├── Problema (5 pasos narrativos)
-├── Módulos (6 tarjetas técnicas)
-├── Impacto (3 pilares: social, ambiental, tecnológico)
-├── Mercado objetivo (8 segmentos)
-├── Equipo (4 integrantes)
-└── CTA final
-```
-
----
-
-## 👥 Equipo
-
-| Integrante | Rol |
-|---|---|
-| **Omar Quispe Vargas** | Liderazgo, estrategia, modelo de negocio y seguridad |
-| **Carol Katerine Canqui** | Datos, inteligencia artificial y validación |
-| **Jhamil Calixto Mamani** | UI/UX, frontend, diseño visual e identidad |
-| **Saúl Mijael Choquehuanca** | Backend, arquitectura técnica y blockchain |
-
-> Universidad Mayor de San Andrés · Carrera de Informática · ElevateU 2026
-
----
-
-## 📄 Licencia
-
-Proyecto académico — ElevateU 2026. Todos los derechos reservados.
+Universidad Mayor de San Andrés · La Paz, Bolivia · 2026.
