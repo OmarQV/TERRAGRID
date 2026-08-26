@@ -2,6 +2,7 @@ import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import { Canvas } from '@react-three/fiber'
 import { ContactShadows, Float, OrbitControls, useGLTF } from '@react-three/drei'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react'
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6'
 import * as THREE from 'three'
 import {
   Activity,
@@ -244,34 +245,56 @@ const BUSINESS_PHASES = [
 
 const TEAM = [
   {
-    photo: '/equipo/omar.jpg',
+    photo: '/equipo/omar.png',
     name: 'Omar Quispe Vargas',
     role: 'Cofundador · Estrategia y producto',
-    copy: 'Conecta tecnología, modelo de negocio, seguridad y alianzas para llevar TERRAGRID hacia validaciones reales.',
-  },
-  {
-    photo: '/equipo/helen.jpeg',
-    name: 'Helen Noemi Flores Apaza',
-    role: 'Agronomía y protocolos',
-    copy: 'Define criterios biológicos, manejo de germinación, calidad del plantín y diseño de los ensayos agronómicos.',
+    socials: [
+      { label: 'LinkedIn', href: 'https://linkedin.com/in/omar-quispe-vargas-7b5601204', icon: FaLinkedinIn },
+      { label: 'X', href: 'https://x.com/OmarQV2025', icon: FaXTwitter },
+      { label: 'Facebook', href: 'https://www.facebook.com/omar.quispe.568/', icon: FaFacebookF },
+      { label: 'Instagram', href: 'https://www.instagram.com/omar_aic_/', icon: FaInstagram },
+    ],
   },
   {
     photo: '/equipo/carol.jpeg',
     name: 'Carol Katerine Canqui Uturunco',
     role: 'Datos, IA y validación',
-    copy: 'Estructura métricas, análisis de datos, validación de usuarios y evolución de la inteligencia aplicada.',
+    socials: [
+      { label: 'LinkedIn', href: 'https://linkedin.com/in/carol-canqui', icon: FaLinkedinIn },
+      { label: 'Instagram', href: 'https://www.instagram.com/carolcanqui/', icon: FaInstagram },
+      { label: 'Facebook', href: 'https://www.facebook.com/katerine.canqui.uturunco', icon: FaFacebookF },
+    ],
+  },
+  {
+    photo: '/equipo/helen.jpeg',
+    name: 'Helen Noemi Flores Apaza',
+    role: 'Agronomía y protocolos',
+    socials: [
+      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/flores-apaza-helen-noemi-2b078b429', icon: FaLinkedinIn },
+      { label: 'Facebook', href: 'https://www.facebook.com/noemi.flores.3558', icon: FaFacebookF },
+      { label: 'Instagram', href: 'https://www.instagram.com/noemiflores18/', icon: FaInstagram },
+    ],
   },
   {
     photo: '/equipo/jhamil.jpg',
     name: 'Jhamil Calixto Mamani Quea',
     role: 'UI/UX e identidad visual',
-    copy: 'Convierte el sistema técnico en una experiencia comprensible mediante interfaces, visualización y diseño.',
+    socials: [
+      { label: 'LinkedIn', href: 'https://linkedin.com/in/jhamilcali', icon: FaLinkedinIn },
+      { label: 'X', href: 'https://x.com/JHAMILCALIXTO', icon: FaXTwitter },
+      { label: 'Instagram', href: 'https://instagram.com/jhamilquea', icon: FaInstagram },
+      { label: 'Facebook', href: 'https://www.facebook.com/jhamil.mamani.7330', icon: FaFacebookF },
+    ],
   },
   {
-    photo: '/img/saul.webp',
+    photo: '/equipo/saul.png',
     name: 'Saúl Mijael Choquehuanca Huanca',
     role: 'Backend y blockchain',
-    copy: 'Diseña la arquitectura de datos, operación local y trazabilidad verificable de cada lote.',
+    socials: [
+      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/saul-choquehuanca/?locale=es', icon: FaLinkedinIn },
+      { label: 'Facebook', href: 'https://www.facebook.com/saulchoque123/', icon: FaFacebookF },
+      { label: 'Instagram', href: 'https://www.instagram.com/baulchop/', icon: FaInstagram },
+    ],
   },
 ]
 
@@ -424,6 +447,17 @@ function App() {
   const progress = useSpring(scrollYProgress, { stiffness: 110, damping: 28, restDelta: 0.001 })
   const heroY = useTransform(scrollYProgress, [0, 0.12], [0, 90])
   const heroOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0.12])
+
+  useEffect(() => {
+    const targetId = window.location.hash.slice(1)
+    if (!targetId) return
+
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(targetId)?.scrollIntoView({ block: 'start' })
+    })
+
+    return () => window.cancelAnimationFrame(frame)
+  }, [])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -771,11 +805,29 @@ function App() {
           <div className="team-grid">
             {TEAM.map((member) => (
               <Reveal className="team-card" key={member.name}>
-                <img src={member.photo} alt={member.name} />
-                <div>
+                <div className="team-photo-wrap">
+                  <img src={member.photo} alt={`Retrato de ${member.name}`} />
+                </div>
+                <div className="team-info">
                   <h3>{member.name}</h3>
                   <span>{member.role}</span>
-                  <p>{member.copy}</p>
+                  <div className="team-socials" aria-label={`Redes sociales de ${member.name}`}>
+                    {member.socials.map((social) => {
+                      const SocialIcon = social.icon
+                      return (
+                        <a
+                          href={social.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={`${member.name} en ${social.label}`}
+                          title={social.label}
+                          key={social.label}
+                        >
+                          <SocialIcon size={16} aria-hidden="true" />
+                        </a>
+                      )
+                    })}
+                  </div>
                 </div>
               </Reveal>
             ))}

@@ -27,6 +27,7 @@ La página distingue lo que pertenece al MVP, al roadmap y a la visión futura. 
 - React Three Fiber + Drei + Three.js
 - Motion para animaciones vinculadas al scroll y entrada en viewport
 - Lucide React para iconografía
+- React Icons para las redes sociales del equipo
 - Oxlint
 - glTF Transform como herramienta de optimización de modelos
 
