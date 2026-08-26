@@ -31,6 +31,8 @@ La página distingue lo que pertenece al MVP, al roadmap y a la visión futura. 
 - Oxlint
 - glTF Transform como herramienta de optimización de modelos
 
+Los modelos ya optimizados se conservan como archivos finales. La herramienta de optimización no forma parte de las dependencias necesarias para compilar o desplegar la web.
+
 ## Activos 3D
 
 Los modelos entregados se optimizaron para web con compresión Draco y simplificación geométrica. Las versiones originales permanecen fuera del proyecto de producción; la aplicación utiliza:
@@ -42,6 +44,13 @@ Los modelos entregados se optimizaron para web con compresión Draco y simplific
 | SEED BANK | `public/models/terragrid-seed-bank.glb` | 21,3 MB |
 
 Los decodificadores Draco se sirven localmente desde `public/draco/`. Las imágenes conceptuales se encuentran en `public/products/` y funcionan como póster y alternativa visual.
+
+## Identidad visual
+
+- `public/brand/terragrid-mark.svg`: símbolo independiente.
+- `public/brand/terragrid-logo.svg`: versión horizontal para fondos oscuros.
+- `public/brand/terragrid-logo-light.svg`: versión horizontal para fondos claros.
+- `public/favicon.svg`: favicon propio derivado del símbolo TERRAGRID.
 
 ## Desarrollo
 

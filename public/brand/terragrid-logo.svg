@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 180" role="img" aria-labelledby="title desc">
+  <title id="title">TERRAGRID</title>
+  <desc id="desc">Logo de TERRAGRID, incubación agrícola inteligente.</desc>
+  <defs>
+    <linearGradient id="tg-logo-green" x1="22" y1="20" x2="108" y2="110" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B8FF9F"/>
+      <stop offset="0.55" stop-color="#6DEA83"/>
+      <stop offset="1" stop-color="#36C96A"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(18 20) scale(1.08)" fill="none" stroke="url(#tg-logo-green)" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke-width="6" d="M64 105V53"/>
+    <path stroke-width="5" d="M64 73 45 56M64 61l19-17M64 86l-16 12M64 86l17 12"/>
+    <path stroke-width="6" d="M57 65C39 64 28 53 29 34c19 1 29 12 28 31Z"/>
+    <path stroke-width="6" d="M71 56c1-18 12-28 31-28-1 19-12 29-31 28Z"/>
+    <path stroke-width="4" d="M44 49 57 62M86 42 73 54" opacity=".85"/>
+    <path stroke-width="5" d="M42 105h44M49 94v11M64 92v13M80 94v11"/>
+    <g fill="#9DF78F" stroke="none">
+      <circle cx="42" cy="105" r="4"/><circle cx="49" cy="94" r="4"/><circle cx="64" cy="92" r="4"/><circle cx="80" cy="94" r="4"/><circle cx="86" cy="105" r="4"/>
+    </g>
+  </g>
+  <text x="166" y="100" fill="#F1F6F2" font-family="Inter, Arial, sans-serif" font-size="68" font-weight="850" letter-spacing="5">TERRAGRID</text>
+  <text x="171" y="136" fill="#9DF78F" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="750" letter-spacing="4">INCUBACIÓN AGRÍCOLA INTELIGENTE</text>
+</svg>

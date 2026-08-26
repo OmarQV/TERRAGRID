@@ -22,7 +22,6 @@
     "three": "^0.185.0"
   },
   "devDependencies": {
-    "@gltf-transform/cli": "^4.4.2",
     "@types/node": "^24.13.2",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",

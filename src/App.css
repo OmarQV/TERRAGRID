@@ -113,9 +113,13 @@ section[id] {
   height: 36px;
   place-items: center;
   border-radius: 50%;
-  color: #0d1a11;
-  background: var(--green);
+  background: rgba(157, 247, 143, 0.07);
   box-shadow: 0 0 24px rgba(157, 247, 143, 0.22);
+}
+
+.brand-mark img {
+  width: 25px;
+  height: 25px;
 }
 
 .topbar nav {

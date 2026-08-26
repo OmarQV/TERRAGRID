@@ -490,7 +490,7 @@ function App() {
 
       <header className="topbar">
         <a className="brand" href="#inicio" aria-label="TERRAGRID · Inicio">
-          <span className="brand-mark"><Sprout size={21} /></span>
+          <span className="brand-mark"><img src="/brand/terragrid-mark.svg" alt="" /></span>
           <span>TERRAGRID</span>
         </a>
 
@@ -858,7 +858,7 @@ function App() {
       </section>
 
       <footer>
-        <a className="brand" href="#inicio"><span className="brand-mark"><Sprout size={20} /></span><span>TERRAGRID</span></a>
+        <a className="brand" href="#inicio"><span className="brand-mark"><img src="/brand/terragrid-mark.svg" alt="" /></span><span>TERRAGRID</span></a>
         <p>Incubación agrícola inteligente · La Paz, Bolivia · 2026</p>
         <a href="#inicio" aria-label="Volver arriba"><ArrowDown size={18} style={{ transform: 'rotate(180deg)' }} /></a>
       </footer>
