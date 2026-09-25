@@ -129,7 +129,9 @@ Terra-Grid/
 ├── public/            # Marca, equipo, modelos 3D y renders de producto
 ├── src/
 │   ├── assets/
-│   │   ├── fondo.webp               # Paisaje del hero
+│   │   ├── fondo.webp               # Paisaje del hero (escritorio y tablet)
+│   │   ├── fondo-movil.webp         # Recorte central del paisaje para el hero vertical (celular)
+│   │   ├── fondo-contenedores.webp  # Fondo fotográfico del roadmap de productos
 │   │   ├── logo-terragrid.webp      # Logotipo (letras blancas, fondo transparente)
 │   │   ├── problem-1..3.webp        # Fotografías de las tarjetas de «El problema»
 │   │   ├── scene-semilla.webp       # Escena fija del roadmap (plántula al amanecer)
@@ -152,7 +154,8 @@ Terra-Grid/
 
 ## Créditos de imágenes
 
-- `fondo.webp`: paisaje andino del hero, aportado por el equipo.
+- `fondo.webp`: paisaje andino del hero, aportado por el equipo. `fondo-movil.webp` es su recorte central (640 px de ancho, 70 KB) que se sirve en pantallas menores de 768 px, donde el hero vertical solo muestra esa franja.
+- `fondo-contenedores.webp`: conversión a WebP de `public/img/fondo contenedores.png` (1.6 MB → 83 KB).
 - `hero-andes.webp`: fotografía del Illimani desde La Paz por [Azzedine Rouichi](https://unsplash.com/photos/No6mIqzvq5o) en Unsplash (Licencia Unsplash). Ya no se usa en el hero.
 - `terragrid-machine.webp`: recorte con fondo transparente de `public/products/terragrid-seed.png`.
 - `logo-terragrid.webp`: recorte de `public/img/logo tearagrid.png` convertido a WebP.

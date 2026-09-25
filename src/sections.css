@@ -189,10 +189,10 @@ h4 {
   line-height: 1;
 }
 
-.section-heading > p,
+.section-heading > p:not(.eyebrow),
 .section-heading > div + p,
-.validation-copy > p,
-.cta-card > p {
+.validation-copy > p:not(.eyebrow),
+.cta-card > p:not(.eyebrow) {
   color: var(--muted);
   font-size: 1rem;
   line-height: 1.72;
@@ -899,8 +899,12 @@ h4 {
   transform: translateX(3px);
 }
 
-.system-map + .data-strip {
+.system-dots + .data-strip {
   margin-top: 40px;
+}
+
+.system-dots {
+  display: none;
 }
 
 .data-strip {
@@ -1126,6 +1130,24 @@ h4 {
 
 .business-card:not(.is-now) {
   background: rgba(255, 255, 255, 0.018);
+}
+
+.business-phase {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.business-phase em {
+  border-radius: 999px;
+  padding: 6px 8px;
+  color: var(--green);
+  background: rgba(157, 247, 143, 0.07);
+  font-size: 0.56rem;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .business-phase > span {
@@ -1905,6 +1927,7 @@ footer > a:last-child {
     margin: 32px -24px 0;
     padding: 4px 24px 6px;
     overflow-x: auto;
+    overscroll-behavior-x: contain;
     scroll-padding-inline: 24px;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
@@ -1919,8 +1942,53 @@ footer > a:last-child {
     scroll-snap-align: start;
   }
 
+  .system-chip small {
+    font-size: 0.92em;
+  }
+
+  /* Sin blur en tablet/celular: el filtro sobre fotos es caro para la GPU móvil. */
+  .system-chip-body {
+    background: rgba(14, 24, 19, 0.78);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
   .system-link {
     display: none;
+  }
+
+  .system-dots {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    margin-top: 10px;
+  }
+
+  .system-dots button {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .system-dots button::before {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(241, 246, 242, 0.24);
+    content: '';
+    transition: width 220ms ease, background 220ms ease;
+  }
+
+  .system-dots button.is-active::before {
+    width: 22px;
+    background: var(--green-strong);
+  }
+
+  .system-dots + .data-strip {
+    margin-top: 22px;
   }
 
   .system-body h3 {
@@ -1956,7 +2024,7 @@ footer > a:last-child {
   }
 
   .system-chip {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .system-map {
@@ -1967,5 +2035,49 @@ footer > a:last-child {
 
   .system-item {
     flex-basis: min(280px, 80%);
+  }
+}
+
+/* Auditoría móvil: textos con tamaño mínimo legible (11 px) y zonas táctiles de 44 px. */
+@media (max-width: 620px) {
+  .eyebrow,
+  .scene-copy .eyebrow {
+    font-size: 0.72rem;
+  }
+
+  .problem-tag,
+  .system-tag,
+  .team-card span,
+  .business-card > p:nth-of-type(1),
+  .console-header em,
+  .business-phase em {
+    font-size: 0.7rem;
+  }
+
+  .validation-steps span {
+    font-size: 0.8rem;
+  }
+
+  .validation-steps b,
+  .metrics-list span {
+    font-size: 0.7rem;
+  }
+
+  .cta-principles span,
+  footer p {
+    font-size: 0.72rem;
+  }
+
+  .problem .split-heading > p {
+    padding-left: 16px;
+  }
+
+  .brand {
+    min-height: 44px;
+  }
+
+  .team-socials a {
+    width: 44px;
+    height: 44px;
   }
 }

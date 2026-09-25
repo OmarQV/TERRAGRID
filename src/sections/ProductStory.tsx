@@ -1,6 +1,7 @@
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { BadgeCheck, Check, Sprout } from 'lucide-react'
 import scene from '../assets/scene-semilla.webp'
+import backdrop from '../assets/fondo-contenedores.webp'
 import ProductStage from '../components/ProductStage'
 import Parallax from '../components/Parallax'
 import Reveal from '../components/Reveal'
@@ -87,7 +88,7 @@ export default function ProductStory() {
         <div className="product-sheet-backdrop" aria-hidden="true">
           <Parallax className="product-sheet-photo" distance={36} mobileDistance={12}>
             <img
-              src="/img/fondo%20contenedores.png"
+              src={backdrop}
               alt=""
               width={1672}
               height={941}

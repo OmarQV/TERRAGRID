@@ -535,7 +535,15 @@
   .pstage.is-compact .pstage-panel {
     width: 100%;
     padding: 14px 14px 10px;
+    background: rgba(10, 18, 14, 0.84);
     font-size: 12.5px;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .pstage.is-compact .pstage-panel small,
+  .pstage.is-compact .pstage-panel p {
+    font-size: 0.88em;
   }
 
   .pstage.is-compact .pstage-panel ul {

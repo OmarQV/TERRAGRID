@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { ArrowRight, Droplet, Leaf, Network, QrCode, ShieldCheck, Sun } from 'lucide-react'
 import fondo from '../assets/tec-fondo.webp'
 import Reveal from '../components/Reveal'
@@ -11,6 +12,29 @@ const CHIPS = [
 ]
 
 export default function SystemSection() {
+  const map = useRef<HTMLDivElement>(null)
+  const [current, setCurrent] = useState(0)
+
+  // En tablet y celular las capas forman un carrusel: los puntos dicen cuántas hay y en cuál se está.
+  useEffect(() => {
+    const element = map.current
+    if (!element) return
+    const update = () => {
+      const items = Array.from(element.children) as HTMLElement[]
+      const step = items.length > 1 ? items[1].offsetLeft - items[0].offsetLeft : 1
+      const atEnd = element.scrollLeft + element.clientWidth >= element.scrollWidth - 4
+      setCurrent(atEnd ? items.length - 1 : Math.round(element.scrollLeft / step))
+    }
+    element.addEventListener('scroll', update, { passive: true })
+    return () => element.removeEventListener('scroll', update)
+  }, [])
+
+  const goTo = (index: number) => {
+    const element = map.current
+    const item = element?.children[index] as HTMLElement | undefined
+    if (element && item) element.scrollTo({ left: item.offsetLeft - element.offsetLeft - 24, behavior: 'smooth' })
+  }
+
   return (
     <section className="system section-pad" id="sistema">
       <div className="system-inner">
@@ -47,7 +71,7 @@ export default function SystemSection() {
           </div>
         </div>
 
-        <div className="system-map" role="region" aria-label="Capas de la tecnología TERRAGRID" tabIndex={0}>
+        <div className="system-map" ref={map} role="region" aria-label="Capas de la tecnología TERRAGRID" tabIndex={0}>
           {SYSTEM_LAYERS.map((layer, index) => {
             const Icon = layer.icon
             return (
@@ -77,6 +101,19 @@ export default function SystemSection() {
               </Reveal>
             )
           })}
+        </div>
+
+        <div className="system-dots">
+          {SYSTEM_LAYERS.map((layer, index) => (
+            <button
+              key={layer.title}
+              type="button"
+              className={index === current ? 'is-active' : ''}
+              aria-label={`Ir a ${layer.title}`}
+              aria-current={index === current ? 'true' : undefined}
+              onClick={() => goTo(index)}
+            />
+          ))}
         </div>
 
         <Reveal className="data-strip">

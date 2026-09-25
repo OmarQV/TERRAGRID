@@ -1,5 +1,6 @@
 import { ArrowRight, Droplets, Sprout, Thermometer } from 'lucide-react'
 import fondo from '../assets/fondo.webp'
+import fondoMovil from '../assets/fondo-movil.webp'
 import logo from '../assets/logo-terragrid.webp'
 import machine from '../assets/terragrid-machine.webp'
 import SensorCard from './SensorCard'
@@ -50,15 +51,19 @@ export default function Hero() {
   return (
     <section id="inicio" className="hero relative isolate flex flex-col overflow-hidden bg-surface pt-[76px] md:pt-[88px]">
       <Parallax className="absolute -inset-y-12 inset-x-0 -z-20" distance={40} mobileDistance={12} aria-hidden="true">
-      <img
-        src={fondo}
-        alt=""
-        width={1672}
-        height={941}
-        fetchPriority="high"
-        decoding="async"
-        className="absolute inset-0 -z-20 size-full object-cover object-center"
-      />
+      {/* En celular (hero vertical) solo se ve el centro de la foto: se sirve ese recorte (70 KB en vez de 1.8 MB). */}
+      <picture className="contents">
+        <source media="(max-width: 767px)" srcSet={fondoMovil} width={640} height={941} />
+        <img
+          src={fondo}
+          alt=""
+          width={1672}
+          height={941}
+          fetchPriority="high"
+          decoding="async"
+          className="absolute inset-0 -z-20 size-full object-cover object-center"
+        />
+      </picture>
       </Parallax>
       <div aria-hidden="true" className="hero-blur -z-10" />
       {/* Sombra superior: da contraste al navbar transparente sobre nubes y cielo. */}

@@ -29,6 +29,24 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', update)
   }, [])
 
+  // El menú móvil se cierra con Escape, al tocar fuera de él o al desplazar la página.
+  useEffect(() => {
+    if (!open) return
+    const close = () => setOpen(false)
+    const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') close() }
+    const onPointer = (event: PointerEvent) => {
+      if (!(event.target as Element).closest('#menu-movil, [aria-controls="menu-movil"]')) close()
+    }
+    document.addEventListener('keydown', onKey)
+    document.addEventListener('pointerdown', onPointer)
+    window.addEventListener('scroll', close, { passive: true })
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.removeEventListener('pointerdown', onPointer)
+      window.removeEventListener('scroll', close)
+    }
+  }, [open])
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-[90] transition-[background-color,box-shadow] duration-300 ${

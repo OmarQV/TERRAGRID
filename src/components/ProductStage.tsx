@@ -15,13 +15,15 @@ class ModelBoundary extends Component<{ children: ReactNode; onError: () => void
   render() { return this.state.failed ? null : this.props.children }
 }
 
-type NetworkInformation = { saveData?: boolean; effectiveType?: string }
+type NetworkInformation = { saveData?: boolean; effectiveType?: string; type?: string }
 
 /** WebGL disponible y una conexión/equipo que aguante los modelos (pesan entre 11 y 21 MB). */
 function canRender3D() {
   const nav = navigator as Navigator & { connection?: NetworkInformation; deviceMemory?: number }
   if (nav.connection?.saveData) return false
   if (['slow-2g', '2g', '3g'].includes(nav.connection?.effectiveType ?? '')) return false
+  // Con datos móviles no se descargan 50 MB de modelos sin que nadie lo pida: se queda la foto.
+  if (nav.connection?.type === 'cellular') return false
   if (nav.deviceMemory && nav.deviceMemory < 4) return false
   try {
     const canvas = document.createElement('canvas')
