@@ -14,8 +14,8 @@ La página distingue lo que pertenece al MVP, al roadmap y a la visión futura. 
 
 **Hero (≈100vh)** con estética AgTech clara y premium:
 
-- Navbar flotante (se vuelve una barra clara al hacer scroll), badge «Preincubación · La Paz, Bolivia», titular «Agricultura inteligente para un futuro real.» y llamados a la acción.
-- Fotografía del altiplano como fondo, con un velo blanco suave a la izquierda para garantizar la legibilidad.
+- Navbar flotante con el logotipo TERRAGRID (se vuelve una barra oscura translúcida al hacer scroll), badge «Preincubación · La Paz, Bolivia», titular «Agricultura inteligente para un futuro real.» y llamados a la acción.
+- Fotografía del altiplano a pantalla completa como fondo, desenfocada de forma progresiva detrás del texto (izquierda en tablet/desktop, arriba en móvil) para que las letras claras se lean bien.
 - Cámara TERRAGRID SEED (imagen con fondo transparente) como protagonista, con tres tarjetas IoT flotantes (temperatura, humedad, riego) unidas a la máquina por líneas finas.
 - Panel de métricas del piloto y animaciones de entrada muy sutiles (se desactivan con `prefers-reduced-motion`).
 
@@ -88,6 +88,7 @@ Terra-Grid/
 ├── src/
 │   ├── assets/
 │   │   ├── fondo.webp               # Paisaje del hero
+│   │   ├── logo-terragrid.webp      # Logotipo (letras blancas, fondo transparente)
 │   │   └── terragrid-machine.webp   # Cámara TERRAGRID con fondo transparente
 │   ├── components/    # Navbar, Hero, SensorCard, StatsPanel, Logo,
 │   │                  # Reveal, ProductStage y ProductCanvas (3D diferido)
@@ -107,6 +108,7 @@ Terra-Grid/
 - `fondo.webp`: paisaje andino del hero, aportado por el equipo.
 - `hero-andes.webp`: fotografía del Illimani desde La Paz por [Azzedine Rouichi](https://unsplash.com/photos/No6mIqzvq5o) en Unsplash (Licencia Unsplash). Ya no se usa en el hero.
 - `terragrid-machine.webp`: recorte con fondo transparente de `public/products/terragrid-seed.png`.
+- `logo-terragrid.webp`: recorte de `public/img/logo tearagrid.png` convertido a WebP.
 
 ## Alcance actual
 

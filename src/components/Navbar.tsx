@@ -20,7 +20,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
-  // Transparente sobre el hero; al bajar pasa a una barra clara para leerse sobre el resto de secciones.
+  // Transparente sobre el hero; al bajar pasa a una barra oscura translúcida (el logotipo es blanco).
   useEffect(() => {
     const update = () => setScrolled(window.scrollY > 24)
     update()
@@ -31,7 +31,7 @@ export default function Navbar() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-[90] transition-[background-color,box-shadow] duration-300 ${
-        scrolled || open ? 'bg-white/90 shadow-[0_1px_0_rgba(20,32,29,0.08)] backdrop-blur-xl' : ''
+        scrolled || open ? 'bg-[rgba(8,13,11,0.8)] shadow-[0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl' : ''
       }`}
     >
       <div className="relative mx-auto w-full max-w-[1440px] px-5 md:px-10">
@@ -39,7 +39,7 @@ export default function Navbar() {
           <Logo className="lg:justify-self-start" />
 
           <nav aria-label="Navegación principal" className="hidden lg:block">
-            <ul className="flex items-center gap-7 xl:gap-10">
+            <ul className="text-lift flex items-center gap-7 xl:gap-10">
               {LINKS.map((link) => (
                 <li key={link.href}>
                   <a
@@ -47,8 +47,8 @@ export default function Navbar() {
                     aria-current={link.current ? 'page' : undefined}
                     className={`relative inline-block py-2 text-[15px] font-medium transition-colors ${
                       link.current
-                        ? 'text-primary after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-primary'
-                        : 'text-ink/80 hover:text-primary'
+                        ? 'font-semibold text-primary-bright after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-primary-bright'
+                        : 'text-white hover:text-primary-bright'
                     }`}
                   >
                     {link.label}
@@ -72,7 +72,7 @@ export default function Navbar() {
             aria-expanded={open}
             aria-controls="menu-movil"
             aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
-            className="grid size-11 place-items-center rounded-full border border-black/10 bg-white/70 text-ink backdrop-blur lg:hidden"
+            className="grid size-11 place-items-center rounded-full border border-white/35 bg-white/15 text-white backdrop-blur lg:hidden"
           >
             {open ? <X aria-hidden="true" className="size-5" /> : <Menu aria-hidden="true" className="size-5" />}
           </button>

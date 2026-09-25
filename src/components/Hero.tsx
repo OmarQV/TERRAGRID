@@ -56,7 +56,7 @@ export default function Hero() {
         decoding="async"
         className="absolute inset-0 -z-20 size-full object-cover object-center"
       />
-      <div aria-hidden="true" className="hero-veil absolute inset-0 -z-10" />
+      <div aria-hidden="true" className="hero-blur -z-10" />
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-1 items-center px-5 py-8 md:px-10 md:py-6">
         <div className="max-w-[37.5rem] md:max-w-[min(37.5rem,calc(46vw-3.5rem))]">
@@ -68,17 +68,17 @@ export default function Hero() {
           </p>
 
           <h1
-            className="mt-6 text-[clamp(2.5rem,12.5vw,3.25rem)] font-extrabold leading-[0.98] tracking-[-0.035em] motion-safe:animate-fade-up md:mt-7 md:text-[min(clamp(2.5rem,1.2rem+3.2vw,4.5rem),7.5vh)]"
+            className="text-lift mt-6 text-[clamp(2.5rem,12.5vw,3.25rem)] font-extrabold leading-[0.98] tracking-[-0.035em] motion-safe:animate-fade-up md:mt-7 md:text-[min(clamp(2.5rem,1.2rem+3.2vw,4.5rem),7.5vh)]"
             style={{ animationDelay: '120ms' }}
           >
-            <span className="block text-ink">Agricultura</span>
-            <span className="block text-ink">inteligente</span>
-            <span className="block text-primary">para un futuro</span>
-            <span className="block text-primary">real.</span>
+            <span className="block text-white">Agricultura</span>
+            <span className="block text-white">inteligente</span>
+            <span className="block text-primary-bright">para un futuro</span>
+            <span className="block text-primary-bright">real.</span>
           </h1>
 
           <p
-            className="mt-6 max-w-[590px] text-pretty text-[clamp(1rem,0.55rem+0.62vw,1.25rem)] leading-[1.55] text-body motion-safe:animate-fade-up md:mt-8"
+            className="text-lift mt-6 max-w-[590px] text-pretty text-[clamp(1rem,0.55rem+0.62vw,1.25rem)] leading-[1.55] text-white/95 motion-safe:animate-fade-up md:mt-8"
             style={{ animationDelay: '280ms' }}
           >
             TERRAGRID automatiza y documenta la microgerminación de cultivos para generar evidencia útil y decisiones
@@ -101,7 +101,7 @@ export default function Hero() {
             </a>
             <a
               href="#validacion"
-              className={`${buttonBase} border border-[rgba(20,100,60,0.4)] bg-white/25 text-ink backdrop-blur-sm hover:bg-white/70`}
+              className={`${buttonBase} text-lift border border-white/70 bg-white/10 text-white backdrop-blur-sm hover:bg-white/25`}
             >
               Ver el proyecto
             </a>
