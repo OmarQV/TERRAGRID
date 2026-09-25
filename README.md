@@ -89,6 +89,7 @@ Terra-Grid/
 │   ├── assets/
 │   │   ├── fondo.webp               # Paisaje del hero
 │   │   ├── logo-terragrid.webp      # Logotipo (letras blancas, fondo transparente)
+│   │   ├── problem-1..3.webp        # Fotografías de las tarjetas de «El problema»
 │   │   └── terragrid-machine.webp   # Cámara TERRAGRID con fondo transparente
 │   ├── components/    # Navbar, Hero, SensorCard, StatsPanel, Logo,
 │   │                  # Reveal, ProductStage y ProductCanvas (3D diferido)
@@ -109,6 +110,7 @@ Terra-Grid/
 - `hero-andes.webp`: fotografía del Illimani desde La Paz por [Azzedine Rouichi](https://unsplash.com/photos/No6mIqzvq5o) en Unsplash (Licencia Unsplash). Ya no se usa en el hero.
 - `terragrid-machine.webp`: recorte con fondo transparente de `public/products/terragrid-seed.png`.
 - `logo-terragrid.webp`: recorte de `public/img/logo tearagrid.png` convertido a WebP.
+- `problem-1.webp`, `problem-2.webp`, `problem-3.webp`: recortes horizontales (1.85:1) y conversión a WebP de `public/img/p1 pl.png`, `p2 pl.png` y `p3 pl.png`.
 
 ## Alcance actual
 

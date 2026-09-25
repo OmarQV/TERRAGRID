@@ -1,4 +1,4 @@
-import { Sparkles } from 'lucide-react'
+import { ArrowRight, Sparkles } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import { PROBLEM_POINTS } from '../data/content'
 
@@ -9,7 +9,16 @@ export default function ProblemSection() {
         <Reveal className="section-heading split-heading">
           <div>
             <p className="eyebrow">El problema comienza antes de ver la cosecha</p>
-            <h2>Una germinación irregular compromete decisiones, tiempo y recursos.</h2>
+            <h2>
+              Una germinación
+              <br />
+              irregular compromete
+              <span>
+                decisiones,
+                <br />
+                tiempo y recursos.
+              </span>
+            </h2>
           </div>
           <p>
             El productor suele asumir el riesgo desde el almácigo sin un historial comparable del proceso. TERRAGRID enfoca su primera validación exactamente en esa brecha.
@@ -21,20 +30,30 @@ export default function ProblemSection() {
             const Icon = point.icon
             return (
               <Reveal className="problem-card glow-border" key={point.title}>
-                <span className="card-index">0{index + 1}</span>
-                <Icon size={27} />
-                <h3>{point.title}</h3>
-                <p>{point.copy}</p>
+                <div className="problem-media">
+                  <div className="problem-photo">
+                    <img src={point.image} alt={point.imageAlt} width={1000} height={540} loading="lazy" decoding="async" />
+                  </div>
+                  <span className="card-index">0{index + 1}</span>
+                  <span className="problem-icon" aria-hidden="true">
+                    <Icon size={24} />
+                  </span>
+                </div>
+                <div className="problem-body">
+                  <h3>{point.title}</h3>
+                  <p>{point.copy}</p>
+                  <div className="problem-foot" aria-hidden="true">
+                    <span className="problem-tag">{point.tag}</span>
+                    <span className="problem-arrow">
+                      <ArrowRight size={18} />
+                    </span>
+                  </div>
+                </div>
               </Reveal>
             )
           })}
         </div>
 
-        <Reveal className="problem-statement">
-          <Sparkles size={19} />
-          <p><strong>La hipótesis:</strong> si se controlan y documentan las condiciones críticas de germinación, será posible entregar plantines más uniformes y tomar mejores decisiones antes de trasladarlos al campo.</p>
-          <span>Por validar con evidencia</span>
-        </Reveal>
       </div>
     </section>
   )

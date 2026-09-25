@@ -17,6 +17,9 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6'
+import problemGerminacion from '../assets/problem-1.webp'
+import problemClima from '../assets/problem-2.webp'
+import problemCalidad from '../assets/problem-3.webp'
 
 export type ProductLine = {
   id: 'seed' | 'grow' | 'seed-bank'
@@ -114,16 +117,25 @@ export const PROBLEM_POINTS = [
     icon: TimerReset,
     title: 'Resembrar cuesta tiempo',
     copy: 'Una emergencia irregular puede obligar al productor a repetir el almácigo y retrasar todo el ciclo.',
+    tag: 'Más tiempo, más costos',
+    image: problemGerminacion,
+    imageAlt: 'Plántulas de una misma siembra: algunas sanas y otras con brotes deformes sobre tierra oscura',
   },
   {
     icon: CloudSun,
     title: 'El clima amplifica el riesgo',
     copy: 'En La Paz, bajas temperaturas, heladas y variaciones ambientales vuelven más vulnerable la primera etapa.',
+    tag: 'Condiciones inestables',
+    image: problemClima,
+    imageAlt: 'Una plántula entre el calor del día (32 °C) y el frío de la noche (2 °C)',
   },
   {
     icon: ScanLine,
     title: 'La calidad llega sin historia',
     copy: 'Sin datos comparables del lote es difícil distinguir un plantín vigoroso de uno que solo parece estar listo.',
+    tag: 'Decisiones a ciegas',
+    image: problemCalidad,
+    imageAlt: 'Bandejas de plantines: un lote marcado como sano y otro con una alerta',
   },
 ]
 
