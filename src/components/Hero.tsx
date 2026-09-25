@@ -1,5 +1,6 @@
 import { ArrowRight, Droplets, Sprout, Thermometer } from 'lucide-react'
 import fondo from '../assets/fondo.webp'
+import logo from '../assets/logo-terragrid.webp'
 import machine from '../assets/terragrid-machine.webp'
 import SensorCard from './SensorCard'
 import StatsPanel from './StatsPanel'
@@ -41,7 +42,7 @@ const CONNECTORS = [
 ]
 
 const buttonBase =
-  'inline-flex h-14 items-center justify-center gap-2 rounded-full px-6 text-base font-semibold xl:px-8 ' +
+  'inline-flex h-14 items-center justify-center gap-2 rounded-full px-6 text-base font-semibold md:h-[clamp(3rem,5.2vh,3.5rem)] xl:px-8 ' +
   'transition duration-200 hover:-translate-y-0.5'
 
 export default function Hero() {
@@ -57,18 +58,21 @@ export default function Hero() {
         className="absolute inset-0 -z-20 size-full object-cover object-center"
       />
       <div aria-hidden="true" className="hero-blur -z-10" />
+      {/* Sombra superior: da contraste al navbar transparente sobre nubes y cielo. */}
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 -z-10 h-36 bg-linear-to-b from-[rgba(6,20,12,0.4)] to-transparent" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-1 items-center px-5 py-8 md:px-10 md:py-6">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-1 items-center px-5 py-8 md:px-10 md:py-[clamp(0.5rem,1.5vh,1.5rem)]">
         <div className="max-w-[37.5rem] md:max-w-[min(37.5rem,calc(46vw-3.5rem))]">
-          <p
-            className="inline-flex items-center gap-2.5 rounded-full border border-black/[0.08] bg-white/70 px-4 py-2 text-sm font-medium text-ink shadow-[0_1px_2px_rgba(0,0,0,0.04)] backdrop-blur-sm motion-safe:animate-fade-in"
-          >
-            <span aria-hidden="true" className="size-2 rounded-full bg-primary shadow-[0_0_0_4px_rgba(22,148,71,0.16)]" />
-            Preincubación · La Paz, Bolivia
-          </p>
+          <img
+            src={logo}
+            alt="TERRAGRID"
+            width={1188}
+            height={278}
+            className="hero-logo h-auto w-[min(100%,20rem)] [filter:drop-shadow(0_1px_1.5px_rgba(6,20,12,0.75))_drop-shadow(0_4px_18px_rgba(6,20,12,0.55))] motion-safe:animate-fade-in sm:w-[min(100%,24rem)]"
+          />
 
           <h1
-            className="text-lift mt-6 text-[clamp(2.5rem,12.5vw,3.25rem)] font-extrabold leading-[0.98] tracking-[-0.035em] motion-safe:animate-fade-up md:mt-7 md:text-[min(clamp(2.5rem,1.2rem+3.2vw,4.5rem),7.5vh)]"
+            className="text-lift mt-6 text-[clamp(2.5rem,12.5vw,3.25rem)] font-extrabold leading-[0.98] tracking-[-0.035em] motion-safe:animate-fade-up md:mt-[clamp(1rem,3vh,2rem)] md:text-[min(clamp(2.5rem,1.2rem+3vw,4rem),6.4vh)]"
             style={{ animationDelay: '120ms' }}
           >
             <span className="block text-white">Agricultura</span>
@@ -77,16 +81,10 @@ export default function Hero() {
             <span className="block text-primary-bright">real.</span>
           </h1>
 
-          <p
-            className="text-lift mt-6 max-w-[590px] text-pretty text-[clamp(1rem,0.55rem+0.62vw,1.25rem)] leading-[1.55] text-white/95 motion-safe:animate-fade-up md:mt-8"
-            style={{ animationDelay: '280ms' }}
-          >
-            TERRAGRID automatiza y documenta la microgerminación de cultivos para generar evidencia útil y decisiones
-            más precisas en el campo.
-          </p>
+          
 
           <div
-            className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-3 md:mt-10 xl:gap-4 motion-safe:animate-fade-up"
+            className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-3 md:mt-[clamp(1.25rem,3.7vh,2.5rem)] xl:gap-4 motion-safe:animate-fade-up"
             style={{ animationDelay: '440ms' }}
           >
             <a

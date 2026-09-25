@@ -14,7 +14,7 @@ La página distingue lo que pertenece al MVP, al roadmap y a la visión futura. 
 
 **Hero (≈100vh)** con estética AgTech clara y premium:
 
-- Navbar flotante con el logotipo TERRAGRID (se vuelve una barra oscura translúcida al hacer scroll), badge «Preincubación · La Paz, Bolivia», titular «Agricultura inteligente para un futuro real.» y llamados a la acción.
+- Logotipo TERRAGRID grande sobre el titular «Agricultura inteligente para un futuro real.», descripción y llamados a la acción. El navbar es transparente y muestra el logotipo solo al hacer scroll, cuando pasa a una barra oscura translúcida.
 - Fotografía del altiplano a pantalla completa como fondo, desenfocada de forma progresiva detrás del texto (izquierda en tablet/desktop, arriba en móvil) para que las letras claras se lean bien.
 - Cámara TERRAGRID SEED (imagen con fondo transparente) como protagonista, con tres tarjetas IoT flotantes (temperatura, humedad, riego) unidas a la máquina por líneas finas.
 - Panel de métricas del piloto y animaciones de entrada muy sutiles (se desactivan con `prefers-reduced-motion`).

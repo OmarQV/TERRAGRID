@@ -21,6 +21,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
 
   // Transparente sobre el hero; al bajar pasa a una barra oscura translúcida (el logotipo es blanco).
+  // El logotipo del navbar solo aparece entonces: arriba ya lo muestra el propio hero.
   useEffect(() => {
     const update = () => setScrolled(window.scrollY > 24)
     update()
@@ -36,7 +37,7 @@ export default function Navbar() {
     >
       <div className="relative mx-auto w-full max-w-[1440px] px-5 md:px-10">
         <div className="flex h-[76px] items-center justify-between md:h-[88px] lg:grid lg:grid-cols-[1fr_auto_1fr]">
-          <Logo className="lg:justify-self-start" />
+          <Logo visible={scrolled || open} className="lg:justify-self-start" />
 
           <nav aria-label="Navegación principal" className="hidden lg:block">
             <ul className="text-lift flex items-center gap-7 xl:gap-10">

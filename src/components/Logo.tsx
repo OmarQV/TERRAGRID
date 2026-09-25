@@ -2,15 +2,21 @@ import logo from '../assets/logo-terragrid.webp'
 
 type LogoProps = {
   className?: string
+  /** Si es false, el enlace queda oculto (y fuera del orden de tabulación). */
+  visible?: boolean
 }
 
 /** Logotipo TERRAGRID (letras blancas): pensado para fondos oscuros o desenfocados. */
-export default function Logo({ className = '' }: LogoProps) {
+export default function Logo({ className = '', visible = true }: LogoProps) {
   return (
     <a
       href="#inicio"
       aria-label="TERRAGRID, ir al inicio"
-      className={`inline-flex items-center rounded-lg ${className}`}
+      aria-hidden={!visible}
+      tabIndex={visible ? undefined : -1}
+      className={`inline-flex items-center rounded-lg transition-opacity duration-300 ${
+        visible ? 'opacity-100' : 'pointer-events-none opacity-0'
+      } ${className}`}
     >
       <img
         src={logo}
