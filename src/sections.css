@@ -1769,3 +1769,185 @@ footer > a:last-child {
   *, *::before, *::after { transition-duration: 0.001ms !important; }
   .stage-progress { display: none; }
 }
+
+/* ==========================================================================
+   Celular (≤ 620px): mismo contenido y estilo, con mejor ritmo vertical,
+   lectura cómoda y zonas táctiles de tamaño adecuado.
+   ========================================================================== */
+@media (max-width: 620px) {
+  .section-pad {
+    padding: 64px 0;
+  }
+
+  /* Mismo margen lateral (20px) que el hero. */
+  .section-shell,
+  .section-shell-wide {
+    width: calc(100% - 40px);
+  }
+
+  .section-heading h2,
+  .product-story-intro h2,
+  .validation-copy h2,
+  .cta-card h2,
+  .problem .split-heading h2 {
+    margin-top: 14px;
+    font-size: clamp(1.9rem, 8.6vw, 2.5rem);
+  }
+
+  .split-heading,
+  .validation-grid {
+    gap: 22px;
+  }
+
+  .problem-grid,
+  .system-map,
+  .market-grid,
+  .business-roadmap {
+    gap: 14px;
+    margin-top: 36px;
+  }
+
+  /* Textos de tarjetas: unos 15px para leer cómodo en pantallas pequeñas. */
+  .problem-body p,
+  .system-card p,
+  .market-card p,
+  .business-card > p:last-child,
+  .problem-statement p,
+  .market-disclaimer p {
+    font-size: 0.94rem;
+    line-height: 1.6;
+  }
+
+  .problem-body {
+    padding: 40px 22px 22px;
+  }
+
+  .problem-icon {
+    left: 22px;
+  }
+
+  .problem-foot {
+    margin-top: 22px;
+  }
+
+  /* Tarjetas sin alto mínimo: se ajustan a su contenido. */
+  .system-card {
+    min-height: 0;
+    padding: 20px;
+  }
+
+  .system-icon {
+    margin-top: 24px;
+  }
+
+  .market-card {
+    min-height: 0;
+    padding: 22px;
+  }
+
+  .business-card {
+    min-height: 0;
+    padding: 24px;
+  }
+
+  .business-card > p:nth-of-type(1) {
+    margin-top: 26px;
+  }
+
+  .business-card h3 {
+    font-size: 1.4rem;
+  }
+
+  .validation-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 24px;
+  }
+
+  .validation-steps span {
+    padding: 12px 10px;
+    font-size: 0.76rem;
+  }
+
+  .metrics-console {
+    padding: 22px 18px;
+  }
+
+  .data-strip > div {
+    padding: 18px 20px;
+  }
+
+  .data-strip span {
+    font-size: 0.9rem;
+  }
+
+  .data-strip small {
+    font-size: 0.78rem;
+  }
+
+  /* Equipo: tarjetas en fila (foto a la izquierda) en lugar de cinco tarjetas altas. */
+  .team-grid {
+    gap: 10px;
+    margin-top: 30px;
+  }
+
+  .team-card {
+    flex-direction: row;
+    gap: 16px;
+    padding: 16px;
+    text-align: left;
+  }
+
+  .team-card:hover {
+    transform: none;
+  }
+
+  .team-photo-wrap {
+    flex: none;
+    width: 84px;
+    padding: 4px;
+  }
+
+  .team-info {
+    align-items: flex-start;
+    padding-top: 0;
+  }
+
+  .team-card h3 {
+    font-size: 1rem;
+  }
+
+  .team-card span {
+    margin-top: 6px;
+    font-size: 0.64rem;
+  }
+
+  .team-socials {
+    justify-content: flex-start;
+    gap: 8px;
+    padding-top: 12px;
+  }
+
+  .team-socials a {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cta-card {
+    padding: 48px 20px 26px;
+  }
+
+  .cta-card > p:not(.eyebrow) {
+    margin-top: 18px;
+  }
+
+  footer {
+    width: calc(100% - 40px);
+    padding: 24px 0 calc(28px + env(safe-area-inset-bottom));
+  }
+
+  footer > a:last-child {
+    width: 44px;
+    height: 44px;
+  }
+}

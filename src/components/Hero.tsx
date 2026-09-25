@@ -64,7 +64,7 @@ export default function Hero() {
       {/* Sombra superior: da contraste al navbar transparente sobre nubes y cielo. */}
       <div aria-hidden="true" className="absolute inset-x-0 top-0 -z-10 h-36 bg-linear-to-b from-[rgba(6,20,12,0.4)] to-transparent" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-1 items-center px-5 py-8 md:px-10 md:py-[clamp(0.5rem,1.5vh,1.5rem)]">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-1 items-center px-5 pb-0 pt-6 md:px-10 md:py-[clamp(0.5rem,1.5vh,1.5rem)]">
         <div className="max-w-[37.5rem] md:max-w-[min(37.5rem,calc(46vw-3.5rem))]">
           <img
             src={logo}
@@ -87,7 +87,7 @@ export default function Hero() {
           
 
           <div
-            className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-3 md:mt-[clamp(1.25rem,3.7vh,2.5rem)] xl:gap-4 motion-safe:animate-fade-up"
+            className="mt-8 hidden flex-wrap gap-3 md:mt-[clamp(1.25rem,3.7vh,2.5rem)] md:flex xl:gap-4 motion-safe:animate-fade-up"
             style={{ animationDelay: '440ms' }}
           >
             <a
@@ -110,8 +110,8 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Cámara TERRAGRID: en tablet/desktop se ancla a la derecha del hero; en móvil fluye tras los botones. */}
-      <div className="hero-machine relative z-10 [container-type:inline-size] max-md:mx-auto max-md:mt-2 max-md:w-[92%] md:absolute">
+      {/* Cámara TERRAGRID: en tablet/desktop se ancla a la derecha del hero; en móvil va justo debajo del titular (sin botones). */}
+      <div className="hero-machine relative z-10 [container-type:inline-size] max-md:mx-auto max-md:mt-5 max-md:w-[calc(100%-2rem)] md:absolute">
         <div className="relative motion-safe:animate-rise-in" style={{ animationDelay: '300ms' }}>
           {/* Sombra de contacto: sigue la diagonal de la base (perspectiva 3/4) */}
           <div
@@ -128,7 +128,7 @@ export default function Hero() {
           />
         </div>
 
-        <div className="mt-5 grid grid-cols-3 gap-2 text-[12px] sm:text-[13px] md:absolute md:inset-0 md:mt-0 md:block md:text-[length:clamp(11px,1.9cqw,17px)]">
+        <div className="mt-5 grid grid-cols-3 gap-2 text-[13px] md:absolute md:inset-0 md:mt-0 md:block md:text-[length:clamp(11px,1.9cqw,17px)]">
           <svg
             aria-hidden="true"
             viewBox="0 0 100 100"
