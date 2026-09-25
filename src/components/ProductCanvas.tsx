@@ -1,11 +1,14 @@
-import { Suspense, useEffect, useMemo } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { ContactShadows, Float, OrbitControls, useGLTF } from '@react-three/drei'
+import { Suspense, useEffect, useMemo, useRef } from 'react'
+import { Canvas, useThree } from '@react-three/fiber'
+import { OrbitControls, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import type { ProductLine } from '../data/content'
+import type { ScrollProgress } from '../lib/animation'
 
-function ProductModel({ path, onReady }: { path: string; onReady: () => void }) {
+function ProductModel({ path, onReady, progress }: { path: string; onReady: () => void; progress: ScrollProgress }) {
   const gltf = useGLTF(path, '/draco/')
+  const group = useRef<THREE.Group>(null)
+  const { camera, invalidate } = useThree()
 
   const prepared = useMemo(() => {
     const scene = gltf.scene.clone(true)
@@ -42,27 +45,49 @@ function ProductModel({ path, onReady }: { path: string; onReady: () => void }) 
     onReady()
   }, [onReady, path])
 
+  useEffect(() => progress.subscribe((value) => {
+    // Fed by ScrollTrigger on GSAP's clock. Render only when the scene changes.
+    const offset = value - 0.5
+    if (group.current) {
+      group.current.rotation.y = offset * 0.28
+      group.current.position.y = offset * 0.1
+    }
+    camera.position.set(5.1 + offset * 0.4, 2.6 + offset * 0.3, 6.4 - offset * 0.5)
+    camera.lookAt(0, 0.15, 0)
+    invalidate()
+  }), [progress, camera, invalidate])
+
+  useEffect(() => () => {
+    // Geometry/textures belong to useGLTF's cache; only cloned materials are ours.
+    prepared.scene.traverse((object) => {
+      if (object instanceof THREE.Mesh && object.material instanceof THREE.MeshStandardMaterial) object.material.dispose()
+    })
+  }, [prepared])
+
   return (
-    <Float speed={1.1} rotationIntensity={0.08} floatIntensity={0.14}>
+    <group ref={group} dispose={null}>
       <group scale={prepared.scale} position={[0, -1.75, 0]}>
         <primitive object={prepared.scene} position={prepared.offset} />
       </group>
-    </Float>
+    </group>
   )
 }
 
 type ProductCanvasProps = {
   product: ProductLine
   modelReady: boolean
-  reduceMotion: boolean | null
+  progress: ScrollProgress
   onReady: () => void
+  onError: () => void
 }
 
 /** Escena 3D del producto. Se carga de forma diferida para no retrasar el primer render del hero. */
-export default function ProductCanvas({ product, modelReady, reduceMotion, onReady }: ProductCanvasProps) {
+export default function ProductCanvas({ product, modelReady, progress, onReady, onError }: ProductCanvasProps) {
   return (
     <Canvas
       className={`product-canvas ${modelReady ? 'is-ready' : ''}`}
+      frameloop="demand"
+      fallback={<CanvasUnavailable onError={onError} />}
       dpr={[1, 1.45]}
       shadows
       camera={{ position: [5.1, 2.6, 6.4], fov: 31, near: 0.1, far: 80 }}
@@ -74,8 +99,11 @@ export default function ProductCanvas({ product, modelReady, reduceMotion, onRea
       <directionalLight position={[6, 3, 4]} intensity={2.2} color={product.accent} />
       <pointLight position={[-4, 1, -3]} intensity={12} distance={12} color="#7ddfc3" />
       <Suspense fallback={null}>
-        <ProductModel key={product.model} path={product.model} onReady={onReady} />
-        <ContactShadows position={[0, -1.72, 0]} opacity={0.48} scale={8} blur={2.8} far={4.5} color="#000000" />
+        <ProductModel key={product.model} path={product.model} onReady={onReady} progress={progress} />
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.76, 0]} receiveShadow>
+          <planeGeometry args={[12, 12]} />
+          <shadowMaterial transparent opacity={0.25} />
+        </mesh>
       </Suspense>
       <OrbitControls
         makeDefault
@@ -83,10 +111,14 @@ export default function ProductCanvas({ product, modelReady, reduceMotion, onRea
         enableZoom={false}
         minPolarAngle={Math.PI / 3.1}
         maxPolarAngle={Math.PI / 2.05}
-        autoRotate={!reduceMotion}
-        autoRotateSpeed={0.42}
+        enableDamping={false}
         target={[0, 0.15, 0]}
       />
     </Canvas>
   )
+}
+
+function CanvasUnavailable({ onError }: { onError: () => void }) {
+  useEffect(onError, [onError])
+  return null
 }

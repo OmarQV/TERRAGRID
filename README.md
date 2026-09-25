@@ -33,7 +33,9 @@ La página distingue lo que pertenece al MVP, al roadmap y a la visión futura. 
 - Tailwind CSS 4 (`@tailwindcss/vite`) para el hero; tokens de color y animaciones en `src/index.css`
 - CSS propio para las secciones posteriores (`src/sections.css`), cargado en la capa `components` de Tailwind
 - React Three Fiber + Drei + Three.js (carga diferida: no bloquea el primer render del hero)
-- Motion para animaciones vinculadas al scroll y entrada en viewport
+- Lenis + GSAP ScrollTrigger, sincronizados en un único ticker, para scroll continuo y parallax
+- GSAP SplitText para revelar líneas con máscaras, recalculadas al cambiar el ancho o cargar fuentes
+- Motion para detectar la preferencia de movimiento reducido
 - Lucide React para iconografía
 - React Icons para las redes sociales del equipo
 - Inter Variable autoalojada con `@fontsource-variable/inter`
@@ -75,10 +77,34 @@ La aplicación estará disponible normalmente en `http://localhost:5173`.
 
 ## Verificación
 
+El scroll se configura en `SmoothScroll`; `Parallax` y `Reveal` son reutilizables.
+Las anclas mantienen sus URLs y el foco de teclado, con espacio para la navegación fija.
+El táctil conserva la inercia nativa. No hay scroll por diapositivas ni snapping.
+
+El roadmap comunica el progreso a Three.js sin renderizar React por fotograma.
+Los modelos se cargan al acercarse a la sección, solo en escritorio con puntero preciso;
+el canvas renderiza bajo demanda y permite arrastrar. En móvil cada etapa incluye su
+propia imagen con capas suaves. Movimiento reducido desactiva Lenis, parallax,
+revelaciones y 3D, conservando todo el contenido. Un fallo de WebGL/modelo mantiene
+la imagen de respaldo.
+
 ```bash
 pnpm lint
 pnpm build
 ```
+
+Recorrido visual de aceptación (requiere navegador):
+
+- Escritorio: rueda y trackpad desde el hero hasta el pie, volver hacia arriba y
+  pasar SEED → GROW → SEED BANK en ambos sentidos; comprobar el navbar fijo,
+  la cámara, el arrastre y la ausencia de saltos al cargar cada modelo.
+- Anclas: probar el CTA, los tres controles del roadmap, una URL directa con
+  `#grow`, Atrás/Adelante y el enlace de salto usando teclado.
+- Móvil: 390 × 844 y 768 × 1024, menú, scroll táctil y rotación; comprobar que cada
+  imagen acompaña su texto, no hay desborde y no se solicitan archivos `.glb`.
+- Accesibilidad: activar y desactivar movimiento reducido durante la sesión;
+  el contenido debe seguir visible y el scroll pasar a nativo sin cambiar posición.
+- Red lenta/WebGL desactivado: el póster debe conservar el espacio y seguir visible.
 
 ## Estructura principal
 

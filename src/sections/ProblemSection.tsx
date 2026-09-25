@@ -1,4 +1,4 @@
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import Reveal from '../components/Reveal'
 import { PROBLEM_POINTS } from '../data/content'
 

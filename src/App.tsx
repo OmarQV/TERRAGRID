@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import SmoothScroll from './components/SmoothScroll'
 import Hero from './components/Hero'
 import Navbar from './components/Navbar'
 import BusinessSection from './sections/BusinessSection'
@@ -12,20 +12,8 @@ import TeamSection from './sections/TeamSection'
 import ValidationSection from './sections/ValidationSection'
 
 export default function App() {
-  // Si la URL trae un ancla (p. ej. /#equipo), desplaza hasta esa sección al cargar.
-  useEffect(() => {
-    const targetId = window.location.hash.slice(1)
-    if (!targetId) return
-
-    const frame = window.requestAnimationFrame(() => {
-      document.getElementById(targetId)?.scrollIntoView({ block: 'start' })
-    })
-
-    return () => window.cancelAnimationFrame(frame)
-  }, [])
-
   return (
-    <>
+    <SmoothScroll>
       <a
         href="#contenido"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-white focus:px-5 focus:py-3 focus:font-semibold focus:text-ink focus:shadow-lg"
@@ -45,6 +33,6 @@ export default function App() {
         <CtaSection />
       </main>
       <SiteFooter />
-    </>
+    </SmoothScroll>
   )
 }

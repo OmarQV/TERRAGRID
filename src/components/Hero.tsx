@@ -4,6 +4,7 @@ import logo from '../assets/logo-terragrid.webp'
 import machine from '../assets/terragrid-machine.webp'
 import SensorCard from './SensorCard'
 import StatsPanel from './StatsPanel'
+import Parallax from './Parallax'
 
 /** Posiciones en % del contenedor de la máquina (centro de cada tarjeta). */
 const SENSORS = [
@@ -48,6 +49,7 @@ const buttonBase =
 export default function Hero() {
   return (
     <section id="inicio" className="hero relative isolate flex flex-col overflow-hidden bg-surface pt-[76px] md:pt-[88px]">
+      <Parallax className="absolute -inset-y-12 inset-x-0 -z-20" distance={40} mobileDistance={12} aria-hidden="true">
       <img
         src={fondo}
         alt=""
@@ -57,6 +59,7 @@ export default function Hero() {
         decoding="async"
         className="absolute inset-0 -z-20 size-full object-cover object-center"
       />
+      </Parallax>
       <div aria-hidden="true" className="hero-blur -z-10" />
       {/* Sombra superior: da contraste al navbar transparente sobre nubes y cielo. */}
       <div aria-hidden="true" className="absolute inset-x-0 top-0 -z-10 h-36 bg-linear-to-b from-[rgba(6,20,12,0.4)] to-transparent" />
