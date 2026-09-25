@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowRight, Menu, X } from 'lucide-react'
 import Logo from './Logo'
 
 const LINKS = [
   { label: 'Inicio', href: '#inicio', current: true },
-  { label: 'Tecnología', href: '#tecnologia' },
-  { label: 'Beneficios', href: '#beneficios' },
-  { label: 'Cómo funciona', href: '#como-funciona' },
+  { label: 'Tecnología', href: '#sistema' },
+  { label: 'Beneficios', href: '#problema' },
+  { label: 'Cómo funciona', href: '#lineas' },
   { label: 'Equipo', href: '#equipo' },
 ]
 
@@ -18,9 +18,22 @@ const ctaClasses =
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  // Transparente sobre el hero; al bajar pasa a una barra clara para leerse sobre el resto de secciones.
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 24)
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
+  }, [])
 
   return (
-    <header className="absolute inset-x-0 top-0 z-30">
+    <header
+      className={`fixed inset-x-0 top-0 z-[90] transition-[background-color,box-shadow] duration-300 ${
+        scrolled || open ? 'bg-white/90 shadow-[0_1px_0_rgba(20,32,29,0.08)] backdrop-blur-xl' : ''
+      }`}
+    >
       <div className="relative mx-auto w-full max-w-[1440px] px-5 md:px-10">
         <div className="flex h-[76px] items-center justify-between md:h-[88px] lg:grid lg:grid-cols-[1fr_auto_1fr]">
           <Logo className="lg:justify-self-start" />

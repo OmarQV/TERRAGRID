@@ -12,29 +12,38 @@ La página distingue lo que pertenece al MVP, al roadmap y a la visión futura. 
 
 ## Experiencia
 
-Hero de una sola pantalla (≈100vh) con estética AgTech clara y premium:
+**Hero (≈100vh)** con estética AgTech clara y premium:
 
-- Navbar flotante, badge «Preincubación · La Paz, Bolivia», titular «Agricultura inteligente para un futuro real.» y llamados a la acción.
+- Navbar flotante (se vuelve una barra clara al hacer scroll), badge «Preincubación · La Paz, Bolivia», titular «Agricultura inteligente para un futuro real.» y llamados a la acción.
 - Fotografía del altiplano como fondo, con un velo blanco suave a la izquierda para garantizar la legibilidad.
 - Cámara TERRAGRID SEED (imagen con fondo transparente) como protagonista, con tres tarjetas IoT flotantes (temperatura, humedad, riego) unidas a la máquina por líneas finas.
-- Panel de métricas del piloto (cultivos, sistema, seguimiento a 7–14–30 días, evidencia).
-- Animaciones de entrada y vaivén muy sutiles; se desactivan con `prefers-reduced-motion`.
-- Responsive: escritorio, tablet (dos columnas) y móvil (una columna, métricas en 2×2).
+- Panel de métricas del piloto y animaciones de entrada muy sutiles (se desactivan con `prefers-reduced-motion`).
 
-Las secciones siguientes (Tecnología, Beneficios, Cómo funciona, Equipo) aún no existen: los enlaces del navbar apuntan a anclas futuras.
+**Secciones siguientes** (estilo oscuro, sin cambios de contenido):
+
+- Problema, hipótesis y relato de las tres líneas (SEED, GROW, SEED BANK) con escenario 3D persistente y modelos interactivos.
+- Capa inteligente, plan de validación, mercado inicial, modelo de negocio por etapas, equipo y llamado a colaborar.
+- Imágenes de respaldo para pantallas pequeñas, dispositivos sin WebGL y preferencia de movimiento reducido.
+- Diseño responsive, navegación móvil y estados de foco visibles.
 
 ## Tecnología
 
 - React 19 + TypeScript
 - Vite
-- Tailwind CSS 4 (`@tailwindcss/vite`), tokens de color y animaciones en `src/index.css`
+- Tailwind CSS 4 (`@tailwindcss/vite`) para el hero; tokens de color y animaciones en `src/index.css`
+- CSS propio para las secciones posteriores (`src/sections.css`), cargado en la capa `components` de Tailwind
+- React Three Fiber + Drei + Three.js (carga diferida: no bloquea el primer render del hero)
+- Motion para animaciones vinculadas al scroll y entrada en viewport
 - Lucide React para iconografía
+- React Icons para las redes sociales del equipo
 - Inter Variable autoalojada con `@fontsource-variable/inter`
 - Oxlint
+- glTF Transform como herramienta de optimización de modelos
+
+Los modelos ya optimizados se conservan como archivos finales. La herramienta de optimización no forma parte de las dependencias necesarias para compilar o desplegar la web.
 
 ## Activos 3D
 
-> La landing actual no carga estos modelos; se conservan del sitio anterior.
 
 Los modelos entregados se optimizaron para web con compresión Draco y simplificación geométrica. Las versiones originales permanecen fuera del proyecto de producción; la aplicación utiliza:
 
@@ -80,14 +89,14 @@ Terra-Grid/
 │   ├── assets/
 │   │   ├── hero-andes.webp          # Paisaje del hero (fotografía)
 │   │   └── terragrid-machine.webp   # Cámara TERRAGRID con fondo transparente
-│   ├── components/
-│   │   ├── Navbar.tsx
-│   │   ├── Hero.tsx
-│   │   ├── SensorCard.tsx
-│   │   ├── StatsPanel.tsx
-│   │   └── Logo.tsx
+│   ├── components/    # Navbar, Hero, SensorCard, StatsPanel, Logo,
+│   │                  # Reveal, ProductStage y ProductCanvas (3D diferido)
+│   ├── sections/      # Problema, líneas de producto, sistema, validación,
+│   │                  # mercado, modelo, equipo, CTA y footer
+│   ├── data/content.ts # Textos y datos de las secciones
 │   ├── App.tsx
-│   ├── index.css      # Tailwind, tokens y estilos específicos del hero
+│   ├── index.css      # Tailwind, tokens y estilos del hero
+│   ├── sections.css   # Estilos de las secciones posteriores
 │   └── main.tsx
 ├── index.html
 └── package.json

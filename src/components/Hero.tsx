@@ -90,7 +90,7 @@ export default function Hero() {
             style={{ animationDelay: '440ms' }}
           >
             <a
-              href="#tecnologia"
+              href="#lineas"
               className={`${buttonBase} group bg-primary text-white hover:bg-primary-dark hover:shadow-[0_12px_28px_rgba(22,148,71,0.28)]`}
             >
               Explorar el sistema
@@ -100,7 +100,7 @@ export default function Hero() {
               />
             </a>
             <a
-              href="#proyecto"
+              href="#validacion"
               className={`${buttonBase} border border-[rgba(20,100,60,0.4)] bg-white/25 text-ink backdrop-blur-sm hover:bg-white/70`}
             >
               Ver el proyecto

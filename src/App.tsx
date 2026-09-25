@@ -1,7 +1,29 @@
+import { useEffect } from 'react'
 import Hero from './components/Hero'
 import Navbar from './components/Navbar'
+import BusinessSection from './sections/BusinessSection'
+import CtaSection from './sections/CtaSection'
+import MarketSection from './sections/MarketSection'
+import ProblemSection from './sections/ProblemSection'
+import ProductStory from './sections/ProductStory'
+import SiteFooter from './sections/SiteFooter'
+import SystemSection from './sections/SystemSection'
+import TeamSection from './sections/TeamSection'
+import ValidationSection from './sections/ValidationSection'
 
 export default function App() {
+  // Si la URL trae un ancla (p. ej. /#equipo), desplaza hasta esa sección al cargar.
+  useEffect(() => {
+    const targetId = window.location.hash.slice(1)
+    if (!targetId) return
+
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(targetId)?.scrollIntoView({ block: 'start' })
+    })
+
+    return () => window.cancelAnimationFrame(frame)
+  }, [])
+
   return (
     <>
       <a
@@ -13,7 +35,16 @@ export default function App() {
       <Navbar />
       <main id="contenido">
         <Hero />
+        <ProblemSection />
+        <ProductStory />
+        <SystemSection />
+        <ValidationSection />
+        <MarketSection />
+        <BusinessSection />
+        <TeamSection />
+        <CtaSection />
       </main>
+      <SiteFooter />
     </>
   )
 }
