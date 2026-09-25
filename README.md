@@ -12,28 +12,40 @@ La página distingue lo que pertenece al MVP, al roadmap y a la visión futura. 
 
 ## Experiencia
 
-- Hero editorial oscuro con la propuesta central: «El clima ya es incierto. El plantín no debería serlo».
-- Relato por desplazamiento con un escenario 3D persistente y capítulos para SEED, GROW y SEED BANK.
-- Modelos interactivos con rotación suave y controles mediante mouse o toque.
+**Hero (≈100vh)** con estética AgTech clara y premium:
+
+- Logotipo TERRAGRID grande sobre el titular «Agricultura inteligente para un futuro real.», descripción y llamados a la acción. El navbar es transparente y muestra el logotipo solo al hacer scroll, cuando pasa a una barra oscura translúcida.
+- Fotografía del altiplano a pantalla completa como fondo, desenfocada de forma progresiva detrás del texto (izquierda en tablet/desktop, arriba en móvil) para que las letras claras se lean bien.
+- Cámara TERRAGRID SEED (imagen con fondo transparente) como protagonista, con tres tarjetas IoT flotantes (temperatura, humedad, riego) unidas a la máquina por líneas finas.
+- Panel de métricas del piloto y animaciones de entrada muy sutiles (se desactivan con `prefers-reduced-motion`).
+
+**Secciones siguientes** (estilo oscuro, sin cambios de contenido):
+
+- Problema, hipótesis y relato de las tres líneas (SEED, GROW, SEED BANK) con escenario 3D persistente y modelos interactivos.
+- Capa inteligente, plan de validación, mercado inicial, modelo de negocio por etapas, equipo y llamado a colaborar.
 - Imágenes de respaldo para pantallas pequeñas, dispositivos sin WebGL y preferencia de movimiento reducido.
-- Secciones de problema, arquitectura tecnológica, validación, mercado, modelo de negocio, equipo y llamado a colaborar.
-- Bordes luminosos animados sin efectos que persigan el cursor.
 - Diseño responsive, navegación móvil y estados de foco visibles.
 
 ## Tecnología
 
 - React 19 + TypeScript
 - Vite
-- React Three Fiber + Drei + Three.js
-- Motion para animaciones vinculadas al scroll y entrada en viewport
+- Tailwind CSS 4 (`@tailwindcss/vite`) para el hero; tokens de color y animaciones en `src/index.css`
+- CSS propio para las secciones posteriores (`src/sections.css`), cargado en la capa `components` de Tailwind
+- React Three Fiber + Drei + Three.js (carga diferida: no bloquea el primer render del hero)
+- Lenis + GSAP ScrollTrigger, sincronizados en un único ticker, para scroll continuo y parallax
+- GSAP SplitText para revelar líneas con máscaras, recalculadas al cambiar el ancho o cargar fuentes
+- Motion para detectar la preferencia de movimiento reducido
 - Lucide React para iconografía
 - React Icons para las redes sociales del equipo
+- Inter Variable autoalojada con `@fontsource-variable/inter`
 - Oxlint
 - glTF Transform como herramienta de optimización de modelos
 
 Los modelos ya optimizados se conservan como archivos finales. La herramienta de optimización no forma parte de las dependencias necesarias para compilar o desplegar la web.
 
 ## Activos 3D
+
 
 Los modelos entregados se optimizaron para web con compresión Draco y simplificación geométrica. Las versiones originales permanecen fuera del proyecto de producción; la aplicación utiliza:
 
@@ -65,28 +77,66 @@ La aplicación estará disponible normalmente en `http://localhost:5173`.
 
 ## Verificación
 
+El scroll se configura en `SmoothScroll`; `Parallax` y `Reveal` son reutilizables.
+Las anclas mantienen sus URLs y el foco de teclado, con espacio para la navegación fija.
+El táctil conserva la inercia nativa. No hay scroll por diapositivas ni snapping.
+
+El roadmap comunica el progreso a Three.js sin renderizar React por fotograma.
+Los modelos se cargan al acercarse a la sección, solo en escritorio con puntero preciso;
+el canvas renderiza bajo demanda y permite arrastrar. En móvil cada etapa incluye su
+propia imagen con capas suaves. Movimiento reducido desactiva Lenis, parallax,
+revelaciones y 3D, conservando todo el contenido. Un fallo de WebGL/modelo mantiene
+la imagen de respaldo.
+
 ```bash
 pnpm lint
 pnpm build
 ```
 
+Recorrido visual de aceptación (requiere navegador):
+
+- Escritorio: rueda y trackpad desde el hero hasta el pie, volver hacia arriba y
+  pasar SEED → GROW → SEED BANK en ambos sentidos; comprobar el navbar fijo,
+  la cámara, el arrastre y la ausencia de saltos al cargar cada modelo.
+- Anclas: probar el CTA, los tres controles del roadmap, una URL directa con
+  `#grow`, Atrás/Adelante y el enlace de salto usando teclado.
+- Móvil: 390 × 844 y 768 × 1024, menú, scroll táctil y rotación; comprobar que cada
+  imagen acompaña su texto, no hay desborde y no se solicitan archivos `.glb`.
+- Accesibilidad: activar y desactivar movimiento reducido durante la sesión;
+  el contenido debe seguir visible y el scroll pasar a nativo sin cambiar posición.
+- Red lenta/WebGL desactivado: el póster debe conservar el espacio y seguir visible.
+
 ## Estructura principal
 
 ```text
 Terra-Grid/
-├── public/
-│   ├── draco/       # Decodificador local para los GLB comprimidos
-│   ├── equipo/      # Fotografías del equipo
-│   ├── models/      # Modelos web optimizados
-│   └── products/    # Imágenes conceptuales de las tres líneas
+├── public/            # Marca, equipo, modelos 3D y renders de producto
 ├── src/
-│   ├── App.tsx      # Contenido, interacción, 3D y secciones
-│   ├── App.css      # Sistema visual y responsive
-│   ├── index.css    # Base tipográfica, reset y variables
+│   ├── assets/
+│   │   ├── fondo.webp               # Paisaje del hero
+│   │   ├── logo-terragrid.webp      # Logotipo (letras blancas, fondo transparente)
+│   │   ├── problem-1..3.webp        # Fotografías de las tarjetas de «El problema»
+│   │   └── terragrid-machine.webp   # Cámara TERRAGRID con fondo transparente
+│   ├── components/    # Navbar, Hero, SensorCard, StatsPanel, Logo,
+│   │                  # Reveal, ProductStage y ProductCanvas (3D diferido)
+│   ├── sections/      # Problema, líneas de producto, sistema, validación,
+│   │                  # mercado, modelo, equipo, CTA y footer
+│   ├── data/content.ts # Textos y datos de las secciones
+│   ├── App.tsx
+│   ├── index.css      # Tailwind, tokens y estilos del hero
+│   ├── sections.css   # Estilos de las secciones posteriores
 │   └── main.tsx
 ├── index.html
 └── package.json
 ```
+
+## Créditos de imágenes
+
+- `fondo.webp`: paisaje andino del hero, aportado por el equipo.
+- `hero-andes.webp`: fotografía del Illimani desde La Paz por [Azzedine Rouichi](https://unsplash.com/photos/No6mIqzvq5o) en Unsplash (Licencia Unsplash). Ya no se usa en el hero.
+- `terragrid-machine.webp`: recorte con fondo transparente de `public/products/terragrid-seed.png`.
+- `logo-terragrid.webp`: recorte de `public/img/logo tearagrid.png` convertido a WebP.
+- `problem-1.webp`, `problem-2.webp`, `problem-3.webp`: recortes horizontales (1.85:1) y conversión a WebP de `public/img/p1 pl.png`, `p2 pl.png` y `p3 pl.png`.
 
 ## Alcance actual
 
