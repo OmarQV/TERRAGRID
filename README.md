@@ -1,4 +1,4 @@
-# TERRAGRID — Landing Page
+# TERRAGRID
 
 Sitio oficial del nuevo rumbo de **TERRAGRID**, una startup AgroTech boliviana que desarrolla incubación agrícola inteligente para obtener plantines uniformes, medibles y trazables.
 
