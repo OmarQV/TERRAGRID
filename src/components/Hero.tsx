@@ -1,5 +1,5 @@
 import { ArrowRight, Droplets, Sprout, Thermometer } from 'lucide-react'
-import heroAndes from '../assets/hero-andes.webp'
+import fondo from '../assets/fondo.webp'
 import machine from '../assets/terragrid-machine.webp'
 import SensorCard from './SensorCard'
 import StatsPanel from './StatsPanel'
@@ -48,13 +48,13 @@ export default function Hero() {
   return (
     <section id="inicio" className="hero relative isolate flex flex-col overflow-hidden bg-surface pt-[76px] md:pt-[88px]">
       <img
-        src={heroAndes}
+        src={fondo}
         alt=""
-        width={2400}
-        height={1830}
+        width={1672}
+        height={941}
         fetchPriority="high"
         decoding="async"
-        className="absolute inset-0 -z-20 size-full object-cover object-[center_40%]"
+        className="absolute inset-0 -z-20 size-full object-cover object-center"
       />
       <div aria-hidden="true" className="hero-veil absolute inset-0 -z-10" />
 

@@ -87,7 +87,7 @@ Terra-Grid/
 ├── public/            # Marca, equipo, modelos 3D y renders de producto
 ├── src/
 │   ├── assets/
-│   │   ├── hero-andes.webp          # Paisaje del hero (fotografía)
+│   │   ├── fondo.webp               # Paisaje del hero
 │   │   └── terragrid-machine.webp   # Cámara TERRAGRID con fondo transparente
 │   ├── components/    # Navbar, Hero, SensorCard, StatsPanel, Logo,
 │   │                  # Reveal, ProductStage y ProductCanvas (3D diferido)
@@ -104,7 +104,8 @@ Terra-Grid/
 
 ## Créditos de imágenes
 
-- `hero-andes.webp`: fotografía del Illimani desde La Paz por [Azzedine Rouichi](https://unsplash.com/photos/No6mIqzvq5o) en Unsplash (Licencia Unsplash), redimensionada y con un leve ajuste de color.
+- `fondo.webp`: paisaje andino del hero, aportado por el equipo.
+- `hero-andes.webp`: fotografía del Illimani desde La Paz por [Azzedine Rouichi](https://unsplash.com/photos/No6mIqzvq5o) en Unsplash (Licencia Unsplash). Ya no se usa en el hero.
 - `terragrid-machine.webp`: recorte con fondo transparente de `public/products/terragrid-seed.png`.
 
 ## Alcance actual
