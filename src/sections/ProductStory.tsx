@@ -2,6 +2,7 @@ import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { BadgeCheck, Check, Sprout } from 'lucide-react'
 import scene from '../assets/scene-semilla.webp'
 import ProductStage from '../components/ProductStage'
+import Parallax from '../components/Parallax'
 import Reveal from '../components/Reveal'
 import SceneReveal from '../components/SceneReveal'
 import { useSmoothScroll } from '../lib/scroll-context'
@@ -51,6 +52,19 @@ export default function ProductStory() {
       />
 
       <div className="product-sheet">
+        <div className="product-sheet-backdrop" aria-hidden="true">
+          <Parallax className="product-sheet-photo" distance={36} mobileDistance={12}>
+            <img
+              src="/img/fondo%20contenedores.png"
+              alt=""
+              width={1672}
+              height={941}
+              loading="lazy"
+              decoding="async"
+            />
+          </Parallax>
+          <div className="product-sheet-shade" />
+        </div>
         <div className="product-story-grid section-shell-wide">
           <div className="product-copy-column">
             {PRODUCT_LINES.map((product, index) => {
@@ -66,7 +80,7 @@ export default function ProductStory() {
                   style={{ '--product-accent': product.accent } as React.CSSProperties}
                 >
                   <div className="product-mobile-visual">
-                    <ProductStage product={product} progress={progress[index]} posterOnly />
+                    <ProductStage product={product} progress={progress[index]} active={isActive} compact />
                   </div>
                   <Reveal className="product-copy-card">
                     <div className="product-meta">

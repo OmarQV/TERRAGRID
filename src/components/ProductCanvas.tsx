@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import type { ProductLine } from '../data/content'
 import type { ScrollProgress } from '../lib/animation'
 
-function ProductModel({ path, onReady, progress }: { path: string; onReady: () => void; progress: ScrollProgress }) {
+function ProductModel({ path, onReady, progress, compact }: { path: string; onReady: () => void; progress: ScrollProgress; compact: boolean }) {
   const gltf = useGLTF(path, '/draco/')
   const group = useRef<THREE.Group>(null)
   const { camera, invalidate } = useThree()
@@ -52,10 +52,14 @@ function ProductModel({ path, onReady, progress }: { path: string; onReady: () =
       group.current.rotation.y = offset * 0.28
       group.current.position.y = offset * 0.1
     }
-    camera.position.set(5.1 + offset * 0.4, 2.6 + offset * 0.3, 6.4 - offset * 0.5)
+    camera.position.set(
+      (compact ? 6.1 : 5.1) + offset * 0.4,
+      (compact ? 3.2 : 2.6) + offset * 0.3,
+      (compact ? 8.3 : 6.4) - offset * 0.5,
+    )
     camera.lookAt(0, 0.15, 0)
     invalidate()
-  }), [progress, camera, invalidate])
+  }), [progress, camera, invalidate, compact])
 
   useEffect(() => () => {
     // Geometry/textures belong to useGLTF's cache; only cloned materials are ours.
@@ -77,29 +81,30 @@ type ProductCanvasProps = {
   product: ProductLine
   modelReady: boolean
   progress: ScrollProgress
+  compact: boolean
   onReady: () => void
   onError: () => void
 }
 
 /** Escena 3D del producto. Se carga de forma diferida para no retrasar el primer render del hero. */
-export default function ProductCanvas({ product, modelReady, progress, onReady, onError }: ProductCanvasProps) {
+export default function ProductCanvas({ product, modelReady, progress, compact, onReady, onError }: ProductCanvasProps) {
   return (
     <Canvas
-      className={`product-canvas ${modelReady ? 'is-ready' : ''}`}
+      className={`product-canvas ${modelReady ? 'is-ready' : ''} ${compact ? 'is-static' : ''}`}
       frameloop="demand"
       fallback={<CanvasUnavailable onError={onError} />}
-      dpr={[1, 1.45]}
-      shadows
-      camera={{ position: [5.1, 2.6, 6.4], fov: 31, near: 0.1, far: 80 }}
+      dpr={[1, compact ? 1.2 : 1.45]}
+      shadows={!compact}
+      camera={{ position: compact ? [6.1, 3.2, 8.3] : [5.1, 2.6, 6.4], fov: compact ? 38 : 31, near: 0.1, far: 80 }}
       gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.05 }}
     >
       <ambientLight intensity={0.58} color="#eafff1" />
       <hemisphereLight args={['#effff8', '#07100d', 1.25]} />
-      <directionalLight castShadow position={[-5, 8, 6]} intensity={2.5} color="#ffffff" shadow-mapSize={[1024, 1024]} />
+      <directionalLight castShadow={!compact} position={[-5, 8, 6]} intensity={2.5} color="#ffffff" shadow-mapSize={[1024, 1024]} />
       <directionalLight position={[6, 3, 4]} intensity={2.2} color={product.accent} />
       <pointLight position={[-4, 1, -3]} intensity={12} distance={12} color="#7ddfc3" />
       <Suspense fallback={null}>
-        <ProductModel key={product.model} path={product.model} onReady={onReady} progress={progress} />
+        <ProductModel key={product.model} path={product.model} onReady={onReady} progress={progress} compact={compact} />
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.76, 0]} receiveShadow>
           <planeGeometry args={[12, 12]} />
           <shadowMaterial transparent opacity={0.25} />
@@ -107,6 +112,7 @@ export default function ProductCanvas({ product, modelReady, progress, onReady, 
       </Suspense>
       <OrbitControls
         makeDefault
+        enabled={!compact}
         enablePan={false}
         enableZoom={false}
         minPolarAngle={Math.PI / 3.1}

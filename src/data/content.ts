@@ -1,7 +1,5 @@
 import {
-  BatteryCharging,
   Blocks,
-  Bot,
   CloudSun,
   Cpu,
   Database,
@@ -9,17 +7,23 @@ import {
   Leaf,
   ScanLine,
   Sprout,
-  ThermometerSun,
+  Thermometer,
   TimerReset,
   Users,
   Warehouse,
   Waves,
+  Zap,
   type LucideIcon,
 } from 'lucide-react'
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6'
 import problemGerminacion from '../assets/problem-1.webp'
 import problemClima from '../assets/problem-2.webp'
 import problemCalidad from '../assets/problem-3.webp'
+import tecSensores from '../assets/tec-1.webp'
+import tecAutomatizacion from '../assets/tec-2.webp'
+import tecIa from '../assets/tec-3.webp'
+import tecTrazabilidad from '../assets/tec-4.webp'
+import tecEnergia from '../assets/tec-5.webp'
 
 export type ProductLine = {
   id: 'seed' | 'grow' | 'seed-bank'
@@ -141,7 +145,9 @@ export const PROBLEM_POINTS = [
 
 export const SYSTEM_LAYERS = [
   {
-    icon: ThermometerSun,
+    icon: Thermometer,
+    image: tecSensores,
+    imageAlt: 'Sensor ambiental con protector de láminas instalado entre plantas jóvenes al amanecer',
     number: '01',
     title: 'Sensores',
     copy: 'Temperatura, humedad, luz, riego y variables del sustrato traducen el ambiente en datos útiles.',
@@ -149,13 +155,17 @@ export const SYSTEM_LAYERS = [
   },
   {
     icon: Cpu,
+    image: tecAutomatizacion,
+    imageAlt: 'Tubería de riego con una válvula que deja caer agua sobre plantines',
     number: '02',
     title: 'Automatización local',
     copy: 'Reglas por etapa activan iluminación, ventilación y riego sin depender de conectividad permanente.',
     status: 'MVP',
   },
   {
-    icon: Bot,
+    icon: Leaf,
+    image: tecIa,
+    imageAlt: 'Plantín con paneles de análisis superpuestos que representan la IA agronómica',
     number: '03',
     title: 'IA agronómica asistida',
     copy: 'El análisis de tendencias, imágenes y alertas apoyará decisiones; no reemplazará el criterio agronómico.',
@@ -163,13 +173,17 @@ export const SYSTEM_LAYERS = [
   },
   {
     icon: Blocks,
+    image: tecTrazabilidad,
+    imageAlt: 'Vista aérea de un cultivo con marcadores y un panel de datos de NDVI, humedad y temperatura',
     number: '04',
     title: 'Trazabilidad verificable',
     copy: 'Los hitos críticos podrán anclarse en blockchain y cerrar con una constancia digital, no una certificación oficial.',
     status: 'Roadmap',
   },
   {
-    icon: BatteryCharging,
+    icon: Zap,
+    image: tecEnergia,
+    imageAlt: 'Panel solar entre plantas jóvenes con el sol de fondo',
     number: '05',
     title: 'Energía modular',
     copy: 'Medición de consumo y arquitectura adaptable a red, respaldo o energía solar según el lugar de uso.',

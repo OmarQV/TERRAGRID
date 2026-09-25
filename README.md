@@ -125,6 +125,8 @@ Terra-Grid/
 │   │   ├── logo-terragrid.webp      # Logotipo (letras blancas, fondo transparente)
 │   │   ├── problem-1..3.webp        # Fotografías de las tarjetas de «El problema»
 │   │   ├── scene-semilla.webp       # Escena fija del roadmap (plántula al amanecer)
+│   │   ├── tec-fondo.webp           # Fondo del titular de «La capa inteligente»
+│   │   ├── tec-1..5.webp            # Fotografías de las cinco capas de tecnología
 │   │   └── terragrid-machine.webp   # Cámara TERRAGRID con fondo transparente
 │   ├── components/    # Navbar, Hero, SensorCard, StatsPanel, Logo,
 │   │                  # Reveal, SceneReveal, ProductStage y ProductCanvas (3D diferido)
@@ -146,6 +148,7 @@ Terra-Grid/
 - `terragrid-machine.webp`: recorte con fondo transparente de `public/products/terragrid-seed.png`.
 - `logo-terragrid.webp`: recorte de `public/img/logo tearagrid.png` convertido a WebP.
 - `scene-semilla.webp`: conversión a WebP de `public/img/scrolling.png` (escena fija del roadmap).
+- `tec-fondo.webp` y `tec-1.webp` … `tec-5.webp`: conversión a WebP de `public/img/tec fond.png` y `tec1.png` … `tec5.png` (sección «La capa inteligente»; las cinco tarjetas se redimensionan a 800 px de ancho).
 - `problem-1.webp`, `problem-2.webp`, `problem-3.webp`: recortes horizontales (1.85:1) y conversión a WebP de `public/img/p1 pl.png`, `p2 pl.png` y `p3 pl.png`.
 
 ## Alcance actual
