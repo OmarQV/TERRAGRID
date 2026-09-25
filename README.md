@@ -96,6 +96,14 @@ salen de una máscara línea por línea (SplitText). El guion está en unidades 
 y su largo total (310) debe coincidir con la altura de `.scene` en `sections.css`.
 Con movimiento reducido la escena queda estática con el título visible.
 
+El roadmap de productos (`ProductStory`) usa un escenario (`ProductStage`) sobre la plataforma
+del fondo fotográfico: cada producto es su foto con fondo transparente
+(`src/assets/product-*.webp`) y, si hay WebGL, una conexión razonable y no hay movimiento
+reducido, su modelo 3D encima. El foco (0, 1, 2…) lo calcula el scroll y `smoothFollow` lo
+suaviza en el reloj de GSAP/Lenis; el producto que sale se hunde en la plataforma (plano de
+recorte) y el siguiente sube, sin solaparse. Se carga primero el modelo en foco y luego los
+demás (11–21 MB cada uno). Los datos del panel lateral son ilustrativos y así se rotulan.
+
 ```bash
 pnpm lint
 pnpm build
@@ -126,6 +134,7 @@ Terra-Grid/
 │   │   ├── problem-1..3.webp        # Fotografías de las tarjetas de «El problema»
 │   │   ├── scene-semilla.webp       # Escena fija del roadmap (plántula al amanecer)
 │   │   ├── tec-fondo.webp           # Fondo del titular de «La capa inteligente»
+│   │   ├── product-*.webp           # Fotos de producto con fondo transparente (SEED, GROW, SEED BANK)
 │   │   ├── tec-1..5.webp            # Fotografías de las cinco capas de tecnología
 │   │   └── terragrid-machine.webp   # Cámara TERRAGRID con fondo transparente
 │   ├── components/    # Navbar, Hero, SensorCard, StatsPanel, Logo,
@@ -148,6 +157,7 @@ Terra-Grid/
 - `terragrid-machine.webp`: recorte con fondo transparente de `public/products/terragrid-seed.png`.
 - `logo-terragrid.webp`: recorte de `public/img/logo tearagrid.png` convertido a WebP.
 - `scene-semilla.webp`: conversión a WebP de `public/img/scrolling.png` (escena fija del roadmap).
+- `product-seed.webp`, `product-grow.webp`, `product-seed-bank.webp`: recorte al borde del equipo y conversión a WebP de `public/products/*-Photoroom.png`.
 - `tec-fondo.webp` y `tec-1.webp` … `tec-5.webp`: conversión a WebP de `public/img/tec fond.png` y `tec1.png` … `tec5.png` (sección «La capa inteligente»; las cinco tarjetas se redimensionan a 800 px de ancho).
 - `problem-1.webp`, `problem-2.webp`, `problem-3.webp`: recortes horizontales (1.85:1) y conversión a WebP de `public/img/p1 pl.png`, `p2 pl.png` y `p3 pl.png`.
 

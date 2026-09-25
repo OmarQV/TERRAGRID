@@ -1,12 +1,17 @@
 import {
+  BadgeCheck,
   Blocks,
+  CalendarClock,
   CloudSun,
   Cpu,
   Database,
+  Droplets,
+  FlaskConical,
   Handshake,
   Leaf,
   ScanLine,
   Sprout,
+  Sun,
   Thermometer,
   TimerReset,
   Users,
@@ -24,6 +29,12 @@ import tecAutomatizacion from '../assets/tec-2.webp'
 import tecIa from '../assets/tec-3.webp'
 import tecTrazabilidad from '../assets/tec-4.webp'
 import tecEnergia from '../assets/tec-5.webp'
+import productSeed from '../assets/product-seed.webp'
+import productGrow from '../assets/product-grow.webp'
+import productSeedBank from '../assets/product-seed-bank.webp'
+
+/** Lectura de ejemplo del panel flotante (ilustrativa: el producto aún es un modelo conceptual). */
+export type ProductReading = { icon: LucideIcon; value: string; label: string }
 
 export type ProductLine = {
   id: 'seed' | 'grow' | 'seed-bank'
@@ -35,7 +46,11 @@ export type ProductLine = {
   headline: string
   description: string
   model: string
+  /** Recorte con fondo transparente, ajustado al borde del equipo. */
   poster: string
+  posterWidth: number
+  posterHeight: number
+  readings: ProductReading[]
   icon: LucideIcon
   accent: string
   crops: string
@@ -56,7 +71,15 @@ export const PRODUCT_LINES: ProductLine[] = [
     description:
       'Incubadora agrícola inteligente para controlar la germinación, la emergencia y el desarrollo inicial del plantín. Registra las condiciones y los eventos de cada lote antes del trasplante.',
     model: '/models/terragrid-seed.glb',
-    poster: '/products/terragrid-seed.png',
+    poster: productSeed,
+    posterWidth: 1146,
+    posterHeight: 1049,
+    readings: [
+      { icon: Thermometer, value: '24.3 °C', label: 'Temperatura' },
+      { icon: Droplets, value: '78 %', label: 'Humedad' },
+      { icon: Sun, value: '65 %', label: 'Luz' },
+      { icon: Leaf, value: 'CO₂', label: 'Optimizado' },
+    ],
     icon: Sprout,
     accent: '#9df78f',
     crops: 'Perejil · Lechuga · Tomate',
@@ -79,7 +102,15 @@ export const PRODUCT_LINES: ProductLine[] = [
     description:
       'Módulo hidropónico compacto orientado a hortalizas de hoja y hierbas. Extenderá el monitoreo hacia pH, conductividad eléctrica, nivel y temperatura de la solución nutritiva.',
     model: '/models/terragrid-grow.glb',
-    poster: '/products/terragrid-grow.png',
+    poster: productGrow,
+    posterWidth: 1126,
+    posterHeight: 1041,
+    readings: [
+      { icon: Thermometer, value: '21.4 °C', label: 'Solución' },
+      { icon: FlaskConical, value: '6.0', label: 'pH' },
+      { icon: Zap, value: '1.6 mS/cm', label: 'Conductividad' },
+      { icon: Waves, value: 'Estable', label: 'Nivel' },
+    ],
     icon: Waves,
     accent: '#6ee7c1',
     crops: 'Lechuga · Perejil · Hojas',
@@ -102,7 +133,15 @@ export const PRODUCT_LINES: ProductLine[] = [
     description:
       'Sistema modular que combina conservación controlada, identificación de lotes, pruebas periódicas de germinación y un historial digital de viabilidad.',
     model: '/models/terragrid-seed-bank.glb',
-    poster: '/products/terragrid-seed-bank.png',
+    poster: productSeedBank,
+    posterWidth: 1274,
+    posterHeight: 951,
+    readings: [
+      { icon: Thermometer, value: '5.0 °C', label: 'Conservación' },
+      { icon: Droplets, value: '32 %', label: 'Humedad' },
+      { icon: BadgeCheck, value: '94 %', label: 'Viabilidad' },
+      { icon: CalendarClock, value: '12 días', label: 'Próxima prueba' },
+    ],
     icon: Database,
     accent: '#f2d27d',
     crops: 'Semillas locales · Nativas · Comerciales',
