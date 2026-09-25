@@ -5,7 +5,7 @@ Sitio oficial del nuevo rumbo de **TERRAGRID**, una startup AgroTech boliviana q
 La narrativa sigue el roadmap real del proyecto:
 
 1. **TERRAGRID SEED — MVP actual:** germinación y producción inicial de plantines. El piloto prioriza perejil; lechuga sirve como referencia técnica y tomate se trabaja hasta plantín para trasplante.
-2. **TERRAGRID GROW — siguiente etapa:** crecimiento y producción hidropónica compacta, inicialmente para lechuga, perejil y otros cultivos de hoja.
+2. **TERRAGRID GROW — siguiente etapa:** crecimiento y producción hidropónica compacta, inicialmente para lechugjsjsa, perejil y otros cultivos de hoja.
 3. **TERRAGRID SEED BANK — visión futura:** conservación distribuida de semillas, pruebas periódicas de viabilidad y apoyo a su regeneración.
 
 La página distingue lo que pertenece al MVP, al roadmap y a la visión futura. No presenta resultados agronómicos aún no obtenidos ni describe la trazabilidad digital como una certificación oficial.
