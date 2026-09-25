@@ -1,44 +1,158 @@
-:root {
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #f1f6f2;
-  background: #070a09;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter Variable', Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-primary: #169447;
+  --color-primary-dark: #087a3a;
+  --color-primary-light: #dff5e6;
+  --color-ink: #14201d;
+  --color-body: #4f5754;
+  --color-surface: #f7f9f6;
+
+  --animate-fade-in: fade-in 0.9s ease-out both;
+  --animate-fade-up: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-rise-in: rise-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-float: float 5s ease-in-out infinite;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(-4px);
+    }
+    50% {
+      transform: translateY(4px);
+    }
+  }
 }
 
-* {
-  box-sizing: border-box;
+@layer base {
+  html {
+    min-width: 320px;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    overflow-x: clip;
+    background-color: var(--color-surface);
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--color-primary-light);
+    color: var(--color-ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
 }
 
-html {
-  min-width: 320px;
-  background: #070a09;
+/*
+ * Hero: valores que Tailwind no expresa bien (degradados por breakpoint y
+ * dimensionado de la máquina en función de la altura disponible).
+ */
+
+/* Velo blanco para legibilidad del texto. Móvil: vertical; desde tablet: lateral. */
+.hero-veil {
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.86) 40%,
+    rgba(255, 255, 255, 0.3) 62%,
+    rgba(255, 255, 255, 0) 80%
+  );
 }
 
-body {
-  min-width: 320px;
-  min-height: 100svh;
-  margin: 0;
+@media (min-width: 768px) {
+  .hero-veil {
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.96) 0%,
+      rgba(255, 255, 255, 0.88) 42%,
+      rgba(255, 255, 255, 0.4) 62%,
+      rgba(255, 255, 255, 0) 84%
+    );
+  }
 }
 
-button,
-a {
-  font: inherit;
+@media (min-width: 1280px) {
+  .hero-veil {
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.96) 0%,
+      rgba(255, 255, 255, 0.82) 28%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0) 70%
+    );
+  }
 }
 
-button:focus-visible,
-a:focus-visible {
-  outline: 2px solid #9df78f;
-  outline-offset: 4px;
+.hero {
+  --hero-h: max(100svh, 46rem);
+  min-height: var(--hero-h);
 }
 
-#root {
-  min-height: 100svh;
+/*
+ * La máquina ocupa ~47vw como máximo, pero se limita por la altura disponible
+ * (entre el navbar y el panel de métricas) para no invadir ninguno de los dos.
+ * 1.0936 = relación ancho/alto del recorte de terragrid-machine.webp.
+ */
+@media (min-width: 768px) {
+  .hero-machine {
+    --machine-bottom: 14rem;
+    right: 7%;
+    bottom: var(--machine-bottom);
+    width: min(47vw, calc((var(--hero-h) - var(--machine-bottom) - 8.25rem) * 1.0936));
+  }
 }
 
-::selection {
-  color: #071008;
-  background: #9df78f;
+@media (min-width: 1024px) {
+  .hero-machine {
+    --machine-bottom: max(calc(var(--hero-h) * 0.13), 9.25rem);
+  }
 }

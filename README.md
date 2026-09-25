@@ -12,28 +12,29 @@ La página distingue lo que pertenece al MVP, al roadmap y a la visión futura. 
 
 ## Experiencia
 
-- Hero editorial oscuro con la propuesta central: «El clima ya es incierto. El plantín no debería serlo».
-- Relato por desplazamiento con un escenario 3D persistente y capítulos para SEED, GROW y SEED BANK.
-- Modelos interactivos con rotación suave y controles mediante mouse o toque.
-- Imágenes de respaldo para pantallas pequeñas, dispositivos sin WebGL y preferencia de movimiento reducido.
-- Secciones de problema, arquitectura tecnológica, validación, mercado, modelo de negocio, equipo y llamado a colaborar.
-- Bordes luminosos animados sin efectos que persigan el cursor.
-- Diseño responsive, navegación móvil y estados de foco visibles.
+Hero de una sola pantalla (≈100vh) con estética AgTech clara y premium:
+
+- Navbar flotante, badge «Preincubación · La Paz, Bolivia», titular «Agricultura inteligente para un futuro real.» y llamados a la acción.
+- Fotografía del altiplano como fondo, con un velo blanco suave a la izquierda para garantizar la legibilidad.
+- Cámara TERRAGRID SEED (imagen con fondo transparente) como protagonista, con tres tarjetas IoT flotantes (temperatura, humedad, riego) unidas a la máquina por líneas finas.
+- Panel de métricas del piloto (cultivos, sistema, seguimiento a 7–14–30 días, evidencia).
+- Animaciones de entrada y vaivén muy sutiles; se desactivan con `prefers-reduced-motion`.
+- Responsive: escritorio, tablet (dos columnas) y móvil (una columna, métricas en 2×2).
+
+Las secciones siguientes (Tecnología, Beneficios, Cómo funciona, Equipo) aún no existen: los enlaces del navbar apuntan a anclas futuras.
 
 ## Tecnología
 
 - React 19 + TypeScript
 - Vite
-- React Three Fiber + Drei + Three.js
-- Motion para animaciones vinculadas al scroll y entrada en viewport
+- Tailwind CSS 4 (`@tailwindcss/vite`), tokens de color y animaciones en `src/index.css`
 - Lucide React para iconografía
-- React Icons para las redes sociales del equipo
+- Inter Variable autoalojada con `@fontsource-variable/inter`
 - Oxlint
-- glTF Transform como herramienta de optimización de modelos
-
-Los modelos ya optimizados se conservan como archivos finales. La herramienta de optimización no forma parte de las dependencias necesarias para compilar o desplegar la web.
 
 ## Activos 3D
+
+> La landing actual no carga estos modelos; se conservan del sitio anterior.
 
 Los modelos entregados se optimizaron para web con compresión Draco y simplificación geométrica. Las versiones originales permanecen fuera del proyecto de producción; la aplicación utiliza:
 
@@ -74,19 +75,28 @@ pnpm build
 
 ```text
 Terra-Grid/
-├── public/
-│   ├── draco/       # Decodificador local para los GLB comprimidos
-│   ├── equipo/      # Fotografías del equipo
-│   ├── models/      # Modelos web optimizados
-│   └── products/    # Imágenes conceptuales de las tres líneas
+├── public/            # Marca, equipo, modelos 3D y renders de producto
 ├── src/
-│   ├── App.tsx      # Contenido, interacción, 3D y secciones
-│   ├── App.css      # Sistema visual y responsive
-│   ├── index.css    # Base tipográfica, reset y variables
+│   ├── assets/
+│   │   ├── hero-andes.webp          # Paisaje del hero (fotografía)
+│   │   └── terragrid-machine.webp   # Cámara TERRAGRID con fondo transparente
+│   ├── components/
+│   │   ├── Navbar.tsx
+│   │   ├── Hero.tsx
+│   │   ├── SensorCard.tsx
+│   │   ├── StatsPanel.tsx
+│   │   └── Logo.tsx
+│   ├── App.tsx
+│   ├── index.css      # Tailwind, tokens y estilos específicos del hero
 │   └── main.tsx
 ├── index.html
 └── package.json
 ```
+
+## Créditos de imágenes
+
+- `hero-andes.webp`: fotografía del Illimani desde La Paz por [Azzedine Rouichi](https://unsplash.com/photos/No6mIqzvq5o) en Unsplash (Licencia Unsplash), redimensionada y con un leve ajuste de color.
+- `terragrid-machine.webp`: recorte con fondo transparente de `public/products/terragrid-seed.png`.
 
 ## Alcance actual
 
