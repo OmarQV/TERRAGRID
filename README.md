@@ -88,6 +88,14 @@ propia imagen con capas suaves. Movimiento reducido desactiva Lenis, parallax,
 revelaciones y 3D, conservando todo el contenido. Un fallo de WebGL/modelo mantiene
 la imagen de respaldo.
 
+La entrada del roadmap es una escena por capas (`SceneReveal`): la foto queda fija
+(`position: fixed` recortada por el `clip-path` de la escena), «El problema» sube
+y la destapa, y al final la capa de líneas de producto sube y la cubre. El velo, el
+zoom y los títulos avanzan con `scrub` sobre el mismo reloj que Lenis; los títulos
+salen de una máscara línea por línea (SplitText). El guion está en unidades de svh
+y su largo total (310) debe coincidir con la altura de `.scene` en `sections.css`.
+Con movimiento reducido la escena queda estática con el título visible.
+
 ```bash
 pnpm lint
 pnpm build
@@ -116,9 +124,10 @@ Terra-Grid/
 │   │   ├── fondo.webp               # Paisaje del hero
 │   │   ├── logo-terragrid.webp      # Logotipo (letras blancas, fondo transparente)
 │   │   ├── problem-1..3.webp        # Fotografías de las tarjetas de «El problema»
+│   │   ├── scene-semilla.webp       # Escena fija del roadmap (plántula al amanecer)
 │   │   └── terragrid-machine.webp   # Cámara TERRAGRID con fondo transparente
 │   ├── components/    # Navbar, Hero, SensorCard, StatsPanel, Logo,
-│   │                  # Reveal, ProductStage y ProductCanvas (3D diferido)
+│   │                  # Reveal, SceneReveal, ProductStage y ProductCanvas (3D diferido)
 │   ├── sections/      # Problema, líneas de producto, sistema, validación,
 │   │                  # mercado, modelo, equipo, CTA y footer
 │   ├── data/content.ts # Textos y datos de las secciones
@@ -136,6 +145,7 @@ Terra-Grid/
 - `hero-andes.webp`: fotografía del Illimani desde La Paz por [Azzedine Rouichi](https://unsplash.com/photos/No6mIqzvq5o) en Unsplash (Licencia Unsplash). Ya no se usa en el hero.
 - `terragrid-machine.webp`: recorte con fondo transparente de `public/products/terragrid-seed.png`.
 - `logo-terragrid.webp`: recorte de `public/img/logo tearagrid.png` convertido a WebP.
+- `scene-semilla.webp`: conversión a WebP de `public/img/scrolling.png` (escena fija del roadmap).
 - `problem-1.webp`, `problem-2.webp`, `problem-3.webp`: recortes horizontales (1.85:1) y conversión a WebP de `public/img/p1 pl.png`, `p2 pl.png` y `p3 pl.png`.
 
 ## Alcance actual

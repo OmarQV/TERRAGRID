@@ -132,7 +132,7 @@ h4 {
 }
 
 .section-heading h2,
-.product-story-intro h2,
+.scene-copy h2,
 .validation-copy h2,
 .cta-card h2 {
   margin: 0;
@@ -181,7 +181,6 @@ h4 {
 }
 
 .section-heading h2,
-.product-story-intro h2,
 .validation-copy h2,
 .cta-card h2 {
   margin-top: 18px;
@@ -191,7 +190,6 @@ h4 {
 
 .section-heading > p,
 .section-heading > div + p,
-.product-story-intro > p:last-child,
 .validation-copy > p,
 .cta-card > p {
   color: var(--muted);
@@ -459,27 +457,123 @@ h4 {
 
 .product-story {
   position: relative;
-  padding-top: 140px;
-  border-top: 1px solid var(--line);
   background:
     radial-gradient(circle at 85% 28%, rgba(57, 139, 88, 0.1), transparent 24rem),
     #070a09;
 }
 
-.product-story-intro {
-  max-width: 980px;
-  margin-bottom: 70px;
+/*
+ * Escena por capas (SceneReveal): la foto queda fija y las secciones vecinas pasan
+ * por delante. `.problem` (anterior) y `.product-sheet` (siguiente) son las capas
+ * opacas de bordes redondeados; la escena se mete bajo ambas para que en las
+ * esquinas se vea la foto.
+ */
+:root {
+  --sheet-r: 28px;
+}
+
+.problem {
+  z-index: 2;
+  border-radius: 0 0 var(--sheet-r) var(--sheet-r);
+}
+
+.scene {
+  position: relative;
+  height: 310svh; /* debe coincidir con LENGTH en SceneReveal.tsx */
+  margin-top: calc(var(--sheet-r) * -1);
+  /* Recorta al hijo fixed: la foto solo se ve dentro de la escena y no se mueve con ella. */
+  clip-path: inset(0);
+}
+
+.scene-media {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh;
+  overflow: hidden;
+  background: var(--bg);
+  pointer-events: none;
+}
+
+.scene-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 62%;
+  /* El zoom se recoge hacia la plántula. */
+  transform-origin: 50% 72%;
+  will-change: transform;
+}
+
+/* Velo que sube y baja con el scroll; en movimiento reducido queda en su valor final. */
+.scene-veil {
+  position: absolute;
+  inset: 0;
+  background: #050a08;
+  opacity: 0.1;
+}
+
+/* Contraste fijo para el título sobre el cielo, aunque el velo esté claro. */
+.scene-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(4, 10, 8, 0.6) 0%, rgba(4, 10, 8, 0.22) 40%, transparent 62%),
+    radial-gradient(130% 95% at 50% 45%, transparent 58%, rgba(4, 10, 8, 0.42) 100%);
+}
+
+.scene-stage {
+  position: sticky;
+  top: 0;
+  display: flex;
+  height: 100svh;
+  justify-content: center;
+  padding: clamp(96px, 17svh, 190px) 24px 0;
+}
+
+.scene-copy {
+  width: min(100%, 1040px);
   text-align: center;
 }
 
-.product-story-intro h2 {
-  max-width: 14ch;
-  margin-inline: auto;
+.scene-copy .eyebrow {
+  color: #b9ffb0;
+  font-size: 0.78rem;
+  text-shadow: 0 1px 8px rgba(4, 10, 8, 0.55);
 }
 
-.product-story-intro > p:last-child {
-  max-width: 620px;
-  margin: 24px auto 0;
+.scene-copy h2 {
+  max-width: 22ch;
+  margin: 20px auto 0;
+  color: #fff;
+  font-size: clamp(2.5rem, 5.6vw, 5.4rem);
+  line-height: 1.02;
+  text-shadow: 0 2px 14px rgba(4, 10, 8, 0.4);
+}
+
+/* Destino de #lineas: cae con la escena fija y el título ya revelado (los enlaces restan 96px). */
+.scene-anchor {
+  position: absolute;
+  top: calc(60svh + 96px);
+  left: 0;
+  width: 1px;
+  height: 1px;
+  outline: none;
+  pointer-events: none;
+}
+
+.product-sheet {
+  position: relative;
+  z-index: 2;
+  margin-top: -100svh; /* sube sobre la escena fija y la cubre */
+  border-top: 1px solid var(--line);
+  border-radius: var(--sheet-r) var(--sheet-r) 0 0;
+  background:
+    radial-gradient(circle at 85% 28%, rgba(57, 139, 88, 0.1), transparent 24rem),
+    #070a09;
+  box-shadow: 0 -30px 80px rgba(0, 0, 0, 0.45);
 }
 
 .product-story-grid {
@@ -1574,7 +1668,6 @@ footer > a:last-child {
   }
 
   .section-heading h2,
-  .product-story-intro h2,
   .validation-copy h2,
   .cta-card h2 {
     font-size: clamp(2.05rem, 9.5vw, 3.1rem);
@@ -1597,14 +1690,6 @@ footer > a:last-child {
   .problem-statement span {
     grid-column: 1 / -1;
     justify-self: start;
-  }
-
-  .product-story {
-    padding-top: 100px;
-  }
-
-  .product-story-intro {
-    margin-bottom: 40px;
   }
 
   .product-visual-column {
@@ -1786,7 +1871,6 @@ footer > a:last-child {
   }
 
   .section-heading h2,
-  .product-story-intro h2,
   .validation-copy h2,
   .cta-card h2,
   .problem .split-heading h2 {
@@ -1949,5 +2033,37 @@ footer > a:last-child {
   footer > a:last-child {
     width: 44px;
     height: 44px;
+  }
+}
+
+/* Escena por capas en tablet: título más grande que el mínimo de escritorio. */
+@media (max-width: 980px) {
+  .scene-copy h2 {
+    max-width: 18ch;
+    font-size: clamp(2.6rem, 8.2vw, 4.4rem);
+  }
+}
+
+/* Escena por capas en celular: capas de borde más suave y título ajustado al ancho. */
+@media (max-width: 620px) {
+  :root {
+    --sheet-r: 20px;
+  }
+
+  .scene-stage {
+    padding: clamp(88px, 15svh, 130px) 20px 0;
+  }
+
+  .scene-copy .eyebrow {
+    font-size: 0.68rem;
+  }
+
+  .scene-copy h2 {
+    margin-top: 16px;
+    font-size: clamp(2.2rem, 10.6vw, 3rem);
+  }
+
+  .scene-image {
+    object-position: 49% 50%;
   }
 }
