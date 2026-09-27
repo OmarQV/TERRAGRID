@@ -70,13 +70,13 @@ export default function Hero() {
       <div aria-hidden="true" className="absolute inset-x-0 top-0 -z-10 h-36 bg-linear-to-b from-[rgba(6,20,12,0.4)] to-transparent" />
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-1 items-center px-5 pb-0 pt-6 md:px-10 md:py-[clamp(0.5rem,1.5vh,1.5rem)]">
-        <div className="max-w-[37.5rem] md:max-w-[min(37.5rem,calc(46vw-3.5rem))]">
+        <div className="max-w-[37.5rem] max-md:w-full max-md:text-center md:max-w-[min(37.5rem,calc(46vw-3.5rem))]">
           <img
             src={logo}
             alt="TERRAGRID"
             width={1188}
             height={278}
-            className="hero-logo h-auto w-[min(100%,20rem)] [filter:drop-shadow(0_1px_1.5px_rgba(6,20,12,0.75))_drop-shadow(0_4px_18px_rgba(6,20,12,0.55))] motion-safe:animate-fade-in sm:w-[min(100%,24rem)]"
+            className="hero-logo h-auto w-[min(100%,20rem)] [filter:drop-shadow(0_1px_1.5px_rgba(6,20,12,0.75))_drop-shadow(0_4px_18px_rgba(6,20,12,0.55))] max-md:mx-auto motion-safe:animate-fade-in sm:w-[min(100%,24rem)]"
           />
 
           <h1
