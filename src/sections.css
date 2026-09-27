@@ -2006,7 +2006,17 @@ footer > a:last-child {
   }
 
   .system-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
     width: calc(100% - 40px);
+  }
+
+  .system-head {
+    position: relative;
+    z-index: 1;
+    grid-area: 1 / 1;
+    max-width: none;
+    padding-bottom: clamp(190px, 54vw, 250px);
   }
 
   .system-head h2 {
@@ -2019,8 +2029,35 @@ footer > a:last-child {
   }
 
   .system-visual {
-    aspect-ratio: 4 / 3;
-    margin-top: 26px;
+    position: relative;
+    z-index: 0;
+    grid-area: 1 / 1;
+    align-self: stretch;
+    width: calc(100% + 40px);
+    aspect-ratio: auto;
+    margin: 0 -20px;
+    border: 0;
+    border-radius: 0;
+    background: #090d0b;
+  }
+
+  .system-visual::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #090d0b 0%, rgba(9, 13, 11, 0.9) 18%, rgba(9, 13, 11, 0.58) 51%, rgba(9, 13, 11, 0.08) 78%, #090d0b 100%);
+    content: '';
+  }
+
+  .system-visual-img {
+    top: 70px;
+    height: calc(100% - 70px);
+    object-position: 82% center;
+  }
+
+  .system-chips {
+    z-index: 1;
+    inset-inline: 20px;
+    bottom: 20px;
   }
 
   .system-chip {
