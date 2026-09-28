@@ -1076,15 +1076,146 @@ h4 {
 }
 
 .market {
+  position: relative;
   border-top: 1px solid var(--line);
   background: #0a0e0c;
+}
+
+.agri-parallax {
+  position: relative;
+  height: 180svh;
+}
+
+.agri-parallax-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  background: #07100c;
+}
+
+.agri-parallax-layers,
+.agri-parallax-background,
+.agri-parallax-foreground,
+.agri-parallax-shade {
+  position: absolute;
+  inset: 0;
+}
+
+.agri-parallax-layers {
+  pointer-events: none;
+}
+
+.agri-parallax-background,
+.agri-parallax-foreground {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.agri-parallax-background {
+  z-index: 1;
+  filter: brightness(0.82);
+}
+
+/* El recorte conserva el lienzo original; este encuadre alinea al técnico con la referencia. */
+.agri-parallax-subject {
+  position: absolute;
+  z-index: 2;
+  bottom: 23%;
+  left: 16%;
+  width: 70%;
+  height: auto;
+  max-width: none;
+  transform-origin: center bottom;
+  will-change: transform;
+}
+
+.agri-parallax-shade {
+  z-index: 4;
+  background: linear-gradient(90deg, rgba(5, 10, 7, 0.88) 0%, rgba(5, 10, 7, 0.65) 28%, rgba(5, 10, 7, 0.2) 55%, transparent 78%);
+}
+
+.agri-parallax-foreground {
+  z-index: 3;
+  inset: auto 0 -28%;
+  height: 128%;
+  object-position: center bottom;
+  transform-origin: center bottom;
+}
+
+.agri-parallax-content {
+  position: absolute;
+  top: clamp(150px, 20svh, 230px);
+  left: clamp(40px, 7vw, 130px);
+  z-index: 5;
+  width: min(760px, 57vw);
+  text-shadow: 0 2px 18px rgba(2, 8, 4, 0.5);
+}
+
+.agri-parallax-content .eyebrow {
+  color: #7cff7b;
+  font-size: clamp(0.82rem, 1vw, 1rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.agri-parallax-content h2 {
+  margin: 22px 0 0;
+  color: #f5f7f3;
+  font-family: 'Arial Narrow', 'Segoe UI', sans-serif;
+  font-size: clamp(3.5rem, 5.7vw, 6.75rem);
+  font-weight: 900;
+  line-height: 0.94;
+  letter-spacing: -0.055em;
+}
+
+.agri-line-mask {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.06em;
+  margin-block: -0.06em;
+}
+
+.agri-line-inner {
+  display: block;
+}
+
+.agri-line-accent {
+  color: #82f67b;
+}
+
+.market-sheet {
+  position: relative;
+  z-index: 2;
+  margin-top: -20svh;
+  border-top: 1px solid var(--line);
+  border-radius: 32px 32px 0 0;
+  background: #0a0e0c;
+  box-shadow: 0 -24px 70px rgba(0, 0, 0, 0.3);
+}
+
+.market-intro {
+  max-width: 760px;
+}
+
+.market-intro p {
+  margin: 0;
+  color: rgba(233, 244, 236, 0.78);
+  font-size: clamp(1.1rem, 1.7vw, 1.5rem);
+  line-height: 1.6;
 }
 
 .market-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
-  margin-top: 68px;
+  margin-top: 44px;
 }
 
 .market-card {
@@ -1108,6 +1239,68 @@ h4 {
 
 .market-disclaimer {
   grid-template-columns: auto 1fr;
+}
+
+@media (max-width: 1199px) {
+  .agri-parallax-content {
+    top: clamp(130px, 18svh, 190px);
+    left: clamp(28px, 5vw, 70px);
+    width: min(680px, 62vw);
+  }
+
+  .agri-parallax-content h2 {
+    font-size: clamp(3rem, 5.8vw, 5rem);
+  }
+
+  .agri-parallax-subject {
+    bottom: 17%;
+    left: 13%;
+    width: 90%;
+  }
+}
+
+@media (max-width: 620px) {
+  .agri-parallax-background {
+    object-position: 68% center;
+  }
+
+  .agri-parallax-subject {
+    bottom: 8%;
+    left: -57%;
+    width: 170%;
+  }
+
+  .agri-parallax-shade {
+    background: linear-gradient(180deg, rgba(5, 10, 7, 0.74), rgba(5, 10, 7, 0.62) 42%, rgba(5, 10, 7, 0.1) 76%, rgba(5, 10, 7, 0.28));
+  }
+
+  .agri-parallax-foreground {
+    inset: auto auto -6% -22%;
+    width: 145%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .agri-parallax-content {
+    top: clamp(120px, 19svh, 170px);
+    right: 20px;
+    left: 20px;
+    width: auto;
+  }
+
+  .agri-parallax-content .eyebrow {
+    font-size: 0.72rem;
+  }
+
+  .agri-parallax-content h2 {
+    margin-top: 18px;
+    font-size: clamp(2rem, 9vw, 3rem);
+    line-height: 0.98;
+  }
+
+  .market-intro p {
+    font-size: 1.05rem;
+  }
 }
 
 .business {

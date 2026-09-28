@@ -1,0 +1,84 @@
+import { useLayoutEffect, useRef } from 'react'
+import { gsap } from '../lib/animation'
+
+type Motion = {
+  backgroundY: number
+  subjectY: number
+  foregroundY: number
+  foregroundExitY: number
+  copyY: number
+}
+
+const DESKTOP: Motion = { backgroundY: -4, subjectY: -7, foregroundY: -13, foregroundExitY: -17, copyY: -60 }
+const TABLET: Motion = { backgroundY: -3, subjectY: -5, foregroundY: -9, foregroundExitY: -12, copyY: -40 }
+const MOBILE: Motion = { backgroundY: -2, subjectY: -4, foregroundY: -8, foregroundExitY: -10, copyY: -24 }
+
+export default function AgricultureParallax() {
+  const root = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    const scene = root.current
+    if (!scene) return
+
+    const background = scene.querySelector<HTMLElement>('.agri-parallax-background')!
+    const subject = scene.querySelector<HTMLElement>('.agri-parallax-subject')!
+    const foreground = scene.querySelector<HTMLElement>('.agri-parallax-foreground')!
+    const copy = scene.querySelector<HTMLElement>('.agri-parallax-content')!
+    const lines = scene.querySelectorAll<HTMLElement>('.agri-line-inner')
+    const media = gsap.matchMedia()
+
+    const animate = ({ backgroundY, subjectY, foregroundY, foregroundExitY, copyY }: Motion) => {
+      // El fondo tiene margen de zoom para que no asome un borde al desplazarse.
+      gsap.set(background, { scale: 1.08, yPercent: 0, filter: 'brightness(0.82)' })
+      gsap.set(subject, { scale: 1, yPercent: 0, xPercent: 0 })
+      gsap.set(foreground, { scale: 1, yPercent: 0, xPercent: 0 })
+
+      gsap.timeline({ scrollTrigger: { trigger: scene, start: 'top bottom', end: 'top top', scrub: true } })
+        .fromTo(subject, { opacity: 0, y: 36 }, { opacity: 1, y: 0, ease: 'none' }, 0)
+        .fromTo(foreground, { opacity: 0, y: 56 }, { opacity: 1, y: 0, ease: 'none' }, 0)
+
+      gsap.timeline({ scrollTrigger: { trigger: scene, start: 'top 78%', end: 'top top', scrub: true } })
+        .fromTo(lines, { yPercent: 120 }, { yPercent: 0, duration: 1, stagger: 0.08, ease: 'power4.out' })
+
+      gsap.timeline({
+        scrollTrigger: { trigger: scene, start: 'top top', end: 'bottom bottom', scrub: 1.2, invalidateOnRefresh: true },
+        defaults: { ease: 'none' },
+      })
+        .to(background, { scale: 1.13, yPercent: backgroundY, filter: 'brightness(0.9)', duration: 0.85 }, 0)
+        .to(subject, { scale: 1.025, xPercent: 1.5, yPercent: subjectY, duration: 0.85 }, 0)
+        .to(foreground, { scale: 1.08, xPercent: -1, yPercent: foregroundY, duration: 0.85 }, 0)
+        .to(copy, { y: copyY, opacity: 0.88, duration: 1 }, 0)
+        .to(background, { filter: 'brightness(0.7)', duration: 0.15 }, 0.85)
+        .to(subject, { opacity: 0.75, duration: 0.15 }, 0.85)
+        .to(foreground, { yPercent: foregroundExitY, duration: 0.15 }, 0.85)
+    }
+
+    media.add('(min-width: 1200px) and (prefers-reduced-motion: no-preference)', () => animate(DESKTOP), scene)
+    media.add('(min-width: 621px) and (max-width: 1199px) and (prefers-reduced-motion: no-preference)', () => animate(TABLET), scene)
+    media.add('(max-width: 620px) and (prefers-reduced-motion: no-preference)', () => animate(MOBILE), scene)
+
+    return () => media.revert()
+  }, [])
+
+  return (
+    <div className="agri-parallax" ref={root}>
+      <div className="agri-parallax-sticky">
+        <div className="agri-parallax-layers" aria-hidden="true">
+          <img className="agri-parallax-background" src="/img/prx1.png" alt="" width={1672} height={941} loading="lazy" decoding="async" />
+          <img className="agri-parallax-subject" src="/img/agriculture-subject.png" alt="" width={1670} height={942} loading="lazy" decoding="async" />
+          <div className="agri-parallax-shade" />
+          <img className="agri-parallax-foreground" src="/img/agriculture-foreground.png" alt="" width={1670} height={942} loading="lazy" decoding="async" />
+        </div>
+        <div className="agri-parallax-content">
+          <p className="eyebrow">Mercado inicial · Departamento de La Paz</p>
+          <h2>
+            <span className="agri-line-mask"><span className="agri-line-inner">El usuario necesita</span></span>
+            <span className="agri-line-mask"><span className="agri-line-inner">confiabilidad.</span></span>
+            <span className="agri-line-mask"><span className="agri-line-inner">El comprador necesita</span></span>
+            <span className="agri-line-mask"><span className="agri-line-inner agri-line-accent">resultados.</span></span>
+          </h2>
+        </div>
+      </div>
+    </div>
+  )
+}
