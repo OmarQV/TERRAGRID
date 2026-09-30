@@ -9,7 +9,6 @@ import ProductStory from './sections/ProductStory'
 import SiteFooter from './sections/SiteFooter'
 import SystemSection from './sections/SystemSection'
 import TeamSection from './sections/TeamSection'
-import ValidationSection from './sections/ValidationSection'
 
 export default function App() {
   return (
@@ -26,7 +25,7 @@ export default function App() {
         <ProblemSection />
         <ProductStory />
         <SystemSection />
-        <ValidationSection />
+        
         <MarketSection />
         <BusinessSection />
         <TeamSection />

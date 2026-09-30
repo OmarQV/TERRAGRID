@@ -164,6 +164,7 @@ Terra-Grid/
 - `tec-fondo.webp` y `tec-1.webp` … `tec-5.webp`: conversión a WebP de `public/img/tec fond.png` y `tec1.png` … `tec5.png` (sección «La capa inteligente»; las cinco tarjetas se redimensionan a 800 px de ancho).
 - `problem-1.webp`, `problem-2.webp`, `problem-3.webp`: recortes horizontales (1.85:1) y conversión a WebP de `public/img/p1 pl.png`, `p2 pl.png` y `p3 pl.png`.
 - `market-atmosphere.jpg`, `market-growers.jpg`, `market-nursery.jpg`, `market-research.jpg` y `market-partners.jpg`: fotografías generadas para la sección de mercado y comprimidas a JPEG de calidad 85.
+- `business-background.jpg`, `business-subject.png`, `business-foreground.png` y `business-incubator.jpg`: paisaje, técnico e incubadora, hojas transparentes y fotografía de equipo generados para el parallax del modelo de negocio. Las capas transparentes conservan alfa; las fotos opacas se comprimieron a JPEG de calidad 85.
 
 ## Alcance actual
 

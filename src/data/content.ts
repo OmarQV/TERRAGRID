@@ -276,6 +276,8 @@ export const BUSINESS_PHASES = [
     label: 'Ingreso inicial',
     title: 'Venta de plantines',
     copy: 'TERRAGRID produce y entrega plantines por lote. El cliente compra el resultado, no el hardware.',
+    image: '/img/market-growers.jpg',
+    imageAlt: 'Plantines jóvenes listos para entrega por lote',
     now: true,
   },
   {
@@ -283,12 +285,16 @@ export const BUSINESS_PHASES = [
     label: 'Capacidad como servicio',
     title: 'Incubación por reserva',
     copy: 'El cliente reserva bandejas, especies y ventanas de producción dentro de una instalación TERRAGRID.',
+    image: '/img/market-nursery.jpg',
+    imageAlt: 'Bandejas de plantines en un vivero de producción programada',
   },
   {
     phase: '03',
     label: 'Despliegue futuro',
     title: 'Alquiler en sitio',
     copy: 'La incubadora se instala en las dependencias del cliente con soporte, monitoreo y mantenimiento.',
+    image: '/img/business-incubator.jpg',
+    imageAlt: 'Incubadora inteligente con plantines dentro de un invernadero',
   },
 ]
 
