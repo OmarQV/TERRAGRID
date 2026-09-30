@@ -55,6 +55,9 @@ export default function AgricultureParallax() {
           .to(bench, { y: () => -Math.min(window.innerHeight * 0.13, 104) }, 0)
           .to(foreground, { y: () => -Math.min(window.innerHeight * 0.17, 136) }, 0)
           .to(copy, { y: () => -Math.min(window.innerHeight * 0.035, 28) }, 0)
+          .to(subject, { opacity: 0, duration: 0.28 }, 0.72)
+          .to(bench, { opacity: 0.3, duration: 0.28 }, 0.72)
+          .to(copy, { opacity: 0, duration: 0.24 }, 0.76)
         return
       }
 
@@ -67,9 +70,11 @@ export default function AgricultureParallax() {
         .to(subject, { scale: 1.025, xPercent: 1.5, yPercent: subjectY, duration: 0.85 }, 0)
         .to(bench, { scale: 1.045, yPercent: benchY, duration: 0.85 }, 0)
         .to(foreground, { scale: 1.08, xPercent: -1, yPercent: foregroundY, duration: 0.85 }, 0)
-        .to(copy, { y: copyY, opacity: 0.88, duration: 1 }, 0)
+        .to(copy, { y: copyY, duration: 1 }, 0)
         .to(background, { filter: 'brightness(0.7)', duration: 0.15 }, 0.85)
-        .to(subject, { opacity: 0.75, duration: 0.15 }, 0.85)
+        .to(subject, { opacity: 0, duration: 0.4 }, 0.6)
+        .to(bench, { opacity: 0.3, duration: 0.3 }, 0.7)
+        .to(copy, { opacity: 0, duration: 0.25 }, 0.75)
         .to(foreground, { yPercent: foregroundExitY, duration: 0.15 }, 0.85)
     }
 

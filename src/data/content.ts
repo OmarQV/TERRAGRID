@@ -244,21 +244,29 @@ export const MARKET_SEGMENTS = [
     icon: Leaf,
     title: 'Productores hortícolas',
     copy: 'Plantines por lote para reducir incertidumbre antes del trasplante.',
+    image: '/img/market-growers.jpg',
+    imageAlt: 'Plantines hortícolas en bandejas dentro de un invernadero',
   },
   {
     icon: Warehouse,
     title: 'Viveros y asociaciones',
     copy: 'Capacidad programada, protocolos repetibles e historial de producción.',
+    image: '/img/market-nursery.jpg',
+    imageAlt: 'Filas de bandejas de cultivo en un vivero iluminado al atardecer',
   },
   {
     icon: Users,
     title: 'Instituciones agrícolas',
     copy: 'Ensayos, formación, investigación aplicada y trazabilidad de lotes.',
+    image: '/img/market-research.jpg',
+    imageAlt: 'Plantines y una tableta con una gráfica de crecimiento en un invernadero',
   },
   {
     icon: Handshake,
     title: 'Aliados de implementación',
     copy: 'Agrónomos, municipios y organizaciones que puedan habilitar pilotos reales.',
+    image: '/img/market-partners.jpg',
+    imageAlt: 'Manos que sostienen un plantín con tierra en un invernadero',
   },
 ]
 
