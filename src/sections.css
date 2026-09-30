@@ -1283,6 +1283,10 @@ h4 {
 }
 
 @media (max-width: 620px) {
+  .agri-parallax {
+    height: 210svh;
+  }
+
   .agri-parallax-background {
     object-position: 68% center;
   }
@@ -1332,6 +1336,16 @@ h4 {
 
   .market-intro p {
     font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 620px) and (prefers-reduced-motion: reduce) {
+  .agri-parallax {
+    height: 100svh;
+  }
+
+  .market-sheet {
+    margin-top: 0;
   }
 }
 

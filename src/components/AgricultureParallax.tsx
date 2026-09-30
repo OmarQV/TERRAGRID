@@ -12,7 +12,6 @@ type Motion = {
 
 const DESKTOP: Motion = { backgroundY: -4, subjectY: -7, benchY: -8, foregroundY: -13, foregroundExitY: -17, copyY: -60 }
 const TABLET: Motion = { backgroundY: -3, subjectY: -5, benchY: -6, foregroundY: -9, foregroundExitY: -12, copyY: -40 }
-const MOBILE: Motion = { backgroundY: -2, subjectY: -4, benchY: -5, foregroundY: -8, foregroundExitY: -10, copyY: -24 }
 
 export default function AgricultureParallax() {
   const root = useRef<HTMLDivElement>(null)
@@ -29,9 +28,9 @@ export default function AgricultureParallax() {
     const lines = scene.querySelectorAll<HTMLElement>('.agri-line-inner')
     const media = gsap.matchMedia()
 
-    const animate = ({ backgroundY, subjectY, benchY, foregroundY, foregroundExitY, copyY }: Motion) => {
+    const animate = (motion: Motion | 'mobile') => {
       // El fondo tiene margen de zoom para que no asome un borde al desplazarse.
-      gsap.set(background, { scale: 1.08, yPercent: 0, filter: 'brightness(0.82)' })
+      gsap.set(background, { scale: motion === 'mobile' ? 1.15 : 1.08, yPercent: 0, filter: 'brightness(0.82)' })
       gsap.set(subject, { scale: 1, yPercent: 0, xPercent: 0 })
       gsap.set(bench, { scale: 1, yPercent: 0, xPercent: 0 })
       gsap.set(foreground, { scale: 1, yPercent: 0, xPercent: 0 })
@@ -44,6 +43,22 @@ export default function AgricultureParallax() {
       gsap.timeline({ scrollTrigger: { trigger: scene, start: 'top 78%', end: 'top top', scrub: true } })
         .fromTo(lines, { yPercent: 120 }, { yPercent: 0, duration: 1, stagger: 0.08, ease: 'power4.out' })
 
+      if (motion === 'mobile') {
+        // Distancias basadas en la pantalla: los porcentajes de estas imágenes
+        // equivalían a apenas unos píxeles en un teléfono.
+        gsap.timeline({
+          scrollTrigger: { trigger: scene, start: 'top top', end: 'bottom bottom', scrub: 0.25, invalidateOnRefresh: true },
+          defaults: { ease: 'none', duration: 1 },
+        })
+          .to(background, { scale: 1.23, y: () => -Math.min(window.innerHeight * 0.035, 28) }, 0)
+          .to(subject, { y: () => -Math.min(window.innerHeight * 0.09, 72) }, 0)
+          .to(bench, { y: () => -Math.min(window.innerHeight * 0.13, 104) }, 0)
+          .to(foreground, { y: () => -Math.min(window.innerHeight * 0.17, 136) }, 0)
+          .to(copy, { y: () => -Math.min(window.innerHeight * 0.035, 28) }, 0)
+        return
+      }
+
+      const { backgroundY, subjectY, benchY, foregroundY, foregroundExitY, copyY } = motion
       gsap.timeline({
         scrollTrigger: { trigger: scene, start: 'top top', end: 'bottom bottom', scrub: 1.2, invalidateOnRefresh: true },
         defaults: { ease: 'none' },
@@ -60,7 +75,7 @@ export default function AgricultureParallax() {
 
     media.add('(min-width: 1200px) and (prefers-reduced-motion: no-preference)', () => animate(DESKTOP), scene)
     media.add('(min-width: 621px) and (max-width: 1199px) and (prefers-reduced-motion: no-preference)', () => animate(TABLET), scene)
-    media.add('(max-width: 620px) and (prefers-reduced-motion: no-preference)', () => animate(MOBILE), scene)
+    media.add('(max-width: 620px) and (prefers-reduced-motion: no-preference)', () => animate('mobile'), scene)
 
     return () => media.revert()
   }, [])
