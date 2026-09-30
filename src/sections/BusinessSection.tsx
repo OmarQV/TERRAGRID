@@ -35,7 +35,7 @@ export default function BusinessSection() {
         y: mobile ? -150 : -300, ease: 'none', scrollTrigger: sceneTrigger,
       })
       gsap.fromTo(subject, { y: 0, autoAlpha: mobile ? 0.78 : 0.9, filter: 'brightness(0.96) blur(2px)' }, {
-        y: mobile ? -100 : -180, autoAlpha: mobile ? 0.68 : 0.72, filter: 'brightness(0.96) blur(0px)', ease: 'none',
+        y: mobile ? -65 : -100, autoAlpha: mobile ? 0.68 : 0.72, filter: 'brightness(0.96) blur(0px)', ease: 'none',
         scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 0.55 },
       })
 
@@ -78,7 +78,7 @@ export default function BusinessSection() {
   return (
     <section className="business" id="modelo" ref={sectionRef}>
       <div className="business-scene" aria-hidden="true">
-        <img className="business-background" src="/img/business-background.jpg" alt="" width={1672} height={941} loading="lazy" decoding="async" />
+        <img className="business-background" src="/img/business-background-nursery.jpg" alt="" width={1672} height={941} loading="lazy" decoding="async" />
         <div className="business-scrim" />
         <img className="business-subject" src="/img/business-subject.png" alt="" width={1672} height={941} loading="lazy" decoding="async" />
         <img className="business-foreground" src="/img/business-foreground.png" alt="" width={1672} height={941} loading="lazy" decoding="async" />

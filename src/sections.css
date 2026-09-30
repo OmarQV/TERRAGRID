@@ -1621,7 +1621,7 @@ h4 {
   width: 100%;
   height: calc(100% + 160px);
   object-fit: cover;
-  object-position: center 58%;
+  object-position: center 52%;
   filter: blur(1px) brightness(0.96) saturate(1.06);
 }
 
@@ -1634,7 +1634,7 @@ h4 {
 
 .business-subject {
   z-index: 2;
-  top: 3%;
+  top: 9%;
   right: -6%;
   width: min(82vw, 1180px);
   height: auto;
@@ -1782,13 +1782,14 @@ h4 {
   height: 100%;
   object-fit: cover;
   object-position: center;
+  filter: brightness(1.08) saturate(1.06);
   transition: scale 500ms ease;
 }
 
 .business-card-photo::after {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #0a150e 0%, rgba(8, 19, 11, 0.93) 24%, rgba(8, 19, 11, 0.72) 46%, transparent 78%, rgba(4, 10, 6, 0.33));
+  background: linear-gradient(180deg, rgba(8, 19, 11, 0.9) 0%, rgba(8, 19, 11, 0.62) 26%, rgba(8, 19, 11, 0.3) 50%, rgba(8, 19, 11, 0.05) 76%, rgba(4, 10, 6, 0.12) 100%);
   content: '';
 }
 
@@ -1860,9 +1861,10 @@ h4 {
 .business-copy {
   max-width: 31ch;
   margin: 17px 0 0;
-  color: rgba(232, 241, 234, 0.78);
+  color: rgba(240, 247, 240, 0.9);
   font-size: 0.96rem;
   line-height: 1.5;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
 .business-card-arrow {
@@ -1914,13 +1916,17 @@ h4 {
 }
 
 @media (max-width: 620px) {
+  .business-scene {
+    height: 100svh;
+  }
+
   .business-background {
-    object-position: 70% center;
+    object-position: 72% 52%;
     filter: blur(1px) brightness(0.84) saturate(1.06);
   }
 
   .business-subject {
-    top: 5%;
+    top: 15%;
     right: -50%;
     width: 150%;
     opacity: 0.68;
