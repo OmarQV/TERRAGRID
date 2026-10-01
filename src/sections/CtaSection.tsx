@@ -3,7 +3,7 @@ import Reveal from '../components/Reveal'
 
 export default function CtaSection() {
   return (
-    <section className="cta section-pad">
+    <section className="cta section-pad" id="contacto">
       <div className="section-shell">
         <Reveal className="cta-card glow-border">
           <div className="cta-signal"><span /><span /><span /><span /><span /></div>
