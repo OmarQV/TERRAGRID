@@ -11,7 +11,9 @@ export default function TeamSection() {
     if (!section) return
 
     const media = gsap.matchMedia()
-    media.add('(prefers-reduced-motion: no-preference)', () => {
+    media.add({ motion: '(prefers-reduced-motion: no-preference)', mobile: '(max-width: 760px)' }, (context) => {
+      if (!context.conditions?.motion) return
+      const mobile = Boolean(context.conditions.mobile)
       const title = section.querySelector<HTMLElement>('.team-headline')!
       const split = SplitText.create(title, {
         type: 'lines',
@@ -61,15 +63,29 @@ export default function TeamSection() {
         })
       })
 
-      gsap.utils.toArray<HTMLElement>('.team-row', section).forEach((row) => {
-        const trigger = { trigger: row, start: 'top 94%', end: 'top 67%', scrub: 0.55 }
-        gsap.fromTo(row, { autoAlpha: 0, y: 54, clipPath: 'inset(0 0 20% 0)' }, {
-          autoAlpha: 1, y: 0, clipPath: 'inset(0 0 0% 0)', ease: 'none', scrollTrigger: trigger,
+      const cards = gsap.utils.toArray<HTMLElement>('.team-card', section)
+      if (mobile) {
+        cards.forEach((card) => {
+          const trigger = { trigger: card, start: 'top 92%', end: 'top 58%', scrub: 0.55 }
+          gsap.fromTo(card, { autoAlpha: 0, y: 54 }, {
+            autoAlpha: 1, y: 0, ease: 'none', scrollTrigger: trigger,
+          })
+          gsap.fromTo(card.querySelector('img'), { scale: 1.12 }, {
+            scale: 1, ease: 'none', scrollTrigger: trigger,
+          })
         })
-        gsap.fromTo(row.querySelector('img'), { scale: 1.16 }, {
-          scale: 1, ease: 'none', scrollTrigger: trigger,
+      } else {
+        gsap.timeline({
+          scrollTrigger: { trigger: '.team-grid', start: 'top 88%', end: 'top 42%', scrub: 0.65 },
+          defaults: { ease: 'none' },
         })
-      })
+          .fromTo(cards, { autoAlpha: 0, y: 70, rotationX: 7 }, {
+            autoAlpha: 1, y: 0, rotationX: 0, stagger: 0.12, duration: 0.7,
+          }, 0)
+          .fromTo(cards.map((card) => card.querySelector('img')), { scale: 1.12 }, {
+            scale: 1, stagger: 0.12, duration: 0.7,
+          }, 0)
+      }
 
       gsap.fromTo(section.querySelector('.team-outro'), { autoAlpha: 0, y: 26 }, {
         autoAlpha: 1, y: 0, duration: 0.8, ease: 'power3.out',
@@ -120,35 +136,37 @@ export default function TeamSection() {
             <span>Las personas detrás del sistema</span>
             <span>01 — 05</span>
           </div>
-          {TEAM.map((member, index) => (
-            <article className="team-row" key={member.name}>
-              <span className="team-row-index">{String(index + 1).padStart(2, '0')}</span>
-              <div className="team-row-photo">
-                <img src={member.photo} alt={`Retrato de ${member.name}`} loading="lazy" decoding="async" />
-              </div>
-              <div className="team-row-person">
-                <h3>{member.name}</h3>
-                <p>{member.role}</p>
-              </div>
-              <div className="team-row-socials" aria-label={`Redes sociales de ${member.name}`}>
-                {member.socials.map((social) => {
-                  const SocialIcon = social.icon
-                  return (
-                    <a
-                      href={social.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={`${member.name} en ${social.label}`}
-                      title={social.label}
-                      key={social.label}
-                    >
-                      <SocialIcon size={17} aria-hidden="true" />
-                    </a>
-                  )
-                })}
-              </div>
-            </article>
-          ))}
+          <div className="team-grid">
+            {TEAM.map((member, index) => (
+              <article className="team-card" key={member.name}>
+                <span className="team-card-index">{String(index + 1).padStart(2, '0')} / 05</span>
+                <div className="team-card-photo">
+                  <img src={member.photo} alt={`Retrato de ${member.name}`} loading="lazy" decoding="async" />
+                </div>
+                <div className="team-card-person">
+                  <h3>{member.name}</h3>
+                  <p>{member.role}</p>
+                </div>
+                <div className="team-card-socials" aria-label={`Redes sociales de ${member.name}`}>
+                  {member.socials.map((social) => {
+                    const SocialIcon = social.icon
+                    return (
+                      <a
+                        href={social.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`${member.name} en ${social.label}`}
+                        title={social.label}
+                        key={social.label}
+                      >
+                        <SocialIcon size={17} aria-hidden="true" />
+                      </a>
+                    )
+                  })}
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
 
         <div className="team-outro">
