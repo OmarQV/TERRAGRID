@@ -2031,149 +2031,6 @@ h4 {
   z-index: 1;
 }
 
-.team-overline {
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
-  color: rgba(225, 241, 227, 0.56);
-  font-size: 0.7rem;
-  font-weight: 750;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.team-overline {
-  border-top: 1px solid rgba(166, 216, 175, 0.22);
-  padding-top: 18px;
-}
-
-.team-overline span:first-child {
-  color: #91ffa1;
-}
-
-.team-header-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(240px, 0.45fr);
-  align-items: end;
-  gap: clamp(36px, 6vw, 120px);
-  padding: clamp(62px, 7vw, 112px) 0 clamp(72px, 7vw, 116px);
-}
-
-.team-eyebrow {
-  margin: 0 0 22px;
-  color: #91ffa1;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-}
-
-.team-headline {
-  max-width: 18ch;
-  margin: 0;
-  color: #f1f6f0;
-  font-size: clamp(3.25rem, 5vw, 6.2rem);
-  font-weight: 830;
-  line-height: 0.98;
-  letter-spacing: -0.075em;
-}
-
-.team-headline em {
-  color: #72ff78;
-  font-style: normal;
-}
-
-.team-headline-line {
-  overflow: hidden;
-  padding-block: 0.07em;
-  margin-block: -0.07em;
-}
-
-.team-header-copy {
-  max-width: 33ch;
-  margin: 0 0 0.45em;
-  color: rgba(226, 240, 228, 0.68);
-  font-size: clamp(1rem, 1.25vw, 1.2rem);
-  line-height: 1.6;
-}
-
-.team-visuals {
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.9fr);
-  align-items: start;
-  gap: clamp(22px, 3.2vw, 58px);
-  margin-bottom: clamp(98px, 10vw, 154px);
-}
-
-.team-visual {
-  min-width: 0;
-  margin: 0;
-}
-
-.team-visual-technology {
-  margin-top: clamp(80px, 9vw, 152px);
-}
-
-.team-visual-frame {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 1.55;
-  border: 1px solid rgba(172, 225, 185, 0.22);
-  border-radius: 17px;
-  background: #102018;
-}
-
-.team-visual-technology .team-visual-frame {
-  aspect-ratio: 1.18;
-}
-
-.team-visual-frame::after {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(180deg, transparent 66%, rgba(2, 9, 5, 0.13));
-  content: '';
-  pointer-events: none;
-}
-
-.team-visual-frame img {
-  position: absolute;
-  top: -10%;
-  left: 0;
-  display: block;
-  width: 100%;
-  height: 120%;
-  object-fit: cover;
-}
-
-.team-visual-agronomy img {
-  object-position: 35% center;
-}
-
-.team-visual figcaption {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  border-top: 1px solid rgba(166, 216, 175, 0.18);
-  margin-top: 16px;
-  padding-top: 13px;
-  color: rgba(225, 241, 227, 0.58);
-  font-size: 0.65rem;
-  font-weight: 720;
-  letter-spacing: 0.12em;
-  line-height: 1.4;
-  text-transform: uppercase;
-}
-
-.team-visual figcaption span:first-child {
-  flex: none;
-  color: #91ffa1;
-}
-
-.team-visual figcaption span:last-child {
-  text-align: right;
-}
-
 .team-roster-title {
   justify-content: center;
   column-gap: 0;
@@ -2312,41 +2169,6 @@ h4 {
   transform: translateY(-2px);
 }
 
-.team-outro {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  margin-top: 48px;
-  color: rgba(226, 240, 228, 0.58);
-  font-size: 0.88rem;
-}
-
-.team-outro a {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  color: #eaf5e9;
-  font-weight: 750;
-  text-decoration: none;
-  transition: color 250ms ease;
-}
-
-.team-outro a svg {
-  color: #72ff78;
-  transition: transform 300ms ease;
-}
-
-.team-outro a:hover,
-.team-outro a:focus-visible {
-  color: #72ff78;
-}
-
-.team-outro a:hover svg,
-.team-outro a:focus-visible svg {
-  transform: translate(3px, 3px);
-}
-
 @media (max-width: 1180px) {
   .team-grid {
     grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -2365,60 +2187,9 @@ h4 {
   }
 }
 
-@media (max-width: 900px) {
-  .team-header-layout {
-    grid-template-columns: 1fr;
-    gap: 34px;
-  }
-
-  .team-header-copy {
-    max-width: 46ch;
-  }
-}
-
 @media (max-width: 760px) {
   .team {
     padding: 80px 0 88px;
-  }
-
-  .team-overline span:last-child {
-    display: none;
-  }
-
-  .team-header-layout {
-    padding: 60px 0 78px;
-  }
-
-  .team-headline {
-    font-size: clamp(2.8rem, 9vw, 4.5rem);
-  }
-
-  .team-visuals {
-    grid-template-columns: 1fr;
-    gap: 28px;
-    margin-bottom: 84px;
-  }
-
-  .team-visual-agronomy .team-visual-frame {
-    aspect-ratio: 1.2;
-  }
-
-  .team-visual-technology {
-    width: 88%;
-    margin: 0 0 0 auto;
-  }
-
-  .team-visual-technology .team-visual-frame {
-    aspect-ratio: 1.08;
-  }
-
-  .team-visual figcaption {
-    flex-wrap: wrap;
-    font-size: 0.6rem;
-  }
-
-  .team-visual figcaption span:last-child {
-    text-align: left;
   }
 
   .team-roster-title {
@@ -2451,10 +2222,7 @@ h4 {
     height: 44px;
   }
 
-  .team-outro {
-    align-items: flex-start;
-    flex-direction: column;
-  }
+
 }
 
 @media (max-width: 620px) {
