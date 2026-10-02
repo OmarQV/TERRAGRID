@@ -2031,8 +2031,7 @@ h4 {
   z-index: 1;
 }
 
-.team-overline,
-.team-roster-heading {
+.team-overline {
   display: flex;
   justify-content: space-between;
   gap: 24px;
@@ -2175,9 +2174,28 @@ h4 {
   text-align: right;
 }
 
-.team-roster-heading {
+.team-roster-title {
+  justify-content: center;
+  column-gap: 0;
+  row-gap: 0.12em;
+  margin: 0;
   border-top: 1px solid rgba(166, 216, 175, 0.3);
-  padding: 20px 2px;
+  padding: 38px 0 34px;
+  color: #eff6ed;
+  font-size: clamp(2.75rem, 5vw, 6rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.06em;
+  text-align: center;
+}
+
+.team-roster-title > span:nth-child(4) {
+  color: #72ff78;
+}
+
+.team-roster-title > span {
+  display: inline-block;
+  will-change: transform, filter, opacity;
 }
 
 .team-grid {
@@ -2401,6 +2419,12 @@ h4 {
 
   .team-visual figcaption span:last-child {
     text-align: left;
+  }
+
+  .team-roster-title {
+    padding: 30px 0 28px;
+    font-size: clamp(2.15rem, 8.8vw, 3.5rem);
+    line-height: 1.08;
   }
 
   .team-grid {

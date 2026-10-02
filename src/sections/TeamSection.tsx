@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef } from 'react'
 import { ArrowDownRight } from 'lucide-react'
 import { TEAM } from '../data/content'
 import { gsap, SplitText } from '../lib/animation'
+import BlurText from '../components/BlurText'
 
 export default function TeamSection() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -132,10 +133,16 @@ export default function TeamSection() {
         </div>
 
         <div className="team-roster" aria-label="Equipo TERRAGRID">
-          <div className="team-roster-heading" aria-hidden="true">
-            <span>Las personas detrás del sistema</span>
-            <span>01 — 05</span>
-          </div>
+          <BlurText
+            text="El equipo de TERRAGRID detrás del sistema"
+            animateBy="words"
+            direction="bottom"
+            delay={95}
+            stepDuration={0.32}
+            threshold={0.3}
+            headingLevel={3}
+            className="team-roster-title"
+          />
           <div className="team-grid">
             {TEAM.map((member, index) => (
               <article className="team-card" key={member.name}>
@@ -169,10 +176,6 @@ export default function TeamSection() {
           </div>
         </div>
 
-        <div className="team-outro">
-          <span>El siguiente paso sucede en campo.</span>
-          <a href="#contacto">Hablemos de un piloto <ArrowDownRight size={22} aria-hidden="true" /></a>
-        </div>
       </div>
     </section>
   )
