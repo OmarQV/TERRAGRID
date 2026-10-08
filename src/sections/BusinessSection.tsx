@@ -87,8 +87,8 @@ export default function BusinessSection() {
       <div className="business-content section-shell-wide">
         <header className="business-heading">
           <p className="eyebrow">Modelo de negocio por etapas</p>
-          <h2>Vender el <span>resultado</span> primero. Desplegar la infraestructura después.</h2>
-          <p>Un modelo que reduce el riesgo, valida la demanda<br className="business-desktop-break" /> y escala con evidencia real.</p>
+          <h2>Vender el <span>resultado</span> primero<br />Desplegar la infraestructura después</h2>
+          <p>Un modelo que reduce el riesgo, valida la demanda<br className="business-desktop-break" /> y escala con evidencia real</p>
         </header>
 
         <div className="business-flow" aria-hidden="true">
