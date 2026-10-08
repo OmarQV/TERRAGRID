@@ -86,7 +86,7 @@ export default function Hero() {
             <span className="block text-white">Agricultura</span>
             <span className="block text-white">inteligente</span>
             <span className="block text-primary-bright">para un futuro</span>
-            <span className="block text-primary-bright">real.</span>
+            <span className="block text-primary-bright">real</span>
           </h1>
 
           

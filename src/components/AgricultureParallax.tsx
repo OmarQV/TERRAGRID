@@ -100,9 +100,9 @@ export default function AgricultureParallax() {
           <p className="eyebrow">Mercado inicial · Departamento de La Paz</p>
           <h2>
             <span className="agri-line-mask"><span className="agri-line-inner">El usuario necesita</span></span>
-            <span className="agri-line-mask"><span className="agri-line-inner">confiabilidad.</span></span>
+            <span className="agri-line-mask"><span className="agri-line-inner">confiabilidad</span></span>
             <span className="agri-line-mask"><span className="agri-line-inner">El comprador necesita</span></span>
-            <span className="agri-line-mask"><span className="agri-line-inner agri-line-accent">resultados.</span></span>
+            <span className="agri-line-mask"><span className="agri-line-inner agri-line-accent">resultados</span></span>
           </h2>
         </div>
       </div>
