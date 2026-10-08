@@ -92,8 +92,8 @@ export default function MarketSection() {
           <header className="market-intro">
             <span className="market-rule" aria-hidden="true" />
             <p className="market-label">Mercado inicial · Departamento de La Paz</p>
-            <h2>La primera oferta no vende una máquina: <strong>entrega plantines y evidencia de cada lote.</strong></h2>
-            <p className="market-follow">El hardware aparece después, cuando el proceso haya sido validado.</p>
+            <h2>La primera oferta no vende una máquina: <strong>entrega plantines y evidencia de cada lote</strong></h2>
+            <p className="market-follow">El hardware aparece después, cuando el proceso haya sido validado</p>
           </header>
 
           <div className="market-grid">
@@ -115,7 +115,7 @@ export default function MarketSection() {
             })}
           </div>
 
-          <p className="market-footnote"><span>Por validar</span> Pérdidas en germinación, costo por plantín aceptado, frecuencia de compra y disposición de pago.</p>
+          <p className="market-footnote"><span>Por validar</span> Pérdidas en germinación, costo por plantín aceptado, frecuencia de compra y disposición de pago</p>
         </div>
       </div>
     </section>

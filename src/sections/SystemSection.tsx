@@ -44,10 +44,10 @@ export default function SystemSection() {
             <span className="line">La tecnología solo</span>{' '}
             <span className="line">entra cuando responde</span>{' '}
             <span className="line">
-              a una <span className="accent">decisión agronómica.</span>
+              a una <span className="accent">decisión agronómica</span>
             </span>
           </h2>
-          <p>Cada sensor, regla o registro debe ayudar a medir, actuar o explicar lo que ocurrió dentro del lote.</p>
+          <p>Cada sensor, regla o registro debe ayudar a medir, actuar o explicar lo que ocurrió dentro del lote</p>
           <a className="system-cta" href="#lineas">
             Conocer la tecnología
             <ArrowRight aria-hidden="true" size={18} />
@@ -117,9 +117,9 @@ export default function SystemSection() {
         </div>
 
         <Reveal className="data-strip">
-          <div><Network size={21} /><span>Offline-first</span><small>El control esencial funciona localmente.</small></div>
-          <div><QrCode size={21} /><span>Identidad por lote</span><small>Datos, eventos e imágenes en una sola ficha.</small></div>
-          <div><ShieldCheck size={21} /><span>Verificable, no oficial</span><small>La constancia tecnológica no sustituye una certificación regulada.</small></div>
+          <div><Network size={21} /><span>Offline-first</span><small>El control esencial funciona localmente</small></div>
+          <div><QrCode size={21} /><span>Identidad por lote</span><small>Datos, eventos e imágenes en una sola ficha</small></div>
+          <div><ShieldCheck size={21} /><span>Verificable, no oficial</span><small>La constancia tecnológica no sustituye una certificación regulada</small></div>
         </Reveal>
       </div>
     </section>
