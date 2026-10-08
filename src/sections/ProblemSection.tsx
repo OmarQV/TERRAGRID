@@ -16,12 +16,12 @@ export default function ProblemSection() {
               <span>
                 decisiones,
                 <br />
-                tiempo y recursos.
+                tiempo y recursos
               </span>
             </h2>
           </div>
           <p>
-            El productor suele asumir el riesgo desde el almácigo sin un historial comparable del proceso. TERRAGRID enfoca su primera validación exactamente en esa brecha.
+            El productor suele asumir el riesgo desde el almácigo sin un historial comparable del proceso; TERRAGRID enfoca su primera validación exactamente en esa brecha
           </p>
         </Reveal>
 

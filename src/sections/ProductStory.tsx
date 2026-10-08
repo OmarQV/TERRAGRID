@@ -81,7 +81,7 @@ export default function ProductStory() {
         image={scene}
         anchorId="lineas"
         eyebrow="Una plataforma · Tres líneas"
-        title="El roadmap se recorre como evoluciona una semilla."
+        title="El roadmap se recorre como evoluciona una semilla"
       />
 
       <div className="product-sheet">
